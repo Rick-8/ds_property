@@ -1,0 +1,39 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home - DS Property Maintenance{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4">Welcome to DS Property Maintenance</h1>
+    <p class="lead mt-3 bad-script">Your all-in-one solution for home services, renovations, and outdoor upgrades.</p>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <img src="{% static 'media/border-2-border-logo.png' %}" class="card-img-top" alt="Border 2 Border">
+                <div class="card-body">
+                    <h5 class="card-title">Border 2 Border</h5>
+                    <p class="card-text">Explore our indoor renovation and handyman services.</p>
+                    <a href="#" class="btn btn-primary">View Services</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow">
+                <img src="{% static 'media/splash-zone-pools-logo.png' %}" class="card-img-top" alt="Splash Zone Pools">
+                <div class="card-body">
+                    <h5 class="card-title">Splash Zone Pools</h5>
+                    <p class="card-text">Browse our pool installations, maintenance, and accessories.</p>
+                    <a href="#" class="btn btn-primary">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <a href="#" class="btn btn-outline-success btn-lg">View Service Packages</a>
+    </div>
+</div>
+{% endblock %}
