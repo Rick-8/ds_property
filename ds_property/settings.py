@@ -76,6 +76,11 @@ TEMPLATES = [
     },
 ]
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # for global static files
+STATIC_ROOT = BASE_DIR / "staticfiles"    # for collectstatic (production)
+
+
 AUTHENTICATION_BACKENDS = [
 
     # Needed to login by username in Django admin, regardless of `allauth`

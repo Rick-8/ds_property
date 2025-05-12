@@ -1,0 +1,49 @@
+/* Font styles */
+body {
+    font-family: 'Exo', sans-serif;
+}
+
+.bad-script {
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.navbar-custom {
+      background: linear-gradient(90deg, #4CAF50, #2196F3);
+      padding: 0.75rem 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar-brand, .nav-link {
+      font-weight: 900;
+      color: white !important;
+      text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
+      transition: text-shadow 0.3s ease;
+    }
+
+    .nav-link:hover, .navbar-brand:hover {
+      text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+
+    .nav-link.green {
+      color: #A5D6A7 !important;
+    }
+
+    .nav-link.blue {
+      color: #BBDEFB !important;
+    }
+
+    .brand-center {
+      font-size: 1.5rem;
+      transform: scale(1.1);
+      text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 991px) {
+      .brand-center {
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+    }
