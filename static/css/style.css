@@ -1,7 +1,9 @@
-/* Font styles */
+/* Global Font Styles */
 body {
     font-family: 'Exo', sans-serif;
 }
+
+/* Background Settings */
 body {
     background-image: url("../media/sky-and-grass.jpg");
     background-size: cover;
@@ -13,53 +15,119 @@ body {
     padding: 0;
 }
 
+/* Font style for bad-script class */
 .bad-script {
   font-family: "Bad Script", cursive;
   font-weight: 400;
   font-style: normal;
 }
 
-/* index page styles */
+/* Navbar Styles */
 .navbar-custom {
-      background: linear-gradient(90deg, #4CAF50, #2196F3);
-      padding: 0.75rem 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for navbar */
+    padding: 0.75rem 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Soft shadow for navbar */
+}
 
-    .navbar-brand, .nav-link {
-      font-weight: 900;
-      color: white !important;
-      text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
-      transition: text-shadow 0.3s ease;
-    }
+/* Navbar Brand (Logo) */
+.navbar-brand {
+    font-family: 'Exo'; /* Use Exo 2 for the logo */
+    font-size: 1.5rem; /* Default font size */
+    font-weight: 900; /* Bold font */
+    color: #d4af37; /* Metallic gold color */
+    text-transform: uppercase; /* Uppercase for sophistication */
+    letter-spacing: 2px; /* Elegant letter spacing */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 0, 0, 0.25), 0 0 5px rgba(0, 0, 0, 0.5); /* 3D effect */
+    transition: all 0.3s ease; /* Smooth transition on hover */
+}
 
-    .nav-link:hover, .navbar-brand:hover {
-      text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
-    }
+/* Navbar Brand Hover Effect */
+.navbar-brand:hover {
+    color: #f4c542; /* Slightly brighter gold on hover */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 0, 0, 0.35), 0 0 5px rgba(0, 0, 0, 0.5);
+}
 
-    .nav-link.green {
-      color: #A5D6A7 !important;
-    }
+/* Navbar Link Styles */
+.nav-link {
+    font-weight: 900;
+    color: white !important;
+    text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
+    transition: text-shadow 0.3s ease;
+}
 
-    .nav-link.blue {
-      color: #BBDEFB !important;
-    }
+/* Navbar Link Hover Effect */
+.nav-link:hover, .navbar-brand:hover {
+    text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
+}
 
-    .brand-center {
-      font-size: 1.5rem;
-      transform: scale(1.1);
-      text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0,0,0,0.4);
-    }
+/* Green and Blue Navbar Links */
+.nav-link.green {
+    color: #A5D6A7 !important; /* Green color */
+}
 
-    @media (max-width: 991px) {
-      .brand-center {
-        text-align: center;
-        margin-bottom: 0.5rem;
-      }
-    }
+.nav-link.blue {
+    color: #17a2b8 !important; /* Blue color */
+}
+
+/* Centering Navbar Brand */
+.brand-center {
+    font-size: 1.5rem;
+    transform: scale(1.1);
+    text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0,0,0,0.4);
+}
+
+/* Styling for the navbar-toggler button */
+.navbar-toggler {
+  background-color: #000; /* Black background */
+  border: 2px solid #d4af37; /* Metallic gold border (hex for gold is #d4af37) */
+}
+
+/* Styling for the hamburger bars (navbar-toggler-icon) */
+.navbar-toggler-icon {
+  background-color: #d4af37; /* Metallic gold color for the bars */
+  border-radius: 2px; /* Optional: rounded corners for the bars */
+}
+
+/* Optional: Hover effect for better interaction */
+.navbar-toggler:hover {
+  background-color: #333; /* Slightly lighter black on hover */
+}
+
+/* If you're using a custom icon (like Font Awesome), here's how to target it */
+.navbar-toggler i {
+  color: #d4af37; /* Metallic gold color for the Font Awesome icon */
+  font-size: 30px; /* Adjust the icon size as needed */
+}
+
+
+/* Dark Opaque Background for Section */
 .dark-opaque {
-    background-color: rgba(0, 0, 0, 0.9); /* dark with 60% opacity */
+    background-color: rgba(0, 0, 0, 0.9); /* Dark with opacity */
     color: white;
     padding: 2rem;
     border-radius: 1rem;
+}
+
+/* Responsive Design for Navbar Brand */
+@media (max-width: 991px) {
+    .brand-center {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Mobile and Desktop Responsiveness for Navbar */
+@media (max-width: 768px) {
+    /* Smaller size for mobile */
+    .navbar-brand {
+        font-size: 1.2rem;
+        letter-spacing: 1px; /* Adjust spacing for mobile */
+    }
+}
+
+@media (min-width: 768px) {
+    /* Larger size for desktop */
+    .navbar-brand {
+        font-size: 1.8rem;
+    }
 }
