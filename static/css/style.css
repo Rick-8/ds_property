@@ -2,6 +2,16 @@
 body {
     font-family: 'Exo', sans-serif;
 }
+body {
+    background-image: url("../media/sky-and-grass.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
 
 .bad-script {
   font-family: "Bad Script", cursive;
@@ -9,7 +19,7 @@ body {
   font-style: normal;
 }
 
-
+/* index page styles */
 .navbar-custom {
       background: linear-gradient(90deg, #4CAF50, #2196F3);
       padding: 0.75rem 1rem;
@@ -47,3 +57,9 @@ body {
         margin-bottom: 0.5rem;
       }
     }
+.dark-opaque {
+    background-color: rgba(0, 0, 0, 0.9); /* dark with 60% opacity */
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+}
