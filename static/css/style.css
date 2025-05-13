@@ -96,7 +96,7 @@ body {
 /* If you're using a custom icon (like Font Awesome), here's how to target it */
 .navbar-toggler i {
   color: #d4af37; /* Metallic gold color for the Font Awesome icon */
-  font-size: 30px; /* Adjust the icon size as needed */
+  font-size: 30px;
 }
 
 
@@ -107,6 +107,65 @@ body {
     padding: 2rem;
     border-radius: 1rem;
 }
+
+/* DS Property - Middle Section Layout */
+.ds-services-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 2rem auto;
+    background-color: rgba(0, 0, 0, 0.85); /* Match dark theme */
+    border-radius: 1rem;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    flex-wrap: nowrap;
+}
+
+.ds-services-image {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.ds-services-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.ds-services-content {
+    flex: 2;
+    padding: 1.5rem;
+    background-color: #222;
+    border-radius: 1rem;
+    color: white;
+    text-align: center;
+}
+
+.ds-services-content h2 {
+    font-size: 2rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+}
+
+.ds-services-content p {
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* Signup style */
+.form-text {
+    color: white !important;
+    margin-top: 2px;
+}
+
+
+/* Media Queries for Responsiveness */
 
 /* Responsive Design for Navbar Brand */
 @media (max-width: 991px) {
@@ -120,8 +179,8 @@ body {
 @media (max-width: 768px) {
     /* Smaller size for mobile */
     .navbar-brand {
-        font-size: 1.2rem;
-        letter-spacing: 1px; /* Adjust spacing for mobile */
+        font-size: 1.5rem;
+        letter-spacing: 1px;
     }
 }
 
@@ -130,4 +189,23 @@ body {
     .navbar-brand {
         font-size: 1.8rem;
     }
+}
+
+/* Responsive stacking for mobile */
+@media (max-width: 900px) {
+    .ds-services-section {
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .ds-services-image,
+    .ds-services-content {
+        max-width: 90%;
+    }
+}
+@media (min-width: 992px) {
+  .ds-push-down {
+    margin-top: 6rem;
+  }
 }

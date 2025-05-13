@@ -11,39 +11,44 @@
 {% block content %}
 
 
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-md-6 dark-opaque rounded-4 shadow p-4 text-center text-md-start">
-                <h2>Border 2 Border Services</h2>
-                <p class="lead">Comprehensive maintenance solutions across the region.</p>
-                <p>Providing top-quality services for all your property needs, from landscaping to repairs.</p>
-                <a href="#" class="btn btn-success mt-3">Explore Border 2 Border</a>
-            </div>
-            <div class="col-md-6 text-center">
-                <img src="{% static 'media/border-2-border-sm.png' %}" alt="Border 2 Border"
-                    class="img-fluid rounded-4 shadow">
-            </div>
-        </div>
+<div class="container my-5">
+  <div class="row align-items-center text-center">
+    
+    <!-- Left Image -->
+    <div class="col-md-3 mb-4 mb-md-0">
+      <img src="{% static 'media/border-2-border-sm.png' %}" alt="Border 2 Border" class="img-fluid rounded shadow">
     </div>
-</section>
 
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-md-6 order-md-2 dark-opaque rounded-4 shadow p-4 text-center text-md-start">
-                <h2>Splash Zone Pools</h2>
-                <p class="lead">Expert care and maintenance for your swimming pools.</p>
-                <p>Keeping your pool sparkling clean and ready for enjoyment with our specialized services.</p>
-                <a href="#" class="btn btn-info mt-3">Discover Splash Zone Pools</a>
-            </div>
-            <div class="col-md-6 order-md-1 text-center">
-                <img src="{% static 'media/splash-zone-pools-sm.png' %}" alt="Splash Zone Pools"
-                    class="img-fluid rounded-4 shadow">
-            </div>
-        </div>
+    <!-- Content Block -->
+    <div class="col-md-6">
+      <div class="content dark-opaque">
+        <h1>Welcome to DS Property Group</h1>
+        <p>
+          DS Property Group proudly brings together the trusted expertise of <strong>Border 2 Border</strong> and the
+          vibrant creativity of <strong>Splash Zone Pools</strong>. Whether you're looking to renovate, landscape, or
+          build your dream pool, we've got you covered from start to finish.
+        </p>
+        <p>
+          From border to border, we offer high-quality property maintenance, garden transformations, pool design and
+          installation, and year-round upkeep tailored to your space and style.
+        </p>
+        <p>
+          In addition, DS Property now offers full <strong>house and holiday home rentals</strong> for both short and
+          long-term lets — making us your all-in-one property solution. Whether you're a landlord, a guest, or a
+          future homeowner, we're here to help.
+        </p>
+      </div>
     </div>
-</section>
+
+    <!-- Right Image -->
+    <div class="col-md-3 mt-4 mt-md-0">
+      <img src="{% static 'media/splash-zone-pools-sm.png' %}" alt="Splash Zone Pools" class="img-fluid rounded shadow">
+    </div>
+    
+  </div>
+</div>
+
+
 {% endblock %}
 
 {% block extra_js %}
