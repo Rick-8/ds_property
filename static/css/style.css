@@ -15,6 +15,25 @@ body {
     padding: 0;
 }
 
+/* General Styles */
+.text-white {
+    color: white !important;
+}
+
+.text-gold {
+    color: gold !important;
+}
+
+.large-gold-text {
+    font-size: 2.5rem;
+    color: gold;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 3rem;
+}
+
+
+
 /* Font style for bad-script class */
 .bad-script {
   font-family: "Bad Script", cursive;
@@ -158,11 +177,13 @@ body {
     font-size: 1.1rem;
 }
 
-/* Signup style */
+/* Signup and regester styles */
 .form-text {
     color: white !important;
     margin-top: 2px;
 }
+
+
 
 
 /* Media Queries for Responsiveness */

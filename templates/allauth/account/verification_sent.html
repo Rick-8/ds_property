@@ -1,14 +1,32 @@
-{% extends "account/base_entrance.html" %}
+{% extends "base.html" %}
+{% load static %}
 {% load i18n %}
+{% load widget_tweaks %}
 {% load allauth %}
+
 {% block head_title %}
     {% trans "Verify Your Email Address" %}
 {% endblock head_title %}
+
 {% block content %}
-    {% element h1 %}
-        {% trans "Verify Your Email Address" %}
-    {% endelement %}
-    {% element p %}
-        {% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}
-    {% endelement %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="dark-opaque p-5 rounded shadow-lg">
+                <h1 class="text-center text-warning mb-4">{% trans "Verify Your Email Address" %}</h1>
+
+                <p class="text-center text-muted mb-4 text-white">
+                    {% blocktrans %}
+                    We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.
+                    {% endblocktrans %}
+                </p>
+
+                <!-- Optional Button to Sign In -->
+                <div class="text-center">
+                    <a href="{% url 'account_login' %}" class="btn btn-warning btn-lg mt-3">{% trans "Go to Sign In" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

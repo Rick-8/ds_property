@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% load allauth %}
+
+{% block head_title %}
+    {% trans "Contact Us" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="dark-opaque p-5 rounded shadow-lg">
+                <h1 class="text-center mb-4">{% trans "Contact Us" %}</h1>
+
+                <p class="text-center text-light">
+                    {% trans "If you have any questions, feel free to reach out to us through the following contact details." %}
+                </p>
+
+                <div class="mb-3">
+                    <h4 class="text-warning">{% trans "Email Addresses" %}</h4>
+                    <ul class="list-unstyled">
+                        <li>
+                            <strong>{% trans "Support" %}:</strong>
+                            <a href="mailto:support@yourcompany.com">support@yourcompany.com</a>
+                        </li>
+                        <li>
+                            <strong>{% trans "Sales" %}:</strong>
+                            <a href="mailto:sales@yourcompany.com">sales@yourcompany.com</a>
+                        </li>
+                        <li>
+                            <strong>{% trans "General Inquiries" %}:</strong>
+                            <a href="mailto:info@yourcompany.com">info@yourcompany.com</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <h4 class="text-warning">{% trans "Phone Numbers" %}</h4>
+                    <ul class="list-unstyled">
+                        <li>
+                            <strong>{% trans "Customer Support" %}:</strong>
+                            <a href="tel:+1234567890">+1 (234) 567-890</a>
+                        </li>
+                        <li>
+                            <strong>{% trans "Sales" %}:</strong>
+                            <a href="tel:+0987654321">+0 (987) 654-321</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
