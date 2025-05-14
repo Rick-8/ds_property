@@ -34,7 +34,7 @@ body {
 
 .facebook-icon {
     color: #FFD700; /* Gold color */
-    font-size: 1.4em;  /* Make it bigger, adjust the size as needed */
+    font-size: 2em;  /* Make it bigger, adjust the size as needed */
 }
 
 .btn-gold {
@@ -68,6 +68,26 @@ body {
   font-family: "Bad Script", cursive;
   font-weight: 400;
   font-style: normal;
+}
+
+.navbar-logo {
+    height: 15vh;
+    object-fit: cover;
+    border-radius: 50%;
+
+    /* Add a smooth border */
+    border: 2px solid #ffd700; /* gold color, customize as needed */
+
+    /* Add a soft shadow */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    /* Optional: slight transition on hover */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #navbar-title {
@@ -202,8 +222,6 @@ body {
   object-fit: contain;
 }
 
-
-
 /* Media Queries for Responsiveness */
 
 /* Responsive Design for Navbar Brand */
@@ -227,6 +245,12 @@ body {
   /* Larger size for desktop */
   .navbar-brand {
     font-size: 3rem;
+  }
+  .navbar-logo {
+    height: 20vh;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-left: 5vw;
   }
 }
 
