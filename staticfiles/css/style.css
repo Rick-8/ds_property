@@ -1,0 +1,240 @@
+/* Global Font Styles */
+body {
+  font-family: "Exo", sans-serif;
+}
+
+/* Background Settings */
+body {
+  background-image: url("../media/sky-and-grass.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* General Styles */
+.text-white {
+  color: white !important;
+}
+
+.text-gold {
+  color: gold !important;
+}
+
+.large-gold-text {
+  font-size: 2.5rem;
+  color: gold;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 3rem;
+}
+
+.btn-gold {
+    background-color: #D4AF37; /* gold color */
+    color: white;
+    border: none;
+}
+
+.btn-gold:hover {
+    background-color: #b38b2b; /* darker shade for hover effect */
+}
+
+/* Dark Opaque Background for Section */
+.dark-opaque {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.dark-opaque-small {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-inline-end: 2rem;
+}
+
+/* Font style for bad-script class */
+.bad-script {
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+#navbar-title {
+  font-family: "Exo", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #d4af37; /* metallic gold (a bit darker for contrast) */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  font-size: 2rem;
+}
+
+/* Hover effect to increase depth */
+#navbar-title:hover {
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7), 6px 6px 15px rgba(0, 0, 0, 0.6),
+    -5px -5px 10px rgba(255, 215, 0, 0.4), 2px 2px 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Navbar Link Styles */
+.nav-link {
+  font-weight: 900;
+  color: white !important;
+  text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
+  transition: text-shadow 0.3s ease;
+  font-size: 1.5rem;
+}
+
+/* Navbar Link Hover Effect */
+.nav-link:hover,
+.navbar-brand:hover {
+  text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Green Navbar Link */
+.nav-link.green {
+  color: #32cd32 !important; /* limegreen: brighter & more professional than greenyellow */
+  font-weight: 600;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2); /* subtle shadow for legibility */
+}
+
+/* Blue Navbar Link */
+.nav-link.blue {
+  color: #007bff !important; /* Bootstrap primary blue or you can use #0d6efd */
+  font-weight: 600;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Centering Navbar Brand */
+.brand-center {
+  font-size: 1.5rem;
+  transform: scale(1.1);
+  text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Styling for the navbar-toggler button */
+.navbar-toggler {
+  background-color: #000;
+  border: 2px solid #d4af37;
+}
+
+/* Styling for the hamburger bars (navbar-toggler-icon) */
+.navbar-toggler-icon {
+  background-color: #d4af37;
+  border-radius: 1px;
+}
+
+/* If you're using a custom icon (like Font Awesome), here's how to target it */
+.navbar-toggler i {
+  color: #d4af37;
+  font-size: 30px;
+}
+
+/* DS Property - Middle Section Layout */
+.ds-services-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 2rem auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 1rem;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  flex-wrap: nowrap;
+}
+
+.ds-services-image {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.ds-services-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.ds-services-content {
+  flex: 2;
+  padding: 1.5rem;
+  background-color: #222;
+  border-radius: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.ds-services-content h2 {
+  font-size: 2rem;
+  color: #d4af37;
+  margin-bottom: 1rem;
+}
+
+.ds-services-content p {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Signup and regester styles */
+.form-text {
+  color: white !important;
+  margin-top: 2px;
+}
+
+/* Border 2 Border page layout styles */ 
+.carousel-item img {
+  max-height: 500px;
+  object-fit: contain;
+}
+
+
+
+/* Media Queries for Responsiveness */
+
+/* Responsive Design for Navbar Brand */
+@media (max-width: 991px) {
+  .brand-center {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Mobile and Desktop Responsiveness for Navbar */
+@media (max-width: 768px) {
+  /* Smaller size for mobile */
+  .navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
+}
+
+@media (min-width: 768px) {
+  /* Larger size for desktop */
+  .navbar-brand {
+    font-size: 3rem;
+  }
+}
+
+/* Responsive stacking for mobile */
+@media (max-width: 900px) {
+  .ds-services-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .ds-services-image,
+  .ds-services-content {
+    max-width: 90%;
+  }
+}
