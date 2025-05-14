@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
+# Import settings from env.py
+from env import SECRET_KEY, DEBUG
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,11 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k$^1a#7m^00gxzh*-a$3pd!saeufum8xkg-sp0qh_de)@kooho'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# Security settings
+SECRET_KEY = SECRET_KEY
+
+# Define ALLOWED_HOSTS based on environment
+if os.getenv('DEBUG') == 'True':  # Local development with DEBUG = True
+    ALLOWED_HOSTS = ['*']  # Allow all hosts for development
+else:
+    ALLOWED_HOSTS = [
+        'ds-property-group-04ec2ca20d25.herokuapp.com',  # Heroku app domain
+    ]
 
 ALLOWED_HOSTS = []
 

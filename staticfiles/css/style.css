@@ -32,6 +32,11 @@ body {
   padding-bottom: 3rem;
 }
 
+.facebook-icon {
+    color: #FFD700; /* Gold color */
+    font-size: 2em;  /* Make it bigger, adjust the size as needed */
+}
+
 .btn-gold {
     background-color: #D4AF37; /* gold color */
     color: white;
