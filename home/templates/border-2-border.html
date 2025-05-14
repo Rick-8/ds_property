@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- About Us Section -->
+<section id="about" class="py-5 dark-opaque">
+  <div class="container">
+    <h2 class="text-center text-gold mb-4">About Us</h2>
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-4 mb-md-0">
+        <img src="{% static 'media/border-2-border-sm.png' %}" alt="Border 2 Border"
+          class="img-fluid rounded shadow-sm">
+      </div>
+      <div class="col-md-6">
+        <p>Border 2 Border offers premium property maintenance services designed to enhance both form and function of
+          your home or garden. From landscaping to bespoke improvements, we tailor every solution to your needs.</p>
+        <p>We focus on quality and detail, delivering results that are both reliable and visually impressive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5">
+  <div class="container dark-opaque">
+    <h2 class="text-center text-gold mb-4">What We Do</h2>
+    <div class="row g-4">
+      <!-- Landscaping -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-path-garden-2.png' %}" alt="Landscaping" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Landscaping</h5>
+          <p>Custom garden design and outdoor transformations to match your vision and lifestyle.</p>
+        </div>
+      </div>
+      <!-- Grounds Maintenance-->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-lawn-mowing-2.png' %}" alt="Grounds Maintenance" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Grounds Maintenance</h5>
+          <p>Comprehensive upkeep of lawns, hedges, and outdoor areas to ensure your property stays clean, safe, and
+            visually impressive all year round.</p>
+        </div>
+      </div>
+
+      <!-- Property Repairs & Upkeep -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-pipe-repair.jpg' %}" alt="Property Repairs & Upkeep" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Property Repairs & Upkeep</h5>
+          <p>Interior and exterior maintenance including gutter cleaning, minor repairs, fence restoration, and
+            painting.</p>
+        </div>
+      </div>
+
+      <!-- Garden Clearances & Waste Removal -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-garden-clearance-2.png' %}" alt="Garden Clearances" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Garden Clearances</h5>
+          <p>We clear overgrown gardens, storm debris, sheds, and green waste — with eco-conscious disposal practices.
+          </p>
+        </div>
+      </div>
+
+      <!-- Fencing & Gate Installation -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/ds-fenching-drive-extension-2.png' %}" alt="Fencing & Gates" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Fencing & Gates</h5>
+          <p>Professional installation of timber or composite fencing and secure gates to enhance your property's
+            boundary.</p>
+        </div>
+      </div>
+
+      <!-- Driveway & Patio Jet Washing -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-washed-drive-2.png' %}" alt="Jet Washing" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Jet Washing</h5>
+          <p>We restore driveways, patios, and walls with high-pressure cleaning for a fresh, renewed look.</p>
+        </div>
+      </div>
+
+      <!-- Decking & Timber Work -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-decking-pool-2.png' %}" alt="Decking & Timber Work" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Decking & Timber Work</h5>
+          <p>Install or restore decking, pergolas, planters, and timber features that elevate your outdoor space.</p>
+        </div>
+      </div>
+
+      <!-- Seasonal Services -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-hedge-cut-2.png' %}" alt="Seasonal Services" class="img-fluid mb-3"
+            style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Seasonal Services</h5>
+          <p>From winter gritting to spring planting and summer tidying — we keep your outdoor spaces season-ready.</p>
+        </div>
+      </div>
+      <!-- Tree Stump Removal & Turf Installation -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+          <img src="{% static 'media/dsp-stump-removal-2.png' %}" alt="Stump Removal & Turf Laying"
+            class="img-fluid mb-3" style="max-height: 140px; object-fit: contain; border-radius: 50%;">
+          <h5 class="text-gold">Stump Removal & Turf Laying</h5>
+          <p>Efficient tree stump grinding and complete removal, followed by professional-grade turf installation to
+            restore vibrant, level lawn spaces with instant impact.</p>
+        </div>
+      </div>
+
+    </div>
+</section>
+
+<section id="gallery" class="py-5 bg-dark text-light">
+  <div class="container">
+    <h2 class="text-center text-gold mb-4">Our Work Gallery</h2>
+    <div id="b2bCarousel" class="carousel slide" data-bs-ride="carousel">
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        {% for i in "01234567" %}
+          <button type="button" data-bs-target="#b2bCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+            class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}"
+            aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+
+      <!-- Slides -->
+      <div class="carousel-inner rounded shadow-lg">
+        <div class="carousel-item active">
+          <img src="{% static 'media/ds-fenching-drive-extension-2.png' %}" class="d-block w-100 rounded"
+            alt="Fence installation and driveway extension project">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-flowerbed-labeled-flowers-and-trees.jpg' %}" class="d-block w-100 rounded"
+            alt="Labeled flowerbed with trees and plants">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-flowers-in-barrow.jpg' %}" class="d-block w-100 rounded"
+            alt="Floral display in garden barrow">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-path-c.png' %}" class="d-block w-100 rounded"
+            alt="Stone garden pathway">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-path-garden-2.png' %}" class="d-block w-100 rounded"
+            alt="Curved gravel path through a landscaped garden">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-path-stone-gravel.jpg' %}" class="d-block w-100 rounded"
+            alt="Stone and gravel path with edging">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-raised-flowerbed-c.png' %}" class="d-block w-100 rounded"
+            alt="Raised timber flowerbed installation">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'media/dsp-trench-creation-c.png' %}" class="d-block w-100 rounded"
+            alt="Trench creation and groundwork preparation">
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#b2bCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-secondary rounded-circle" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#b2bCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-secondary rounded-circle" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-5">
+  <div class="container dark-opaque">
+    <h2 class="text-center text-gold mb-4">What Our Clients Say</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="p-4  text-light shadow-sm rounded h-100">
+          <p><i class="bi bi-quote text-gold"></i> "Border 2 Border transformed our garden into a beautiful oasis!
+            Highly recommend their services."</p>
+          <footer class="blockquote-footer text-gold mt-2">James & Emma</footer>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-4  text-light shadow-sm rounded h-100">
+          <p><i class="bi bi-quote text-gold"></i> "The pool installation was seamless, and now our backyard is perfect
+            for summer fun."</p>
+          <footer class="blockquote-footer text-gold mt-2">Sarah & Mike</footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

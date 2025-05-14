@@ -18,16 +18,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     {% endblock %}
 
-    {% block extra_css %}
-    {% endblock %}
-
-    {% block corejs %}
-    {% endblock %}
-
     <!-- Google Fonts CDN link-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
         rel="stylesheet">
 
 
@@ -48,7 +47,7 @@
             <!-- Always-visible brand and title -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <i class="bi bi-house-fill me-2"></i>
-                <span class="navbar-title fs-6 fs-sm-5 fs-md-4 fw-semibold">DS Property Maintenance</span>
+                <span class="fw-semibold dark-opaque-small" id="navbar-title">DS Property Maintenance</span>
             </a>
 
             <!-- Toggler for mobile -->
@@ -60,13 +59,14 @@
             <!-- Navigation links -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
+                    {% if request.path != '/accounts/login/' and request.path != '/accounts/logout/' and request.path != '/accounts/signup/' %}
                     <li class="nav-item">
-                        <a class="nav-link green" href="#">
+                        <a class="nav-link green dark-opaque-small" href="{% url 'border-2-border' %}">
                             <i class="bi bi-border-all"></i> Border 2 Border
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link blue" href="#">
+                        <a class="nav-link blue dark-opaque-small" href="#">
                             <i class="bi bi-droplet-fill"></i> Splash Zone Pools
                         </a>
                     </li>
@@ -75,6 +75,8 @@
                             <i class="bi bi-cart-fill"></i>
                         </a>
                     </li>
+                    {% endif %}
+
 
                     {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -101,29 +103,30 @@
     </main>
 
     <!-- Footer -->
-<footer class="bg-dark text-white py-3 mt-5">
-    <div class="container d-flex justify-content-between align-items-center">
-        <!-- Social Media Icons (Left) -->
-        <div>
-            <a href="https://www.facebook.com/YourCompany" class="text-white mx-2" target="_blank" title="Facebook">
-                <i class="fab fa-facebook-f"></i> <!-- Facebook Icon -->
-            </a>
-            <a href="https://www.instagram.com/YourCompany" class="text-white mx-2" target="_blank" title="Instagram">
-                <i class="fab fa-instagram"></i> <!-- Instagram Icon -->
-            </a>
-        </div>
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <!-- Social Media Icons (Left) -->
+            <div>
+                <a href="https://www.facebook.com/YourCompany" class="text-white mx-2" target="_blank" title="Facebook">
+                    <i class="fab fa-facebook-f"></i> <!-- Facebook Icon -->
+                </a>
+                <a href="https://www.instagram.com/YourCompany" class="text-white mx-2" target="_blank"
+                    title="Instagram">
+                    <i class="fab fa-instagram"></i> <!-- Instagram Icon -->
+                </a>
+            </div>
 
-        <!-- Centered Text -->
-        <p class="mb-0">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
+            <!-- Centered Text -->
+            <p class="mb-0">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
 
-        <!-- Contact Us Link (Right) -->
-        <div>
-            <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold">
-                {% trans "Contact Us" %}
-            </a>
+            <!-- Contact Us Link (Right) -->
+            <div>
+                <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold">
+                    {% trans "Contact Us" %}
+                </a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
 
     <!-- Add FontAwesome CDN for icons -->
@@ -132,7 +135,6 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    {% block extra_js %}{% endblock %}
 </body>
 
 </html>

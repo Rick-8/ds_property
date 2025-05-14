@@ -11,19 +11,20 @@
 {% block content %}
 
 
-<div class="container my-5">
-  <div class="row align-items-center text-center">
-    
+<div class="container-fluid py-5 px-3 px-md-5">
+  <div class="row g-4 align-items-center justify-content-center text-center">
+
     <!-- Left Image -->
-    <div class="col-md-3 mb-4 mb-md-0">
-      <img src="{% static 'media/border-2-border-sm.png' %}" alt="Border 2 Border" class="img-fluid rounded shadow">
+    <div class="col-10 col-md-3">
+      <img src="{% static 'media/border-2-border-sm.png' %}" alt="Border 2 Border"
+           class="img-fluid rounded shadow w-100 h-auto">
     </div>
 
     <!-- Content Block -->
-    <div class="col-md-6">
-      <div class="content dark-opaque">
+    <div class="col-12 col-md-6">
+      <div class="content dark-opaque p-4 p-md-5">
         <h1 class="text-gold">Welcome to</h1>
-        <h1 class="text-gold pb-4">DS Property Management</h1>  
+        <h1 class="text-gold pb-4">DS Property Management</h1>
         <p>
           DS Property Group proudly brings together the trusted expertise of <strong>Border 2 Border</strong> and the
           vibrant creativity of <strong>Splash Zone Pools</strong>. Whether you're looking to renovate, landscape, or
@@ -42,12 +43,14 @@
     </div>
 
     <!-- Right Image -->
-    <div class="col-md-3 mt-4 mt-md-0">
-      <img src="{% static 'media/splash-zone-pools-sm.png' %}" alt="Splash Zone Pools" class="img-fluid rounded shadow">
+    <div class="col-10 col-md-3">
+      <img src="{% static 'media/splash-zone-pools-sm.png' %}" alt="Splash Zone Pools"
+           class="img-fluid rounded shadow w-100 h-auto">
     </div>
-    
+
   </div>
 </div>
+
 
 
 {% endblock %}
