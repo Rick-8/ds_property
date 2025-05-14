@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
-# Import settings from env.py
-from env import SECRET_KEY, DEBUG
-
+if os.path.isfile('env.py'):
+    import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,18 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Security settings
-SECRET_KEY = SECRET_KEY
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
-# Define ALLOWED_HOSTS based on environment
-if os.getenv('DEBUG') == 'True':  # Local development with DEBUG = True
-    ALLOWED_HOSTS = ['*']  # Allow all hosts for development
-else:
-    ALLOWED_HOSTS = [
-        'ds-property-group-04ec2ca20d25.herokuapp.com',  # Heroku app domain
-    ]
+DEBUG = True
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = [
+    'ds-property-group-04ec2ca20d25.herokuapp.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # Application definition
 
@@ -89,8 +85,8 @@ TEMPLATES = [
 ]
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]  # for global static files
-STATIC_ROOT = BASE_DIR / "staticfiles"    # for collectstatic (production)
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 AUTHENTICATION_BACKENDS = [
