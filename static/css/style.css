@@ -200,6 +200,49 @@ body {
   object-fit: contain;
 }
 
+/* Whatsapp Styling settings */ 
+.whatsapp-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 9999;
+
+  display: flex;          /* keep flex for icon + text */
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  font-family: exo;
+  font-size: 16px;
+  color: black;
+
+  max-width: 280px;       /* limit max width */
+  width: auto;            /* let width fit content */
+  min-width: 140px;       /* optional: minimum width for consistent shape */
+}
+
+.whatsapp-button img {
+  width: 40px;
+  height: 40px;
+}
+
+.whatsapp-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.whatsapp-close:hover {
+  color: #000;
+}
+
 /* Media Queries for Responsiveness */
 
 /* Responsive Design for Navbar Brand */
