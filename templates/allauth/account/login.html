@@ -29,30 +29,45 @@
                     {% csrf_token %}
 
                     <!-- Form Fields -->
-                    {% for field in form %}
-                    <div class="form-group mb-3">
-                        {% if field.field.widget.input_type == "checkbox" %}
-                        <div class="form-check">
-                            {{ field|add_class:"form-check-input" }}
-                            <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
-                        </div>
-                        {% else %}
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field|add_class:"form-control" }}
-                        {% endif %}
-                        {% if field.errors %}
-                        <small class="text-danger">{{ field.errors|striptags }}</small>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
+                    <form method="post" action="{% url 'account_login' %}" class="form-group">
+                        {% csrf_token %}
 
-                    <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            {% trans "Sign In" %}
-                        </button>
-                    </div>
-                </form>
+                        {# Show non-field errors at the top in red #}
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-3">
+                            {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Form Fields -->
+                        {% for field in form %}
+                        <div class="form-group mb-3">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                            <div class="form-check">
+                                {{ field|add_class:"form-check-input" }}
+                                <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
+                            </div>
+                            {% else %}
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                            {% endif %}
+
+                            {# Field-specific errors in red right under the field #}
+                            {% if field.errors %}
+                            <small class="text-danger">{{ field.errors|striptags }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                {% trans "Sign In" %}
+                            </button>
+                        </div>
+                    </form>
 
                 {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
                 <hr>
