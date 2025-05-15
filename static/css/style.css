@@ -74,14 +74,8 @@ body {
     height: 15vh;
     object-fit: cover;
     border-radius: 50%;
-
-    /* Add a smooth border */
-    border: 2px solid black; /* gold color, customize as needed */
-
-    /* Add a soft shadow */
+    border: 2px solid black;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-
-    /* Optional: slight transition on hover */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -108,14 +102,14 @@ body {
 
 /* Green Navbar Link */
 .nav-link.green {
-  color: #32cd32 !important; /* limegreen: brighter & more professional than greenyellow */
+  color: #32cd32 !important;
   font-weight: 600;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2); /* subtle shadow for legibility */
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Blue Navbar Link */
 .nav-link.blue {
-  color: #007bff !important; /* Bootstrap primary blue or you can use #0d6efd */
+  color: #007bff !important;
   font-weight: 600;
   text-shadow: 0 0 2px white (0, 0, 0, 0.2) !important;
 }
@@ -139,13 +133,12 @@ body {
   border-radius: 1px;
 }
 
-/* If you're using a custom icon (like Font Awesome), here's how to target it */
 .navbar-toggler i {
   color: #d4af37;
   font-size: 30px;
 }
 
-/* DS Property - Middle Section Layout */
+/* DS Property - index.html Layout */
 .ds-services-section {
   display: flex;
   flex-direction: row;

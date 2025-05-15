@@ -30,8 +30,15 @@
         rel="stylesheet">
 
 
-    <!-- Optional: Your custom CSS -->
+    <!-- custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'media/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" type="image/png" href="{% static 'media/favicon-32x32.png' %}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{% static 'media/favicon-16x16.png' %}" sizes="16x16" />
+
+
 
 
     {% block extra_head %}{% endblock %}
@@ -47,7 +54,7 @@
             <!-- Always-visible brand and title -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <img src="{% static 'media/dsproperty-logo.png' %}" alt="DS Property Maintenance Logo"
-                                class="navbar-logo img-fluid rounded-circle me-2">
+                    class="navbar-logo img-fluid rounded-circle me-2">
             </a>
             <!-- Toggler for mobile -->
             <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
