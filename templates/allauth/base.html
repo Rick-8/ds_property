@@ -88,6 +88,12 @@
 
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link w3-button w3-black" href="{% url 'view_profile' %}">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link w3-button w3-black" href="{% url 'list_properties' %}">My Properties</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link w3-button w3-black" href="{% url 'account_logout' %}">Logout</a>
                     </li>
                     {% else %}
@@ -98,6 +104,7 @@
                         <a class="nav-link w3-button w3-black" href="{% url 'account_signup' %}">Register</a>
                     </li>
                     {% endif %}
+
                 </ul>
             </div>
         </div>
