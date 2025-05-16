@@ -5,6 +5,13 @@ from .models import Profile
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        # Create profile with email synced
+        Profile.objects.create(user=instance, email=instance.email)
+    else:
+        # Update profile email if User email changed
+        profile = getattr(instance, 'profile', None)
+        if profile and profile.email != instance.email:
+            profile.email = instance.email
+            profile.save()

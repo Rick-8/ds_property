@@ -30,7 +30,6 @@ class Profile(models.Model):
     default_postcode = models.CharField(max_length=20, blank=True)
     default_country = models.CharField(max_length=100, blank=True)
 
-    profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
     preferred_contact_time = models.CharField(max_length=100, blank=True)
     timezone = models.CharField(max_length=100, choices=[(tz, tz) for tz in pytz.all_timezones], default='UTC')
     account_status = models.CharField(max_length=20, choices=ACCOUNT_STATUSES, default='active')
