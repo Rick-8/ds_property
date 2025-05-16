@@ -29,6 +29,8 @@
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
         rel="stylesheet">
 
+    <!-- W3.CSS Framework -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
 
     <!-- custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -67,18 +69,18 @@
                 <ul class="navbar-nav">
                     {% if request.path != '/accounts/login/' and request.path != '/accounts/logout/' and request.path != '/accounts/signup/' %}
                     <li class="nav-item">
-                        <a class="nav-link green dark-opaque-small" href="{% url 'border-2-border' %}">
-                            <i class="bi bi-border-all"></i> Border 2 Border
+                        <a class="nav-link green w3-button w3-black" href="{% url 'border-2-border' %}">
+                            Border 2 Border
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link blue dark-opaque-small" href="#">
-                            <i class="bi bi-droplet-fill"></i> Splash Zone Pools
+                        <a class="nav-link blue w3-button w3-black" href="#">
+                            Splash Zone Pools
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-cart-fill"></i>
+                        <a class="nav-link text-white w3-button w3-black" href="#">
+                            Cart
                         </a>
                     </li>
                     {% endif %}
@@ -86,14 +88,14 @@
 
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                        <a class="nav-link w3-button w3-black" href="{% url 'account_logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                        <a class="nav-link w3-button w3-black" href="{% url 'account_login' %}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
+                        <a class="nav-link w3-button w3-black" href="{% url 'account_signup' %}">Register</a>
                     </li>
                     {% endif %}
                 </ul>

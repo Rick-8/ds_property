@@ -154,19 +154,20 @@ body {
   flex-wrap: nowrap;
 }
 
-.ds-services-image {
-  flex: 1;
-  min-width: 200px;
-  max-width: 300px;
+.round-image-container {
+  width: 300px;  /* adjust as needed */
+  height: 300px;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
-.ds-services-image img {
+.round-image-container img {
+  object-fit: cover;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
+
+
 
 .ds-services-content {
   flex: 2;
