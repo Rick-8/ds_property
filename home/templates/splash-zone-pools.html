@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- About Section -->
+<section id="about" class="py-5 dark-opaque">
+    <div class="container">
+        <h2 class="text-center text-gold mb-4">About SplashZone Pools</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="{% static 'media/splash-zone-pools-sm.png' %}" alt="SplashZone Pools"
+                    class="img-fluid rounded shadow-sm">
+            </div>
+            <div class="col-md-6">
+                <p>SplashZone Pools is your trusted provider of premium pools, accessories, and maintenance services.
+                    Whether you’re looking to install a luxurious in-ground pool or a quick above-ground option, we’ve
+                    got the solution.</p>
+                <p>We bring top-quality products, experienced technicians, and outstanding customer service to every job
+                    — creating the perfect pool experience from start to splash.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products & Services -->
+<section id="products" class="py-5">
+    <div class="container dark-opaque">
+        <h2 class="text-center text-gold mb-4">Our Pools & Services</h2>
+        <div class="row g-4">
+            {% comment %}
+            Example product/service cards
+            {% endcomment %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+                    <img src="{% static 'media/splashzone-aboveground.jpg' %}" alt="Above Ground Pools"
+                        class="img-fluid mb-3" style="max-height: 140px; object-fit: cover; border-radius: 50%;">
+                    <h5 class="text-gold">Above Ground Pools</h5>
+                    <p>Quick-install pools perfect for seasonal enjoyment and small gardens, with custom sizes and
+                        shapes available.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+                    <img src="{% static 'media/splashzone-inground.jpg' %}" alt="In-Ground Pools" class="img-fluid mb-3"
+                        style="max-height: 140px; object-fit: cover; border-radius: 50%;">
+                    <h5 class="text-gold">In-Ground Pools</h5>
+                    <p>Professionally designed and installed in-ground pools with luxury finishes and advanced
+                        filtration systems.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+                    <img src="{% static 'media/splashzone-cleaning.jpg' %}" alt="Cleaning Equipment"
+                        class="img-fluid mb-3" style="max-height: 140px; object-fit: cover; border-radius: 50%;">
+                    <h5 class="text-gold">Pool Cleaning Equipment</h5>
+                    <p>From robotic cleaners to manual vacuums — we provide everything you need to keep your pool
+                        crystal clear.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+                    <img src="{% static 'media/splashzone-heaters.jpg' %}" alt="Pool Heaters" class="img-fluid mb-3"
+                        style="max-height: 140px; object-fit: cover; border-radius: 50%;">
+                    <h5 class="text-gold">Heaters & Covers</h5>
+                    <p>Extend your swimming season with efficient heaters and keep your pool protected with our durable
+                        covers.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm text-center p-3 bg-dark text-light">
+                    <img src="{% static 'media/splashzone-maintenance.jpg' %}" alt="Maintenance Services"
+                        class="img-fluid mb-3" style="max-height: 140px; object-fit: cover; border-radius: 50%;">
+                    <h5 class="text-gold">Pool Maintenance</h5>
+                    <p>Let us handle weekly cleaning, chemical balancing, equipment checks, and seasonal
+                        opening/closing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="py-5 bg-dark text-light">
+    <div class="container">
+        <h2 class="text-center text-gold mb-4">Pool Inspiration Gallery</h2>
+        <div id="splashGallery" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for i in "01234" %}
+                <button type="button" data-bs-target="#splashGallery" data-bs-slide-to="{{ forloop.counter0 }}"
+                    class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}"
+                    aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+
+            <div class="carousel-inner rounded shadow-lg">
+                <div class="carousel-item active">
+                    <img src="{% static 'media/splashzone-pool1.jpg' %}" class="d-block w-100 rounded"
+                        alt="Modern pool with decking">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'media/splashzone-pool2.jpg' %}" class="d-block w-100 rounded"
+                        alt="Luxury in-ground pool">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'media/splashzone-cleaning2.jpg' %}" class="d-block w-100 rounded"
+                        alt="Cleaning system demonstration">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'media/splashzone-install.jpg' %}" class="d-block w-100 rounded"
+                        alt="Pool installation process">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'media/splashzone-heatedpool.jpg' %}" class="d-block w-100 rounded"
+                        alt="Heated pool in use">
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#splashGallery" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-secondary rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#splashGallery" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-secondary rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-5">
+    <div class="container dark-opaque">
+        <h2 class="text-center text-gold mb-4">Customer Reviews</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-4 text-light shadow-sm rounded h-100">
+                    <p><i class="bi bi-quote text-gold"></i> "We absolutely love our new pool — from design to delivery,
+                        SplashZone was amazing!"</p>
+                    <footer class="blockquote-footer text-gold mt-2">Liam & Zoe</footer>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4 text-light shadow-sm rounded h-100">
+                    <p><i class="bi bi-quote text-gold"></i> "Great maintenance service — our pool has never looked
+                        better!"</p>
+                    <footer class="blockquote-footer text-gold mt-2">Karen B.</footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

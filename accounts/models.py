@@ -54,6 +54,7 @@ class Property(models.Model):
     postcode = models.CharField(max_length=20)
     country = models.CharField(max_length=100, default='UK')
     notes = RichTextField(blank=True, null=True)
+    route_number = models.PositiveIntegerField(null=True, blank=True, help_text="Route number for staff")
 
     is_active = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)

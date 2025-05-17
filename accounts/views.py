@@ -13,7 +13,7 @@ def view_profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully.')
-            return redirect('index')  # or wherever you want to redirect
+            return redirect('index')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -23,8 +23,14 @@ def view_profile(request):
 
 @login_required
 def list_properties(request):
-    properties = request.user.profile.property_set.all()  # or properties.all() if related_name set
-    return render(request, 'accounts/property_list.html', {'properties': properties})
+    if request.user.is_staff or request.user.is_superuser:
+        properties = Property.objects.all().order_by('route_number', 'label')
+    else:
+        properties = request.user.profile.properties.all().order_by('label')
+    return render(request, 'accounts/property_list.html', {
+        'properties': properties,
+        'is_staff_user': request.user.is_staff or request.user.is_superuser,
+    })
 
 
 @login_required
@@ -44,7 +50,11 @@ def add_property(request):
 
 @login_required
 def edit_property(request, property_id):
-    property = get_object_or_404(Property, id=property_id, profile=request.user.profile)
+    if request.user.is_staff or request.user.is_superuser:
+        property = get_object_or_404(Property, id=property_id)
+    else:
+        property = get_object_or_404(Property, id=property_id, profile=request.user.profile)
+
     if request.method == 'POST':
         form = PropertyForm(request.POST, instance=property)
         if form.is_valid():
@@ -54,3 +64,19 @@ def edit_property(request, property_id):
     else:
         form = PropertyForm(instance=property)
     return render(request, 'accounts/property_form.html', {'form': form, 'title': 'Edit Property'})
+
+
+@login_required
+def delete_property(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+
+    if property.profile != request.user.profile and not (request.user.is_staff or request.user.is_superuser):
+        messages.error(request, 'You do not have permission to delete this property.')
+        return redirect('list_properties')
+
+    if request.method == 'POST':
+        property.delete()
+        messages.success(request, 'Property deleted successfully.')
+        return redirect('list_properties')
+
+    return render(request, 'accounts/property_confirm_delete.html', {'property': property})

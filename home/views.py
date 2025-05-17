@@ -17,3 +17,7 @@ def border_2_border(request):
     """ A view to return the Border 2 Border page """
     return render(request, 'border-2-border.html')
 
+
+def splashzone_pools(request):
+    """ A view to return the Splash Zone Pools page """
+    return render(request, 'splash-zone-pools.html')
