@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (whatsappBtn) {
     whatsappBtn.addEventListener("click", function () {
-      // Replace with your WhatsApp number (country code + number, no + or spaces)
       const whatsappNumber = "447700900123";  
       const url = `https://wa.me/${whatsappNumber}`;
       window.open(url, "_blank");
