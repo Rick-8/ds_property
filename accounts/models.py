@@ -38,6 +38,8 @@ class Profile(models.Model):
 
     notes = RichTextField(blank=True, null=True)
 
+    profile_completed = models.BooleanField(default=False)
+
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

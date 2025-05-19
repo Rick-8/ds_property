@@ -87,8 +87,8 @@
 
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle w3-button" href="#" id="navbarDropdown"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle w3-button" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Menu
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -109,6 +109,27 @@
             </div>
         </div>
     </nav>
+<!-- Toast container -->
+<div aria-live="polite" aria-atomic="true" class="position-relative" style="z-index: 1080;">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive"
+                    aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+</div>
 
 
 
@@ -150,7 +171,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    {% block extra_js %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            toastElList.forEach(toastEl => {
+                const toast = new bootstrap.Toast(toastEl)
+                toast.show()
+            })
+        })
+    </script>
 
 </body>
 

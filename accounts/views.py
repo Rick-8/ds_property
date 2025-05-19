@@ -7,17 +7,40 @@ from .forms import ProfileForm, PropertyForm
 
 @login_required
 def view_profile(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile = request.user.profile
+
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile, user=request.user)
+        form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully.')
-            return redirect('index')
+            profile = form.save(commit=False)
+
+            required_fields = [
+                profile.email,
+                profile.phone,
+                profile.company_name,
+                profile.default_address_line_1,
+                profile.default_city,
+                profile.default_postcode,
+                profile.default_country
+            ]
+
+            if all(required_fields):
+                profile.profile_completed = True
+                messages.success(request, "Thank you, your Profile has updated.")
+            else:
+                profile.profile_completed = False
+                messages.warning(request, "Profile updated, but some fields are missing. Please complete your profile.")
+
+            profile.save()
+            return redirect('home')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, "There were errors in your form. Please correct them.")
     else:
-        form = ProfileForm(instance=profile, user=request.user)
+        form = ProfileForm(instance=profile)
+
+    if not profile.profile_completed:
+        messages.info(request, "Please complete your profile to get the best experience.")
+
     return render(request, 'accounts/profile.html', {'form': form})
 
 
@@ -80,3 +103,18 @@ def delete_property(request, property_id):
         return redirect('list_properties')
 
     return render(request, 'accounts/property_confirm_delete.html', {'property': property})
+
+
+@login_required
+def profile_setup(request):
+    profile = request.user.profile
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            profile.profile_completed = True
+            profile.save()
+            return redirect('home')
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'accounts/profile.html', {'form': form})

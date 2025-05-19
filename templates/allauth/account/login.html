@@ -69,21 +69,22 @@
                         </div>
                     </form>
 
-                {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
-                <hr>
-                <div class="d-flex justify-content-between">
-                    {% if PASSKEY_LOGIN_ENABLED %}
-                    <a href="#" id="passkey_login" class="btn btn-outline-primary">
-                        {% trans "Sign in with a passkey" %}
-                    </a>
+
+                    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        {% if PASSKEY_LOGIN_ENABLED %}
+                        <a href="#" id="passkey_login" class="btn btn-outline-primary">
+                            {% trans "Sign in with a passkey" %}
+                        </a>
+                        {% endif %}
+                        {% if LOGIN_BY_CODE_ENABLED %}
+                        <a href="{{ request_login_code_url }}" class="btn btn-outline-primary">
+                            {% trans "Send me a sign-in code" %}
+                        </a>
+                        {% endif %}
+                    </div>
                     {% endif %}
-                    {% if LOGIN_BY_CODE_ENABLED %}
-                    <a href="{{ request_login_code_url }}" class="btn btn-outline-primary">
-                        {% trans "Send me a sign-in code" %}
-                    </a>
-                    {% endif %}
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>

@@ -3,7 +3,7 @@ from .models import Profile, Property
 
 
 class ProfileForm(forms.ModelForm):
-    email = forms.EmailField(required=True, label='Email')  # Overrides the one in the model
+    email = forms.EmailField(required=True, label='Email')
 
     class Meta:
         model = Profile
