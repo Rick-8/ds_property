@@ -11,6 +11,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="DS Property Maintenance offers expert home improvement services and products via Border 2 Border and Splash Zone Pools. Trusted, reliable, and professional.">
+    <meta name="keywords"
+        content="DS Property Maintenance, Border 2 Border, Splash Zone Pools, home improvement, property services, garden landscaping, swimming pools, ecommerce">
+    <meta name="author" content="DS Property Group">
+    <!-- facebook Meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DS Property Maintenance">
+    <meta property="og:description"
+        content="Premium property services and products through Border 2 Border and Splash Zone Pools.">
+    <meta property="og:image" content="{% static 'images/seo-preview.jpg' %}">
+    <meta property="og:url" content="https://www.dspropertygroup.com/">
     {% endblock %}
 
     {% block corecss %}
@@ -40,10 +52,6 @@
     <link rel="icon" type="image/png" href="{% static 'media/favicon-32x32.png' %}" sizes="32x32" />
     <link rel="icon" type="image/png" href="{% static 'media/favicon-16x16.png' %}" sizes="16x16" />
 
-
-
-
-    {% block extra_head %}{% endblock %}
     <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
 </head>
 
@@ -106,76 +114,86 @@
         </div>
     </nav>
     <!-- Toast container -->
-    <div aria-live="polite" aria-atomic="true" class="position-relative" style="z-index: 1080;">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-
-            {% if messages %}
-            {% for message in messages %}
-            <div class="toast align-items-center text-bg-{{ message.tags }} border-0" role="alert" aria-live="assertive"
-                aria-atomic="true" data-bs-delay="1000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ message }}
+    {% if messages %}
+    <div aria-live="polite" aria-atomic="true" class="toast-container position-fixed top-0 end-0 p-3"
+        style="z-index: 1100; margin-top: 70px;">
+        {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
+            style="background-color: rgba(25, 135, 84, 0.8); border: 2px solid gold; color: black; font-weight: bold;">
+            {% elif 'danger' in message.tags or 'error' in message.tags %}
+            <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
+                style="background-color: rgba(220, 53, 69, 0.5); border: 2px solid gold; color: black; font-weight: bold;">
+                {% elif 'warning' in message.tags %}
+                <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
+                    style="background-color: rgba(255, 193, 7, 0.4); border: 2px solid gold; color: black; font-weight: bold;">
+                    {% elif 'info' in message.tags %}
+                    <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
+                        style="background-color: rgba(13, 110, 253, 0.5); border: 2px solid gold; color: black; font-weight: bold;">
+                        {% else %}
+                        <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
+                            style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold; color: black; font-weight: bold;">
+                            {% endif %}
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
-            </div>
-            {% endfor %}
-            {% endif %}
+                    {% endif %}
 
-        </div>
-    </div>
+                    <!-- Main Content -->
+                    <main class="container mt-4 flex-fill">
+                        {% block content %}
 
+                        {% endblock %}
+                    </main>
 
+                    <!-- Footer -->
+                    <footer class="dark-opaque text-white py-3 mt-5">
+                        <div class="container d-flex justify-content-between align-items-center">
+                            <!-- Social Media Icons (Left) -->
+                            <div>
+                                <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 facebook-icon"
+                                    target="_blank" title="Facebook">
+                                    <i class="fab fa-facebook-f"></i> <!-- Facebook Icon -->
+                                </a>
+                            </div>
 
-    <!-- Main Content -->
-    <main class="container mt-4 flex-fill">
-        {% block content %}
+                            <!-- Centered Text -->
+                            <p class="mb-0">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
 
-        {% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="dark-opaque text-white py-3 mt-5">
-        <div class="container d-flex justify-content-between align-items-center">
-            <!-- Social Media Icons (Left) -->
-            <div>
-                <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 facebook-icon" target="_blank"
-                    title="Facebook">
-                    <i class="fab fa-facebook-f"></i> <!-- Facebook Icon -->
-                </a>
-            </div>
-
-            <!-- Centered Text -->
-            <p class="mb-0">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
-
-            <!-- Contact Us Link (Right) -->
-            <div>
-                <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold" title="Contact Us">
-                    {% trans "Contact Us" %}
-                </a>
-            </div>
-        </div>
-    </footer>
+                            <!-- Contact Us Link (Right) -->
+                            <div>
+                                <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
+                                    title="Contact Us">
+                                    {% trans "Contact Us" %}
+                                </a>
+                            </div>
+                        </div>
+                    </footer>
 
 
-    <!-- Add FontAwesome CDN for icons -->
-    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
+                    <!-- Add FontAwesome CDN for icons -->
+                    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                    <!-- Bootstrap JS Bundle -->
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
-            toastElList.forEach(toastEl => {
-                const toast = new bootstrap.Toast(toastEl)
-                toast.show()
-            })
-        })
-    </script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+                            toastElList.forEach(toastEl => {
+                                const toast = new bootstrap.Toast(toastEl)
+                                toast.show()
+                            })
+                        })
+                    </script>
 
 </body>
 

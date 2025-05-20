@@ -131,13 +131,12 @@ WSGI_APPLICATION = 'ds_property.wsgi.application'
 # Custom Allauth adapter
 ACCOUNT_ADAPTER = 'accounts.adapter.MyAccountAdapter'
 
-# Message tags for Bootstrap toasts
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',
     messages.INFO: 'info',
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
-    messages.ERROR: 'danger',
+    messages.ERROR: 'danger',  # Bootstrap uses 'danger' not 'error'
 }
 
 

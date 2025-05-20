@@ -33,19 +33,51 @@ body {
 }
 
 .facebook-icon {
-    color: #FFD700; /* Gold color */
-    font-size: 2em;  /* Make it bigger, adjust the size as needed */
+  color: #ffd700;
+  font-size: 2em;
 }
 
 .btn-gold {
-    background-color: #D4AF37; /* gold color */
-    color: white;
-    border: none;
+  background-color: #d4af37;
+  color: white;
+  border: none;
 }
 
 .btn-gold:hover {
-    background-color: #b38b2b; /* darker shade for hover effect */
+  background-color: #b38b2b;
 }
+
+/* Toast styles */
+#toast-container .toast-success {
+    background-color: rgba(25, 135, 84, 0.8) !important;
+    border: 2px solid gold !important;
+    color: white !important;
+}
+
+#toast-container .toast-error {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border: 2px solid gold !important;
+    color: white !important;
+}
+
+#toast-container .toast-warning {
+    background-color: rgba(255, 193, 7, 0.8) !important;
+    border: 2px solid gold !important;
+    color: black !important;
+}
+
+#toast-container .toast-info {
+    background-color: rgba(13, 110, 253, 0.8) !important;
+    border: 2px solid gold !important;
+    color: white !important;
+}
+
+/* style close button color for all toasts */
+#toast-container .btn-close {
+    filter: invert(1);
+}
+
+
 
 /* Dark Opaque Background for Section */
 .dark-opaque {
@@ -83,14 +115,13 @@ body {
   width: auto;
   border-radius: 50%;
   border: 2px solid black;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .navbar-logo:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-
 
 /* Navbar Link Styles */
 .nav-link {
@@ -162,7 +193,7 @@ body {
 }
 
 .round-image-container {
-  width: 300px;  /* adjust as needed */
+  width: 300px; /* adjust as needed */
   height: 300px;
   overflow: hidden;
   border-radius: 50%;
@@ -173,7 +204,6 @@ body {
   width: 100%;
   height: 100%;
 }
-
 
 .ds-services-content {
   flex: 2;
@@ -201,13 +231,13 @@ body {
   margin-top: 2px;
 }
 
-/* Border 2 Border page layout styles */ 
+/* Border 2 Border page layout styles */
 .carousel-item img {
   max-height: 500px;
   object-fit: contain;
 }
 
-/* Whatsapp Styling settings */ 
+/* Whatsapp Styling settings */
 .whatsapp-popup {
   position: fixed;
   bottom: 20px;
@@ -215,10 +245,10 @@ body {
   background: white;
   padding: 12px 20px;
   border-radius: 50px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 9999;
 
-  display: flex;          /* keep flex for icon + text */
+  display: flex; /* keep flex for icon + text */
   align-items: center;
   gap: 12px;
   white-space: nowrap;
@@ -228,9 +258,9 @@ body {
   font-size: 16px;
   color: black;
 
-  max-width: 280px;       /* limit max width */
-  width: auto;            /* let width fit content */
-  min-width: 140px;       /* optional: minimum width for consistent shape */
+  max-width: 280px; /* limit max width */
+  width: auto; /* let width fit content */
+  min-width: 140px; /* optional: minimum width for consistent shape */
 }
 
 .whatsapp-button img {
