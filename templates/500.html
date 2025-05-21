@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="p-5 text-center rounded-4" style="
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid crimson;
+        color: white;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+    ">
+        <h1 class="display-1 fw-bold text-danger">500</h1>
+        <p class="lead mb-4">Something went wrong on our end. Please try again later.</p>
+        <a href="{% url 'home' %}" class="btn btn-outline-danger btn-lg">Return to Homepage</a>
+    </div>
+</div>
+{% endblock %}

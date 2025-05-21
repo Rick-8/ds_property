@@ -108,6 +108,10 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
+# Custom error handlers (these work only when DEBUG = False)
+handler404 = 'yourapp.views.custom_404_view'
+handler500 = 'yourapp.views.custom_500_view'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

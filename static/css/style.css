@@ -49,35 +49,33 @@ body {
 
 /* Toast styles */
 #toast-container .toast-success {
-    background-color: rgba(25, 135, 84, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(25, 135, 84, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 #toast-container .toast-error {
-    background-color: rgba(220, 53, 69, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(220, 53, 69, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 #toast-container .toast-warning {
-    background-color: rgba(255, 193, 7, 0.8) !important;
-    border: 2px solid gold !important;
-    color: black !important;
+  background-color: rgba(255, 193, 7, 0.8) !important;
+  border: 2px solid gold !important;
+  color: black !important;
 }
 
 #toast-container .toast-info {
-    background-color: rgba(13, 110, 253, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(13, 110, 253, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 /* style close button color for all toasts */
 #toast-container .btn-close {
-    filter: invert(1);
+  filter: invert(1);
 }
-
-
 
 /* Dark Opaque Background for Section */
 .dark-opaque {
@@ -193,7 +191,7 @@ body {
 }
 
 .round-image-container {
-  width: 300px; /* adjust as needed */
+  width: 300px;
   height: 300px;
   overflow: hidden;
   border-radius: 50%;
@@ -237,47 +235,33 @@ body {
   object-fit: contain;
 }
 
-/* Whatsapp Styling settings */
-.whatsapp-popup {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: white;
-  padding: 12px 20px;
-  border-radius: 50px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-
-  display: flex; /* keep flex for icon + text */
-  align-items: center;
-  gap: 12px;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-  font-family: exo;
-  font-size: 16px;
+/* 404 page styles */
+body {
+  background-color: #111;
+  color: gold;
+  font-family: "Exo", sans-serif;
+  text-align: center;
+  padding: 60px 20px;
+}
+h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+.error-icon {
+  font-size: 5rem;
+  color: red;
+}
+.btn-home {
+  margin-top: 2rem;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border: 2px solid gold;
+  color: gold;
+  background: transparent;
+}
+.btn-home:hover {
+  background-color: gold;
   color: black;
-
-  max-width: 280px; /* limit max width */
-  width: auto; /* let width fit content */
-  min-width: 140px; /* optional: minimum width for consistent shape */
-}
-
-.whatsapp-button img {
-  width: 40px;
-  height: 40px;
-}
-
-.whatsapp-close {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  margin-left: 10px;
-  cursor: pointer;
-}
-.whatsapp-close:hover {
-  color: #000;
 }
 
 /* Media Queries for Responsiveness */
