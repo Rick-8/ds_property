@@ -1,10 +1,6 @@
 /* Global Font Styles */
 body {
   font-family: "Exo", sans-serif;
-}
-
-/* Background Settings */
-body {
   background-image: url("../media/sky-and-grass.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -12,10 +8,12 @@ body {
   background-attachment: fixed;
   height: 100vh;
   margin: 0;
-  padding: 0;
+  padding-top: 60px; /* Push content below fixed navbar */
+  color: white;
+  text-align: center;
 }
 
-/* General Styles */
+/* Text Color Utilities */
 .text-white {
   color: white !important;
 }
@@ -32,11 +30,7 @@ body {
   padding-bottom: 3rem;
 }
 
-.facebook-icon {
-  color: #ffd700;
-  font-size: 2em;
-}
-
+/* Buttons */
 .btn-gold {
   background-color: #d4af37;
   color: white;
@@ -72,12 +66,19 @@ body {
   color: white !important;
 }
 
-/* style close button color for all toasts */
+/* Toast close button color */
 #toast-container .btn-close {
   filter: invert(1);
 }
 
-/* Dark Opaque Background for Section */
+/* Typography */
+.bad-script {
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Dark Opaque Backgrounds */
 .dark-opaque {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
@@ -92,16 +93,32 @@ body {
   margin-inline-end: 2rem;
 }
 
-/* Font style for bad-script class */
-.bad-script {
-  font-family: "Bad Script", cursive;
-  font-weight: 400;
-  font-style: normal;
+/* Navbar Styles */
+nav.navbar {
+  position: fixed; /* Fixed to top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1030;
+  display: flex;
+  align-items: flex-start; /* Align children to top */
+  padding: 0 1rem;
+  overflow: visible;
 }
 
-.navbar {
+.navbar-brand {
   height: 60px;
-  overflow: visible;
+  display: flex;
+  align-items: flex-start; /* Top align */
+  padding-top: 0;
+  line-height: 60px; /* Vertically center text if text-based */
+  transition: all 0.3s ease;
+  font-size: 3rem; /* Desktop size */
+  font-weight: bold;
+  color: #000;
 }
 
 .navbar-logo {
@@ -116,12 +133,12 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .navbar-logo:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Navbar Link Styles */
 .nav-link {
   font-weight: 700;
   color: white !important;
@@ -130,40 +147,54 @@ body {
   font-size: 1.5rem;
 }
 
-/* Navbar Link Hover Effect */
 .nav-link:hover,
 .navbar-brand:hover {
   text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
-/* Green Navbar Link */
 .nav-link.green {
   color: #32cd32 !important;
   font-weight: 600;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Blue Navbar Link */
+.nav-link.green:hover {
+  color: #32cd32 !important; /* bright green */
+  text-shadow:
+    0 0 5px #32cd32,
+    0 0 10px #32cd32,
+    0 0 15px #32cd32,
+    0 0 20px #32cd32,
+    0 0 25px #32cd32;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
 .nav-link.blue {
   color: #007bff !important;
   font-weight: 600;
-  text-shadow: 0 0 2px white (0, 0, 0, 0.2) !important;
 }
 
-/* Centering Navbar Brand */
+.nav-link.blue:hover {
+  color: #007bff !important; /* bright blue */
+  text-shadow:
+    0 0 5px #007bff,
+    0 0 10px #007bff,
+    0 0 15px #007bff,
+    0 0 20px #007bff,
+    0 0 25px #007bff;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
 .brand-center {
   font-size: 1.5rem;
   transform: scale(1.1);
   text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Styling for the navbar-toggler button */
 .navbar-toggler {
   background-color: #000;
   border: 2px solid #d4af37;
 }
 
-/* Styling for the hamburger bars (navbar-toggler-icon) */
 .navbar-toggler-icon {
   background-color: #d4af37;
   border-radius: 1px;
@@ -189,6 +220,22 @@ body {
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
   flex-wrap: nowrap;
 }
+
+  /* Dropdown menu background */
+  .navbar-collapse .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border: none;
+  }
+
+  .navbar-collapse .dropdown-menu .dropdown-item {
+    color: white !important;
+  }
+
+  .navbar-collapse .dropdown-menu .dropdown-item:hover,
+  .navbar-collapse .dropdown-menu .dropdown-item:focus {
+    background-color: #d4af37 !important; /* gold highlight */
+    color: black !important;
+  }
 
 .round-image-container {
   width: 300px;
@@ -223,7 +270,7 @@ body {
   font-size: 1.1rem;
 }
 
-/* Signup and regester styles */
+/* Signup and register styles */
 .form-text {
   color: white !important;
   margin-top: 2px;
@@ -236,21 +283,24 @@ body {
 }
 
 /* 404 page styles */
-body {
+body.error-page {
   background-color: #111;
   color: gold;
   font-family: "Exo", sans-serif;
   text-align: center;
   padding: 60px 20px;
 }
-h1 {
+
+.error-page h1 {
   font-size: 4rem;
   margin-bottom: 1rem;
 }
+
 .error-icon {
   font-size: 5rem;
   color: red;
 }
+
 .btn-home {
   margin-top: 2rem;
   padding: 10px 20px;
@@ -259,14 +309,83 @@ h1 {
   color: gold;
   background: transparent;
 }
+
 .btn-home:hover {
   background-color: gold;
   color: black;
 }
 
-/* Media Queries for Responsiveness */
+/* WhatsApp Popup Styles */
+.whatsapp-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 50px;
+  width: 120px;
+  height: auto;
+  padding: 10px;
+  z-index: 9999;
+  cursor: move;
+  user-select: none;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 1rem;
+  font-family: "Exo", sans-serif;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
 
-/* Responsive Design for Navbar Brand */
+.whatsapp-popup:hover {
+  background-color: rgba(0, 0, 0, 1);
+}
+
+.whatsapp-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-icon:hover {
+  transform: scale(1.1);
+}
+
+.whatsapp-text {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  user-select: text;
+  white-space: nowrap;
+  color: gold;
+}
+
+.whatsapp-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.whatsapp-close:hover {
+  color: #25d366;
+}
+
+/* Media Queries */
+
+/* Responsive Navbar Brand */
 @media (max-width: 991px) {
   .brand-center {
     text-align: center;
@@ -276,7 +395,6 @@ h1 {
 
 /* Mobile and Desktop Responsiveness for Navbar */
 @media (max-width: 768px) {
-  /* Smaller size for mobile */
   .navbar-brand {
     font-size: 1.4rem;
     letter-spacing: 1px;
@@ -284,7 +402,6 @@ h1 {
 }
 
 @media (min-width: 768px) {
-  /* Larger size for desktop */
   .navbar-brand {
     font-size: 3rem;
   }
@@ -296,7 +413,7 @@ h1 {
   }
 }
 
-/* Responsive stacking for mobile */
+/* Responsive stacking for smaller screens */
 @media (max-width: 900px) {
   .ds-services-section {
     flex-direction: column;
@@ -306,6 +423,72 @@ h1 {
 
   .ds-services-image,
   .ds-services-content {
-    max-width: 90%;
+    width: 90vw;
+  }
+
+  .round-image-container {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ds-services-section {
+    padding: 1rem 0.5rem;
+  }
+
+  .round-image-container {
+    width: 200px;
+    height: 200px;
+  }
+
+  .ds-services-content h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Responsive WhatsApp popup on smaller screens */
+@media (max-width: 600px) {
+  .whatsapp-popup {
+    bottom: 20px;
+    right: 20px;
+    width: 90px;
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .whatsapp-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .whatsapp-text {
+    display: none;
+  }
+}
+/* Dropdown menu background matches navbar on mobile */
+@media (max-width: 768px) {
+  /* Dropdown menu background */
+  .navbar-collapse .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border: none;
+  }
+
+  .navbar-collapse .dropdown-menu .dropdown-item {
+    color: white !important;
+  }
+
+  .navbar-collapse .dropdown-menu .dropdown-item:hover,
+  .navbar-collapse .dropdown-menu .dropdown-item:focus {
+    background-color: #d4af37 !important; /* gold highlight */
+    color: black !important;
+  }
+
+  /* Toggler menu (collapsed menu) background with gold border */
+  .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #d4af37; /* Gold border */
+    border-radius: 0 0 0.5rem 0.5rem;
+    z-index: 9999;
   }
 }

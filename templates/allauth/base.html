@@ -56,7 +56,7 @@
 
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark dark-opaque">
+    <nav class="navbar navbar-expand-lg navbar-dark dark-opaque fixed-top">
         <div class="container-fluid">
             <!-- Brand/Logo -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
@@ -150,45 +150,54 @@
                         {% endblock %}
                     </main>
 
-                    <!-- Footer -->
-                    <footer class="dark-opaque text-white py-3 mt-5">
-                        <div class="container d-flex justify-content-between align-items-center">
-                            <!-- Social Media Icons (Left) -->
-                            <div>
-                                <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 facebook-icon"
-                                    target="_blank" title="Facebook">
-                                    <i class="fab fa-facebook-f"></i> <!-- Facebook Icon -->
-                                </a>
-                            </div>
+                    <!-- WhatsApp Floating Button -->
+                    <div class="whatsapp-popup" id="whatsapp-popup">
+                        <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button"
+                            aria-label="Chat on WhatsApp">
+                            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon"
+                                class="whatsapp-icon">
+                        </a>
+                        <div class="whatsapp-text">Chat or Call</div>
+                        <button class="whatsapp-close" id="close-whatsapp"
+                            aria-label="Close WhatsApp chat popup">&times;</button>
+                    </div>
+              <!-- Footer -->
+<footer class="dark-opaque text-white py-1 mt-1">
+  <div class="container">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
+      <!-- Social Media Icons (Left) -->
+      <div>
+        <a href="https://www.facebook.com/border2borderlandscapes"
+           class="mx-2 text-decoration-none"
+           target="_blank"
+           title="Facebook"
+           style="font-family: 'Exo', sans-serif;">
+          <span class="text-white d-flex align-items-center">
+            Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
+          </span>
+        </a>
+      </div>
 
-                            <!-- Centered Text -->
-                            <p class="mb-0">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
+      <!-- Centered Text -->
+      <p class="mb-0 small">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
 
-                            <!-- Contact Us Link (Right) -->
-                            <div>
-                                <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
-                                    title="Contact Us">
-                                    {% trans "Contact Us" %}
-                                </a>
-                            </div>
-                        </div>
-                    </footer>
+      <!-- Contact Us Link (Right) -->
+      <div>
+        <a href="{% url 'contact' %}"
+           class="text-warning text-decoration-none fw-bold"
+           title="Contact Us">{% trans "Contact Us" %}</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
-                    <!-- Add FontAwesome CDN for icons -->
-                    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
 
-                    <!-- Bootstrap JS Bundle -->
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                <!-- Add FontAwesome CDN for icons -->
+                <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
 
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            const toastElList = [].slice.call(document.querySelectorAll('.toast'))
-                            toastElList.forEach(toastEl => {
-                                const toast = new bootstrap.Toast(toastEl)
-                                toast.show()
-                            })
-                        })
-                    </script>
+                <!-- Bootstrap JS Bundle -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                 <script src="{% static 'js/script.js' %}"></script>
 
 </body>
 
