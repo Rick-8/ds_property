@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Profile, Property
+from django.shortcuts import render
 from .forms import ProfileForm, PropertyForm
 
 
@@ -118,3 +119,8 @@ def profile_setup(request):
     else:
         form = ProfileForm(instance=profile)
     return render(request, 'accounts/profile.html', {'form': form})
+
+
+@login_required
+def account_dashboard(request):
+    return render(request, 'account/dashboard.html')

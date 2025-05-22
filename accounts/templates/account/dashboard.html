@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="dark-opaque rounded p-4 text-center" style="max-width: 400px; width: 100%;">
+    <h2 class="large-gold-text mb-4">My Account</h2>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item dark-opaque-small mb-2 rounded d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <a href="{% url 'account_reset_password' %}" class="text-gold text-decoration-none fw-semibold text-center">
+            Forgot / Reset Password
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5"></i>
+        </div>
+      </li>
+      <li class="list-group-item dark-opaque-small mb-2 rounded d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <a href="{% url 'account_change_password' %}" class="text-gold text-decoration-none fw-semibold text-center">
+            Change Password
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5"></i>
+        </div>
+      </li>
+      <li class="list-group-item dark-opaque-small mb-2 rounded d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <a href="{% url 'account_email' %}" class="text-gold text-decoration-none fw-semibold text-center">
+            Manage Email Address
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5"></i>
+        </div>
+      </li>
+      <li class="list-group-item dark-opaque-small rounded logout d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <a href="{% url 'account_logout' %}" class="text-gold text-decoration-none fw-semibold text-center">
+            Log Out
+          </a>
+          <i class="bi bi-box-arrow-right text-gold fs-5"></i>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock content %}

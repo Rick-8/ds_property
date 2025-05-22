@@ -11,4 +11,5 @@ urlpatterns = [
     path('splashzone/', views.splashzone_pools, name='splashzone_pools'),
     path("test-404/", trigger_404, name="test_404"),
     path("test-500/", trigger_500, name="test_500"),
+
 ]
