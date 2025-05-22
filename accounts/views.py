@@ -42,7 +42,7 @@ def view_profile(request):
     if not profile.profile_completed:
         messages.info(request, "Please complete your profile to get the best experience.")
 
-    return render(request, 'accounts/profile.html', {'form': form})
+    return render(request, 'account/profile.html', {'form': form})
 
 
 @login_required
@@ -51,7 +51,7 @@ def list_properties(request):
         properties = Property.objects.all().order_by('route_number', 'label')
     else:
         properties = request.user.profile.properties.all().order_by('label')
-    return render(request, 'accounts/property_list.html', {
+    return render(request, 'account/property_list.html', {
         'properties': properties,
         'is_staff_user': request.user.is_staff or request.user.is_superuser,
     })
@@ -69,7 +69,7 @@ def add_property(request):
             return redirect('list_properties')
     else:
         form = PropertyForm()
-    return render(request, 'accounts/property_form.html', {'form': form, 'title': 'Add Property'})
+    return render(request, 'account/property_form.html', {'form': form, 'title': 'Add Property'})
 
 
 @login_required
@@ -87,7 +87,7 @@ def edit_property(request, property_id):
             return redirect('list_properties')
     else:
         form = PropertyForm(instance=property)
-    return render(request, 'accounts/property_form.html', {'form': form, 'title': 'Edit Property'})
+    return render(request, 'account/property_form.html', {'form': form, 'title': 'Edit Property'})
 
 
 @login_required
@@ -103,7 +103,7 @@ def delete_property(request, property_id):
         messages.success(request, 'Property deleted successfully.')
         return redirect('list_properties')
 
-    return render(request, 'accounts/property_confirm_delete.html', {'property': property})
+    return render(request, 'account/property_confirm_delete.html', {'property': property})
 
 
 @login_required
@@ -118,7 +118,7 @@ def profile_setup(request):
             return redirect('home')
     else:
         form = ProfileForm(instance=profile)
-    return render(request, 'accounts/profile.html', {'form': form})
+    return render(request, 'account/profile.html', {'form': form})
 
 
 @login_required
