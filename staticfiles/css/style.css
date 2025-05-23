@@ -383,6 +383,20 @@ body.error-page {
   color: #25d366;
 }
 
+
+.btn-outline-gold {
+  color: gold;
+  border: 2px solid gold;
+}
+
+.btn-outline-gold:hover {
+  background-color: gold;
+  color: black;
+}
+
+
+
+
 /* Media Queries */
 
 /* Responsive Navbar Brand */
