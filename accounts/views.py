@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
 from .models import Profile, Property
-from django.shortcuts import render
 from .forms import ProfileForm, PropertyForm
 
 
@@ -11,7 +11,7 @@ def view_profile(request):
     profile = request.user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, instance=profile, user=request.user)
         if form.is_valid():
             profile = form.save(commit=False)
 
@@ -33,11 +33,30 @@ def view_profile(request):
                 messages.warning(request, "Profile updated, but some fields are missing. Please complete your profile.")
 
             profile.save()
+
+            # Add to property list if selected
+            if form.cleaned_data.get('add_as_property'):
+                exists = Property.objects.filter(
+                    profile=profile,
+                    address_line_1=profile.default_address_line_1,
+                    postcode=profile.default_postcode
+                ).exists()
+                if not exists:
+                    Property.objects.create(
+                        profile=profile,
+                        label='Default Address',
+                        address_line_1=profile.default_address_line_1,
+                        address_line_2=profile.default_address_line_2,
+                        city=profile.default_city,
+                        postcode=profile.default_postcode,
+                        country=profile.default_country
+                    )
+
             return redirect('home')
         else:
             messages.error(request, "There were errors in your form. Please correct them.")
     else:
-        form = ProfileForm(instance=profile)
+        form = ProfileForm(instance=profile, user=request.user)
 
     if not profile.profile_completed:
         messages.info(request, "Please complete your profile to get the best experience.")
@@ -110,14 +129,32 @@ def delete_property(request, property_id):
 def profile_setup(request):
     profile = request.user.profile
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, instance=profile, user=request.user)
         if form.is_valid():
-            form.save()
+            profile = form.save(commit=False)
             profile.profile_completed = True
             profile.save()
+
+            if form.cleaned_data.get('add_as_property'):
+                exists = Property.objects.filter(
+                    profile=profile,
+                    address_line_1=profile.default_address_line_1,
+                    postcode=profile.default_postcode
+                ).exists()
+                if not exists:
+                    Property.objects.create(
+                        profile=profile,
+                        label='Default Address',
+                        address_line_1=profile.default_address_line_1,
+                        address_line_2=profile.default_address_line_2,
+                        city=profile.default_city,
+                        postcode=profile.default_postcode,
+                        country=profile.default_country
+                    )
+
             return redirect('home')
     else:
-        form = ProfileForm(instance=profile)
+        form = ProfileForm(instance=profile, user=request.user)
     return render(request, 'account/profile.html', {'form': form})
 
 
