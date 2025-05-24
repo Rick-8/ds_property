@@ -1,7 +1,9 @@
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.urls import reverse_lazy
+from memberships.models import ServicePackage
 from django.shortcuts import render
-from django.http import HttpResponseServerError, HttpResponseNotFound
-
-# Create your views here.
+from django.http import HttpResponseNotFound
 
 
 def index(request):
@@ -30,6 +32,37 @@ def custom_404_view(request, exception=None):
 
 def custom_500_view(request):
     return render(request, "500.html", status=500)
+
+
+class SuperuserRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class ServicePackageListView(ListView):
+    model = ServicePackage
+    template_name = 'memberships/servicepackage_list.html'
+    context_object_name = 'packages'
+
+
+class ServicePackageCreateView(SuperuserRequiredMixin, CreateView):
+    model = ServicePackage
+    fields = ['name', 'price', 'description']
+    template_name = 'memberships/servicepackage_form.html'
+    success_url = reverse_lazy('memberships:servicepackage_list')
+
+
+class ServicePackageUpdateView(SuperuserRequiredMixin, UpdateView):
+    model = ServicePackage
+    fields = ['name', 'price', 'description']
+    template_name = 'memberships/servicepackage_form.html'
+    success_url = reverse_lazy('memberships:servicepackage_list')
+
+
+class ServicePackageDeleteView(SuperuserRequiredMixin, DeleteView):
+    model = ServicePackage
+    template_name = 'memberships/servicepackage_confirm_delete.html'
+    success_url = reverse_lazy('memberships:servicepackage_list')
 
 
 # Optional test-only views to simulate errors:

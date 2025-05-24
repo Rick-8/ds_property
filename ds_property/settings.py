@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'ckeditor',
     'ckeditor_uploader',
+    'memberships',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -129,7 +130,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
-
 WSGI_APPLICATION = 'ds_property.wsgi.application'
 
 # Custom Allauth adapter
@@ -140,7 +140,7 @@ MESSAGE_TAGS = {
     messages.INFO: 'info',
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
-    messages.ERROR: 'danger',  # Bootstrap uses 'danger' not 'error'
+    messages.ERROR: 'danger',
 }
 
 

@@ -152,6 +152,21 @@ nav.navbar {
   text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
+.gold {
+  color: gold !important;
+  font-weight: 600;
+}
+.nav-link.gold:hover {
+  color: gold !important; /* bright green */
+  text-shadow:
+    0 0 5px gold,
+    0 0 10px gold,
+    0 0 15px gold,
+    0 0 20px gold,
+    0 0 25px gold;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
 .nav-link.green {
   color: #32cd32 !important;
   font-weight: 600;
@@ -174,7 +189,7 @@ nav.navbar {
 }
 
 .nav-link.blue:hover {
-  color: #007bff !important; /* bright blue */
+  color: #007bff !important;
   text-shadow:
     0 0 5px #007bff,
     0 0 10px #007bff,
@@ -233,7 +248,7 @@ nav.navbar {
 
   .navbar-collapse .dropdown-menu .dropdown-item:hover,
   .navbar-collapse .dropdown-menu .dropdown-item:focus {
-    background-color: #d4af37 !important; /* gold highlight */
+    background-color: #d4af37 !important;
     color: black !important;
   }
 
@@ -394,7 +409,105 @@ body.error-page {
   color: black;
 }
 
+/* service package button glow and styles */
+@keyframes pulse-gold {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 1),
+                0 0 40px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+}
 
+.btn-glass-gold {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid gold;
+    color: gold;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    animation: pulse-gold 2s infinite !important;
+}
+
+.btn-glass-gold:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: black;
+    border-color: black;
+    animation: none;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+
+/* Glass effect container for accordion */
+.glass-accordion {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.25rem;
+}
+
+/* Each accordion item as glass pane */
+.glass-item {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+/* Accordion button styling */
+.glass-item .accordion-button {
+  background: transparent;
+  color: #ffd700; /* gold color for text */
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background 0.3s ease, color 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: none;
+}
+
+/* Active/open button */
+.glass-item .accordion-button:not(.collapsed) {
+  background: rgba(255, 255, 255, 0.25);
+  color: #222;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* Accordion body */
+.glass-item .accordion-body {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 10px 10px;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Text shadow for readability */
+.glass-item .accordion-button,
+.glass-item .accordion-body {
+  text-shadow: 0 0 4px rgba(0,0,0,0.25);
+}
+
+/* Smooth transitions */
+.accordion-button,
+.accordion-body {
+  transition: all 0.3s ease;
+}
 
 
 /* Media Queries */
