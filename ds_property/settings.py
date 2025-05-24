@@ -143,6 +143,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# Stripe configuration
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
