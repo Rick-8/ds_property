@@ -60,6 +60,16 @@ class Property(models.Model):
 
     is_active = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    has_active_service = models.BooleanField(default=False, help_text="Does this property currently have an active service plan?")
+
+    @property
+    def address_summary(self):
+        parts = [self.address_line_1]
+        if self.address_line_2:
+            parts.append(self.address_line_2)
+        parts.extend([self.city, self.postcode, self.country])
+
+        return ', '.join(filter(None, parts))
 
     def __str__(self):
         return f"{self.label} - {self.address_line_1}"

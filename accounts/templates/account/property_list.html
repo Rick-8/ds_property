@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 <h2>My Properties</h2>
 <a href="{% url 'add_property' %}" class="btn btn-primary mb-3">Add Property</a>
 
@@ -19,13 +18,16 @@
             <a href="{% url 'edit_property' property.id %}" class="btn btn-sm btn-secondary">Edit</a>
             <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
                 data-bs-target="#deleteModal" data-id="{{ property.id }}"
-                data-label="{{ property.label }}">Delete</button>
+                data-label="{{ property.label }}">
+                Delete
+            </button>
         </span>
     </li>
     {% empty %}
     <li class="list-group-item">No properties yet.</li>
     {% endfor %}
 </ul>
+
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -57,12 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const propertyLabel = button.getAttribute('data-label');
         const form = document.getElementById('deleteForm');
 
-        // Update modal content
         document.getElementById('modalPropertyLabel').textContent = propertyLabel;
 
-        // Update form action
-        form.action = `/account/properties/delete/${propertyId}/`;
+        // Use correct URL with 'account/' prefix
+        form.action = `/accounts/properties/delete/${propertyId}/`;
     });
 });
+
+
 </script>
+
 {% endblock %}

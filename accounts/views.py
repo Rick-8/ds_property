@@ -161,3 +161,9 @@ def profile_setup(request):
 @login_required
 def account_dashboard(request):
     return render(request, 'account/dashboard.html')
+
+
+@login_required
+def user_agreements(request):
+    agreements = ServiceAgreement.objects.filter(user=request.user, active=True)
+    return render(request, 'memberships/user_agreements.html', {'agreements': agreements})
