@@ -12,4 +12,7 @@ urlpatterns = [
     path('remove-package/<int:package_id>/', views.remove_package, name='remove_package'),
     path('update-package-property/<int:package_id>/', views.update_package_property, name='update_package_property'),
     path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'),
+
+    # route for AJAX sidebar content fetching
+    path('sidebar-fragment/', views.sidebar_fragment, name='sidebar_fragment'),
 ]

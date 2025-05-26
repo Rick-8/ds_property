@@ -1,19 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseBadRequest, HttpResponse
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.decorators import login_required
-from .models import ServicePackage
-from .forms import ServicePackageForm
-from django.http import JsonResponse
-from accounts.models import Property
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
+
+from .models import ServicePackage
+from .forms import ServicePackageForm
+from accounts.models import Property
 
 import stripe
+import json
+import logging
 
-
-# Set your Stripe secret key here
 stripe.api_key = 'your_stripe_secret_key'
+
+logger = logging.getLogger(__name__)
 
 
 def superuser_required(view_func):
@@ -36,7 +38,6 @@ def package_create(request):
         if form.is_valid():
             form.save()
             return redirect('servicepackage_list')
-
     else:
         form = ServicePackageForm()
     return render(request, 'memberships/form.html', {'form': form, 'title': 'Create Service Package'})
@@ -58,11 +59,9 @@ def package_update(request, pk):
 @superuser_required
 def package_delete(request, pk):
     package = get_object_or_404(ServicePackage, pk=pk)
-
     if request.method == 'POST':
         package.delete()
         return redirect('servicepackage_list')
-
     return render(request, 'memberships/confirm_delete.html', {'package': package})
 
 
@@ -80,9 +79,7 @@ def package_selection(request):
 def select_package(request, package_id):
     if request.method == 'POST':
         package = get_object_or_404(ServicePackage, id=package_id, is_active=True)
-
         property_id = request.POST.get('property_id')
-
         selected_packages = request.session.get('selected_packages', {})
 
         property_obj = None
@@ -106,7 +103,6 @@ def select_package(request, package_id):
         request.session['selected_packages'] = selected_packages
         request.session.modified = True
 
-        # Return JSON success response for AJAX
         return JsonResponse({'success': True, 'package': selected_packages[package.category]})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
@@ -114,18 +110,11 @@ def select_package(request, package_id):
 
 @login_required
 def confirm_contract(request, package_id):
-    # Get the package
     package = get_object_or_404(ServicePackage, pk=package_id)
-
-
-    # Get the property id from query params
     property_id = request.GET.get('property_id')
-
-    # Optionally, fetch property details (if you have a Property model)
     property_obj = None
     if property_id:
         property_obj = get_object_or_404(Property, pk=property_id)
-
     context = {
         'package': package,
         'property': property_obj,
@@ -134,10 +123,9 @@ def confirm_contract(request, package_id):
 
 
 @require_POST
+@login_required
 def remove_package(request, package_id):
     selected_packages = request.session.get('selected_packages', {})
-
-    # Find package by package_id and remove it
     to_remove_key = None
     for key, pkg in selected_packages.items():
         if str(pkg['id']) == str(package_id):
@@ -147,6 +135,7 @@ def remove_package(request, package_id):
     if to_remove_key:
         del selected_packages[to_remove_key]
         request.session['selected_packages'] = selected_packages
+        request.session.modified = True
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False, 'error': 'Package not found'}, status=404)
@@ -155,7 +144,6 @@ def remove_package(request, package_id):
 @login_required
 @require_POST
 def update_package_property(request, package_id):
-    import json
     try:
         data = json.loads(request.body)
         property_id = data.get('property_id')
@@ -179,7 +167,11 @@ def update_package_property(request, package_id):
             return JsonResponse({'success': False, 'error': 'Invalid property_id'}, status=400)
 
         try:
-            property_obj = Property.objects.get(id=property_id_int, profile__user=request.user, is_active=True)
+            property_obj = Property.objects.get(
+                id=property_id_int,
+                profile__user=request.user,
+                is_active=True
+            )
         except Property.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid property selected'}, status=400)
 
@@ -190,17 +182,21 @@ def update_package_property(request, package_id):
         request.session['selected_packages'] = selected_packages
         request.session.modified = True
 
-        return JsonResponse({'success': True, 'package': selected_packages[category_key]})
+        return JsonResponse({
+            'success': True,
+            'package': selected_packages[category_key],
+            'property_id': property_obj.id,
+        })
 
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
 
 
-@csrf_exempt  # you might want this if called by JS fetch/AJAX from frontend
+@csrf_exempt
 def create_checkout_session(request):
     if request.method == 'POST':
         try:
-            # Example: create a checkout session with a single product price
+            # Example checkout session, replace with your pricing logic
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[
@@ -210,7 +206,7 @@ def create_checkout_session(request):
                             'product_data': {
                                 'name': 'Service Package',
                             },
-                            'unit_amount': 2000,  # $20.00 in cents
+                            'unit_amount': 2000,  # Example $20
                         },
                         'quantity': 1,
                     },
@@ -224,3 +220,15 @@ def create_checkout_session(request):
             return JsonResponse({'error': str(e)})
 
     return HttpResponse("Method not allowed", status=405)
+
+
+@login_required
+def sidebar_fragment(request):
+    selected_packages = request.session.get('selected_packages', {})
+
+    html = render_to_string('memberships/partials/sidebar_content.html', {
+        'selected_packages': selected_packages,
+        'user': request.user,
+    }, request=request)
+
+    return JsonResponse({'success': True, 'html': html})

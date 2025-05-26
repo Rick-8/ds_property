@@ -1,0 +1,32 @@
+{% load static %}
+
+{% with selected_packages=request.session.selected_packages %}
+<div class="p-3">
+    <h5 class="border-bottom pb-2 mb-3">Selected Packages</h5>
+
+    {% if selected_packages %}
+        {% for category, package in selected_packages.items %}
+            <div class="mb-3 border rounded p-2 bg-light">
+                <h6 class="fw-bold">{{ package.name }}</h6>
+                <p class="mb-1"><strong>Category:</strong> {{ package.category }}</p>
+                <p class="mb-1"><strong>Tier:</strong> {{ package.tier }}</p>
+                <p class="mb-1"><strong>Price:</strong> ${{ package.price_usd }}</p>
+
+                {% if package.property_id %}
+                    <p class="mb-1"><strong>Property:</strong> {{ package.property_label }}</p>
+                    <p class="mb-1 text-muted">{{ package.property_address_summary }}</p>
+                {% else %}
+                    <p class="text-warning small mb-1">No property selected.</p>
+                {% endif %}
+
+                <form method="POST" class="remove-package-form mt-2" data-package-id="{{ package.id }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No packages selected yet.</p>
+    {% endif %}
+</div>
+{% endwith %}

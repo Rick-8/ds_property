@@ -10,63 +10,66 @@
     {% for package in packages %}
     <div class="package border rounded p-3 mb-3 shadow-sm dark-opaque">
       <h6 class="mb-1">{{ package.name }}</h6>
-      <p class="mb-1"><strong>Tier:</strong> {{ package.get_tier_display }}</p>
-      <p class="mb-2"><strong>Price:</strong> ${{ package.price_usd }} / month</p>
+      <p class="mb-1"><strong>{% trans "Tier:" %}</strong> {{ package.get_tier_display }}</p>
+      <p class="mb-2"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
       <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
         data-package-id="{{ package.id }}" data-category="{{ package.category }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-primary btn-sm select-btn">Select This Package</button>
+        <button type="submit" class="btn btn-outline-primary btn-sm select-btn">{% trans "Select This Package" %}</button>
       </form>
     </div>
+    {% empty %}
+    <p>{% trans "No packages available at the moment." %}</p>
     {% endfor %}
   </div>
 
   <div class="col-md-4">
     <button class="btn btn-secondary w-100 mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
-      aria-controls="sidebar">View Selected Packages</button>
+      aria-controls="sidebar">{% trans "View Selected Packages" %}</button>
 
     <div class="offcanvas offcanvas-end dark-opaque text-gold" tabindex="-1" id="sidebar"
-      aria-labelledby="sidebarLabel">
+      aria-labelledby="sidebarLabel" aria-modal="true" role="dialog">
       <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="sidebarLabel">Your Selected Packages</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="sidebarLabel">{% trans "Your Selected Packages" %}</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="{% trans "Close" %}"></button>
       </div>
       <div class="offcanvas-body" id="selected-packages-body">
         {% if request.session.selected_packages %}
-        {% for cat, pkg in request.session.selected_packages.items %}
-        <div class="mb-3 border-bottom pb-2" data-package-id="{{ pkg.id }}">
-          <p class="mb-1"><strong>{{ pkg.name }}</strong></p>
-          <p class="mb-1">{{ pkg.category }} - {{ pkg.tier }}</p>
+          {% for cat, pkg in request.session.selected_packages.items %}
+          <div class="mb-3 border-bottom pb-2" data-package-id="{{ pkg.id }}">
+            <p class="mb-1"><strong>{{ pkg.name }}</strong></p>
+            <p class="mb-1">{{ pkg.category }} - {{ pkg.tier }}</p>
 
-          <label for="property-select-sidebar-{{ pkg.id }}" class="form-label"><strong>Select Property:</strong></label>
-          <select name="property_id" id="property-select-sidebar-{{ pkg.id }}"
-            class="form-select mb-2 property-select-sidebar" data-package-id="{{ pkg.id }}">
-            <option value="" {% if not pkg.property_id %}selected{% endif %}>-- Select Property --</option>
-            {% for prop in properties %}
-            <option value="{{ prop.id }}" {% if prop.id == pkg.property_id %}selected{% endif %}>
-              {{ prop.label }} - {{ prop.address_line_1 }}
-            </option>
-            {% endfor %}
-          </select>
+            <label for="property-select-sidebar-{{ pkg.id }}" class="form-label"><strong>{% trans "Select Property:" %}</strong></label>
+            <select name="property_id" id="property-select-sidebar-{{ pkg.id }}"
+              class="form-select mb-2 property-select-sidebar" data-package-id="{{ pkg.id }}">
+              <option value="" {% if not pkg.property_id %}selected{% endif %}>-- {% trans "Select Property" %} --</option>
+              {% for prop in properties %}
+              <option value="{{ prop.id }}" {% if prop.id == pkg.property_id %}selected{% endif %}>
+                {{ prop.label }} - {{ prop.address_line_1 }}
+              </option>
+              {% endfor %}
+            </select>
 
-          <p class="mb-1 selected-property-label" data-package-id="{{ pkg.id }}">
-            {% if pkg.property_label %}
-            <strong>Selected Property:</strong> {{ pkg.property_label }}<br>
-            {{ pkg.property_address_summary }}
-            {% endif %}
-          </p>
+            <p class="mb-1 selected-property-label" data-package-id="{{ pkg.id }}">
+              {% if pkg.property_label %}
+              <strong>{% trans "Selected Property:" %}</strong> {{ pkg.property_label }}<br>
+              {{ pkg.property_address_summary }}
+              {% endif %}
+            </p>
 
-          <p class="mb-2">${{ pkg.price_usd }} / month</p>
-          <a href="{% url 'confirm_contract' pkg.id %}?property_id={{ pkg.property_id }}" class="btn btn-success btn-sm mt-1 w-100 data-package-id">Continue</a>
+            <p class="mb-2">${{ pkg.price_usd }} / {% trans "month" %}</p>
+            <a href="{% url 'confirm_contract' pkg.id %}?property_id={{ pkg.property_id }}" class="btn btn-success btn-sm mt-1 w-100" data-package-id="{{ pkg.id }}">
+              {% trans "Continue" %}
+            </a>
 
-
-          <button class="btn btn-danger btn-sm mt-1 w-100 remove-package-btn" data-package-id="{{ pkg.id }}">
-            Remove
-          </button>
-        </div>
-        {% endfor %}
+            <button class="btn btn-danger btn-sm mt-1 w-100 remove-package-btn" data-package-id="{{ pkg.id }}">
+              {% trans "Remove" %}
+            </button>
+          </div>
+          {% endfor %}
         {% else %}
-        <p>No packages selected yet.</p>
+          <p>{% trans "No packages selected yet." %}</p>
         {% endif %}
       </div>
     </div>
@@ -74,29 +77,29 @@
 </div>
 
 <div class="offcanvas offcanvas-end dark-opaque text-gold" tabindex="-1" id="packageOffcanvas"
-  aria-labelledby="packageOffcanvasLabel">
+  aria-labelledby="packageOffcanvasLabel" aria-modal="true" role="dialog">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="packageOffcanvasLabel">Confirm Package Selection</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h5 class="offcanvas-title" id="packageOffcanvasLabel">{% trans "Confirm Package Selection" %}</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="{% trans "Close" %}"></button>
   </div>
 
   <div class="offcanvas-body">
     <input type="hidden" id="offcanvas-package-id" value="">
     <p id="offcanvas-package-name" class="h6"></p>
 
-    <label for="offcanvas-property-select" class="form-label"><strong>Select Property:</strong></label>
-    <select id="offcanvas-property-select" class="form-select mb-3">
-      <option value="">-- Select Property --</option>
+    <label for="offcanvas-property-select" class="form-label"><strong>{% trans "Select Property:" %}</strong></label>
+    <select id="offcanvas-property-select" class="form-select mb-3" aria-describedby="propertyHelp">
+      <option value="">{% trans "-- Select Property --" %}</option>
       {% for prop in properties %}
       <option value="{{ prop.id }}">{{ prop.label }} - {{ prop.address_line_1 }}</option>
       {% endfor %}
     </select>
 
-    <button class="btn btn-success" id="offcanvas-confirm-btn">Confirm</button>
+    <button class="btn btn-success" id="offcanvas-confirm-btn">{% trans "Confirm" %}</button>
   </div>
 </div>
-
 <script>
+  // Helper: Get CSRF token from cookie
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -112,6 +115,7 @@
     return cookieValue;
   }
 
+  // Bootstrap Offcanvas helper to open offcanvas by id
   function openOffcanvas(id) {
     if (typeof bootstrap === 'undefined') {
       alert('Bootstrap JS not loaded. Cannot open sidebar.');
@@ -127,8 +131,9 @@
     return offcanvas;
   }
 
+  // AJAX: Update package's selected property on server
   function updatePackageProperty(pkgId, propertyId) {
-    fetch(`/memberships/update-package-property/${pkgId}/`, {
+    return fetch(`/memberships/update-package-property/${pkgId}/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
@@ -137,18 +142,13 @@
       },
       body: JSON.stringify({ property_id: propertyId }),
     })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success) {
-          alert(data.error || 'Failed to update property.');
-        }
-      })
-      .catch(err => {
-        console.error('Error updating property:', err);
-        alert('Error updating property.');
-      });
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    });
   }
 
+  // Attach Remove buttons event handlers
   function attachRemoveHandlers() {
     document.querySelectorAll('.remove-package-btn').forEach(button => {
       button.addEventListener('click', (e) => {
@@ -164,28 +164,34 @@
             'X-Requested-With': 'XMLHttpRequest',
           },
         })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              const pkgDiv = document.querySelector(`div[data-package-id="${packageId}"]`);
-              if (pkgDiv) pkgDiv.remove();
-              const sidebarBody = document.getElementById('selected-packages-body');
-              if (sidebarBody && sidebarBody.children.length === 0) {
-                sidebarBody.innerHTML = '<p>No packages selected yet.</p>';
-              }
-            } else {
-              alert(data.error || 'Failed to remove package.');
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          if (data.success) {
+            const pkgDiv = document.querySelector(`div[data-package-id="${packageId}"]`);
+            if (pkgDiv) pkgDiv.remove();
+
+            // Check if there are no more packages in sidebar
+            const sidebarBody = document.getElementById('selected-packages-body');
+            if (sidebarBody && sidebarBody.children.length === 0) {
+              sidebarBody.innerHTML = '<p>No packages selected yet.</p>';
             }
-          })
-          .catch(err => {
-            console.error('Error removing package:', err);
-            alert('Error removing package.');
-          });
+          } else {
+            alert(data.error || 'Failed to remove package.');
+          }
+        })
+        .catch(err => {
+          console.error('Error removing package:', err);
+          alert('Error removing package.');
+        });
       });
     });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Handle selecting a package (form submit via AJAX)
     document.querySelectorAll('.select-form').forEach(form => {
       form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -198,34 +204,36 @@
           },
           body: new FormData(form),
         })
-          .then(res => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-          })
-          .then(data => {
-            if (data.success) {
-              const offcanvasPackageIdInput = document.getElementById('offcanvas-package-id');
-              const offcanvasPackageNameEl = document.getElementById('offcanvas-package-name');
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          if (data.success) {
+            // Prepare offcanvas confirmation
+            const offcanvasPackageIdInput = document.getElementById('offcanvas-package-id');
+            const offcanvasPackageNameEl = document.getElementById('offcanvas-package-name');
 
-              if (offcanvasPackageIdInput && offcanvasPackageNameEl) {
-                offcanvasPackageIdInput.value = form.getAttribute('data-package-id');
+            if (offcanvasPackageIdInput && offcanvasPackageNameEl) {
+              offcanvasPackageIdInput.value = form.getAttribute('data-package-id');
 
-                const packageDiv = form.closest('.package');
-                offcanvasPackageNameEl.textContent = packageDiv ? packageDiv.querySelector('h6')?.textContent : '';
-              }
-
-              openOffcanvas('packageOffcanvas');
-            } else {
-              alert(data.error || 'Failed to select package.');
+              const packageDiv = form.closest('.package');
+              offcanvasPackageNameEl.textContent = packageDiv ? packageDiv.querySelector('h6')?.textContent : '';
             }
-          })
-          .catch(err => {
-            console.error('Error selecting package:', err);
-            alert('Error selecting package.');
-          });
+
+            openOffcanvas('packageOffcanvas');
+          } else {
+            alert(data.error || 'Failed to select package.');
+          }
+        })
+        .catch(err => {
+          console.error('Error selecting package:', err);
+          alert('Error selecting package.');
+        });
       });
     });
 
+    // Confirm button in offcanvas
     const confirmBtn = document.getElementById('offcanvas-confirm-btn');
     if (confirmBtn) {
       confirmBtn.addEventListener('click', () => {
@@ -233,26 +241,48 @@
         const propertySelect = document.getElementById('offcanvas-property-select');
         const propertyId = propertySelect.value;
 
-        if (!propertyId) {
-          alert('Please select a property.');
+        if (!propertyId || propertyId === "None") {
+          alert('Please select a valid property.');
           return;
         }
 
-        updatePackageProperty(pkgId, propertyId);
+        // Call AJAX update and wait for success before redirecting
+        updatePackageProperty(pkgId, propertyId)
+          .then(data => {
+            if (data.success) {
+              // Hide the offcanvas
+              const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('packageOffcanvas'));
+              if (offcanvas) offcanvas.hide();
 
-        const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('packageOffcanvas'));
-        if (offcanvas) offcanvas.hide();
-
-        location.reload();
+              // Redirect to confirmation page with property_id in query params
+              window.location.href = `/memberships/confirm-contract/${pkgId}/?property_id=${propertyId}`;
+            } else {
+              alert(data.error || 'Failed to update property.');
+            }
+          })
+          .catch(err => {
+            console.error('Error updating property:', err);
+            alert('Error updating property.');
+          });
       });
     }
 
+    // Property select in sidebar updates property via AJAX
     document.querySelectorAll('.property-select-sidebar').forEach(select => {
       select.addEventListener('change', (e) => {
         const packageId = e.target.getAttribute('data-package-id');
         const propertyId = e.target.value;
         if (packageId) {
-          updatePackageProperty(packageId, propertyId);
+          updatePackageProperty(packageId, propertyId)
+            .then(data => {
+              if (!data.success) {
+                alert(data.error || 'Failed to update property.');
+              }
+            })
+            .catch(err => {
+              console.error('Error updating property:', err);
+              alert('Error updating property.');
+            });
         }
       });
     });
@@ -260,6 +290,7 @@
     attachRemoveHandlers();
   });
 </script>
+
 
 
 {% endblock content %}
