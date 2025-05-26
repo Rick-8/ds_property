@@ -66,4 +66,4 @@ class ProfileForm(forms.ModelForm):
 class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
-        exclude = ['profile', 'date_added', 'route_number']
+        exclude = ['profile', 'date_added', 'route_number', 'has_active_service']

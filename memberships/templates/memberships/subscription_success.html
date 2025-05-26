@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h2 class="text-success">🎉 Subscription Successful!</h2>
+    <p>Thank you for subscribing to the {{ package.name }} service.</p>
+    <a href="{% url 'list_properties' %}" class="btn btn-primary mt-3">Go to My propertys</a>
+</div>
+{% endblock %}

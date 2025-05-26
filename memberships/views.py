@@ -4,16 +4,20 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_protect
 
 from .models import ServicePackage
 from .forms import ServicePackageForm
 from accounts.models import Property
+from django.urls import reverse
+from django.contrib import messages
 
 import stripe
 import json
 import logging
+from django.conf import settings
 
-stripe.api_key = 'your_stripe_secret_key'
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -192,34 +196,105 @@ def update_package_property(request, package_id):
         return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
 
 
-@csrf_exempt
+@login_required
+@require_POST
 def create_checkout_session(request):
-    if request.method == 'POST':
-        try:
-            # Example checkout session, replace with your pricing logic
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[
-                    {
-                        'price_data': {
-                            'currency': 'usd',
-                            'product_data': {
-                                'name': 'Service Package',
-                            },
-                            'unit_amount': 2000,  # Example $20
-                        },
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                success_url=request.build_absolute_uri('/memberships/success/'),
-                cancel_url=request.build_absolute_uri('/memberships/cancel/'),
-            )
-            return JsonResponse({'id': checkout_session.id})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
+    try:
+        selected_packages = request.session.get('selected_packages', {})
+        # You may want to validate package and property here from session or POST data
 
-    return HttpResponse("Method not allowed", status=405)
+        # For demo, pick first package from session to create Stripe Checkout Session
+        if not selected_packages:
+            return JsonResponse({'error': 'No package selected'}, status=400)
+
+        # Just take first selected package for simplicity
+        first_pkg = next(iter(selected_packages.values()))
+
+        price_id = ServicePackage.objects.get(id=first_pkg['id']).stripe_price_id
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            mode='subscription',
+            line_items=[{
+                'price': price_id,
+                'quantity': 1,
+            }],
+            customer_email=request.user.email,
+            success_url=request.build_absolute_uri(reverse('payment_success')),
+            cancel_url=request.build_absolute_uri(reverse('payment_cancel')),
+        )
+        return JsonResponse({'sessionId': checkout_session.id})
+    except Exception as e:
+        logger.error(f"Stripe Checkout Session creation failed: {e}")
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@login_required
+@csrf_protect
+def payment(request, package_id):
+    package = get_object_or_404(ServicePackage, pk=package_id)
+
+    # Ensure package has a Stripe price ID configured
+    if not package.stripe_price_id:
+        messages.error(request, "Sorry, this package is not configured properly for payment. Please contact support.")
+        return redirect("package_selection")
+
+    property_id = request.GET.get("property_id")
+    property_obj = None
+    if property_id:
+        property_obj = get_object_or_404(Property, pk=property_id)
+
+    if request.method == "POST":
+        payment_method_id = request.POST.get("payment_method_id")
+        if not payment_method_id:
+            return JsonResponse({"error": "Missing payment_method_id"}, status=400)
+
+        try:
+            # Retrieve or create Stripe customer
+            if not hasattr(request.user, "stripe_customer_id") or not request.user.stripe_customer_id:
+                customer = stripe.Customer.create(email=request.user.email)
+                request.user.stripe_customer_id = customer.id
+                request.user.save()
+            else:
+                customer = stripe.Customer.retrieve(request.user.stripe_customer_id)
+
+            # Attach and set default payment method
+            stripe.PaymentMethod.attach(payment_method_id, customer=customer.id)
+            stripe.Customer.modify(
+                customer.id,
+                invoice_settings={"default_payment_method": payment_method_id},
+            )
+
+            # Create subscription
+            stripe.Subscription.create(
+                customer=customer.id,
+                items=[{'price': package.stripe_price_id}],
+                default_payment_method=payment_method_id,
+            )
+
+            # (Optional) Save subscription info to DB
+            messages.success(request, "Subscription successful! Thank you.")
+            return redirect("subscription_success")
+
+        except stripe.error.CardError as e:
+            return JsonResponse({"error": e.user_message}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    context = {
+        "package": package,
+        "property": property_obj,
+        "stripe_publishable_key": settings.STRIPE_PUBLIC_KEY,
+    }
+    return render(request, "memberships/payment.html", context)
+
+    # GET request
+    context = {
+        'package': package,
+        'property': property_obj,
+        'stripe_publishable_key': settings.STRIPE_PUBLIC_KEY,
+    }
+    return render(request, 'memberships/payment.html', context)
 
 
 @login_required
@@ -232,3 +307,8 @@ def sidebar_fragment(request):
     }, request=request)
 
     return JsonResponse({'success': True, 'html': html})
+
+
+@login_required
+def subscription_success(request):
+    return render(request, 'memberships/subscription_success.html')

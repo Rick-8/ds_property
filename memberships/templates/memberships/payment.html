@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container dark-opaque p-5 rounded shadow">
+  <h2 class="mb-5 text-gold text-center">Complete Your Subscription Payment</h2>
+
+  <section class="mb-4">
+    <h4 class="text-gold mb-3 border-bottom pb-2 text-center">Subscription Summary</h4>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <p><strong>Package:</strong> {{ package.name }}</p>
+        <p><strong>Tier:</strong> {{ package.get_tier_display }}</p>
+        <p><strong>Category:</strong> {{ package.get_category_display }}</p>
+        <p><strong>Price:</strong> ${{ package.price_usd }} / month</p>
+        {% if property %}
+          <p><strong>Property:</strong> {{ property.label }}</p>
+          <p><strong>Address:</strong> {{ property.address_summary }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h4 class="text-gold mb-3 border-bottom pb-2">Payment Details</h4>
+
+    <form id="subscription-form" method="POST" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="package_id" value="{{ package.id }}">
+      {% if property %}
+        <input type="hidden" name="property_id" value="{{ property.id }}">
+      {% endif %}
+
+      <div id="card-element" class="mb-3 p-3 border rounded" style="background: white;">
+        <!-- Stripe Elements will insert the Card Element here -->
+      </div>
+      <div id="card-errors" role="alert" class="text-danger mb-3"></div>
+
+      <button id="submit-btn" class="btn btn-outline-green" type="submit" disabled>
+        Loading...
+      </button>
+    </form>
+  </section>
+</div>
+
+<!-- Stripe JS -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const stripe = Stripe("{{ stripe_publishable_key }}");
+    const elements = stripe.elements();
+
+    const card = elements.create('card', {
+      style: {
+        base: {
+          fontSize: '16px',
+          color: '#32325d',
+          '::placeholder': { color: '#a0aec0' },
+        },
+        invalid: { color: '#fa755a' },
+      },
+    });
+    card.mount('#card-element');
+
+    const submitBtn = document.getElementById('submit-btn');
+    const form = document.getElementById('subscription-form');
+    const cardErrors = document.getElementById('card-errors');
+
+    card.on('ready', () => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Subscribe';
+    });
+
+    card.on('change', event => {
+      cardErrors.textContent = event.error ? event.error.message : '';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: card,
+      });
+
+      if (error) {
+        cardErrors.textContent = error.message;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Subscribe';
+        return;
+      }
+
+      // Append payment_method_id to form and submit
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'payment_method_id';
+      hiddenInput.value = paymentMethod.id;
+      form.appendChild(hiddenInput);
+
+      form.submit();
+    });
+  });
+</script>
+{% endblock %}

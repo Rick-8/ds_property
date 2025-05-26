@@ -2,8 +2,8 @@
 {% load static %}
 {% block content %}
 
-<h2>My Properties</h2>
-<a href="{% url 'add_property' %}" class="btn btn-primary mb-3">Add Property</a>
+<h2 class="dark-opaque large-gold-text">My Properties</h2>
+<a href="{% url 'add_property' %}" class="btn btn-outline-gold mb-3">Add Property</a>
 
 <ul class="list-group">
     {% for property in properties %}

@@ -53,9 +53,12 @@
     <h4 class="text-gold mb-3 border-bottom pb-2">Terms and Conditions</h4>
     <p class="gold">By subscribing to this service, you agree to the following:</p>
     <ol class="pl-4" style="max-width: 50vw; margin: 0 auto; line-height: 1.5;">
-      <li>You authorize us to charge your selected payment method on a monthly basis for the selected service package.</li>
-      <li>You acknowledge that the service will automatically renew each month unless cancelled by providing a written 30-day notice.</li>
-      <li>You understand that all services will be provided as outlined in your selected service tier and category, and subject to availability.</li>
+      <li>You authorize us to charge your selected payment method on a monthly basis for the selected service package.
+      </li>
+      <li>You acknowledge that the service will automatically renew each month unless cancelled by providing a written
+        30-day notice.</li>
+      <li>You understand that all services will be provided as outlined in your selected service tier and category, and
+        subject to availability.</li>
       <li>You accept the responsibilities and limitations as described in the full service agreement.</li>
       <li>By proceeding, you agree to all terms and conditions as outlined in the document linked below.</li>
     </ol>
@@ -70,8 +73,10 @@
   <form method="post" class="text-center">
     {% csrf_token %}
     <input type="hidden" name="accepted_terms" value="true">
-    <button type="submit" class="btn btn-outline-green ">Agree and Continue to Payment</button>
-      <button type="button" class="btn btn-outline-gold " onclick="window.history.back();">Cancel</button>
+    <a href="{% url 'payment' package.id %}?property_id={{ property.id }}" class="btn btn-outline-green">
+      Agree and Continue to Payment
+    </a>
+  <button type="button" class="btn btn-outline-gold " onclick="window.history.back();">Cancel</button>
   </form>
 </div>
 {% endblock %}
