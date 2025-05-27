@@ -27,9 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 
-# Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
-# Stripe configuration
+
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
@@ -44,7 +43,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',

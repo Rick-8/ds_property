@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container text-center py-5">
-    <h2 class="text-success">🎉 Subscription Successful!</h2>
-    <p>Thank you for subscribing to the {{ package.name }} service.</p>
-    <a href="{% url 'list_properties' %}" class="btn btn-primary mt-3">Go to My propertys</a>
+<div class="container py-5 dark-opaque ">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2 class="large-gold-text mb-4">Subscription Successful!</h2>
+      <p class="lead mb-4">Thank you for subscribing to the <strong>{{ package.name }}</strong> service.</p>
+      <a href="{% url 'list_properties' %}" class="btn btn-primary btn-lg">Go to My Properties</a>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -2,6 +2,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from accounts.models import Property
+from django.utils import timezone
 
 
 CATEGORY_CHOICES = [
@@ -35,6 +36,9 @@ class ServiceAgreement(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
+    end_date = models.DateField(null=True, blank=True, help_text="Date service agreement ended/cancelled")
+    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True, unique=True,
+                                            help_text="Stripe Subscription ID associated with this agreement.")
 
     def billing_address(self):
         profile = self.user.profile

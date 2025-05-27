@@ -6,13 +6,23 @@
     <h2 class="large-gold-text mb-4">Account Dashboard</h2>
     <ul class="list-group list-group-flush d-flex flex-column align-items-center gap-3">
       <li class="d-flex justify-content-center align-items-center gap-3">
+        {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center">
+          View All Subscriptions
+        </a>
+        {% endif %}
+        {% endif %}
+      </li>
+      <li class="d-flex justify-content-center align-items-center gap-3">
         <a href="{% url 'account_reset_password' %}" class="btn btn-outline-gold text-center" style="min-width: 250px;">
           Forgot / Reset Password
         </a>
         <i class="bi bi-arrow-right text-gold fs-5"></i>
       </li>
       <li class="d-flex justify-content-center align-items-center gap-3">
-        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center" style="min-width: 250px;">
+        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center"
+          style="min-width: 250px;">
           Change Password
         </a>
         <i class="bi bi-arrow-right text-gold fs-5"></i>

@@ -61,6 +61,8 @@ class Property(models.Model):
     is_active = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
     has_active_service = models.BooleanField(default=False, help_text="Does this property currently have an active service plan?")
+    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True, unique=True,
+                                            help_text="Stripe Subscription ID if this property has an active service.")
 
     @property
     def address_summary(self):

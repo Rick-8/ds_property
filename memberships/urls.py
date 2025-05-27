@@ -16,6 +16,7 @@ urlpatterns = [
     path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'),
     path('payment/<int:package_id>/', views.payment, name='payment'),
     path('subscription-success/', views.subscription_success, name='subscription_success'),
+    path('all-subscriptions/', views.all_subscriptions, name='all_subscriptions'),
 
     # route for AJAX sidebar content fetching
     path('sidebar-fragment/', views.sidebar_fragment, name='sidebar_fragment'),

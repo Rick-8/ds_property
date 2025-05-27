@@ -1,31 +1,49 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
+
 
 <h2 class="dark-opaque large-gold-text">My Properties</h2>
 <a href="{% url 'add_property' %}" class="btn btn-outline-gold mb-3">Add Property</a>
 
 <ul class="list-group">
-    {% for property in properties %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>
-            <strong>{{ property.label }}</strong> - {{ property.address_line_1 }}
-            {% if is_staff_user and property.route_number %}
-                <small class="text-muted">Route: {{ property.route_number }}</small>
-            {% endif %}
-        </span>
-        <span>
-            <a href="{% url 'edit_property' property.id %}" class="btn btn-sm btn-secondary">Edit</a>
-            <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                data-bs-target="#deleteModal" data-id="{{ property.id }}"
-                data-label="{{ property.label }}">
-                Delete
-            </button>
-        </span>
-    </li>
-    {% empty %}
-    <li class="list-group-item">No properties yet.</li>
-    {% endfor %}
+  {% for property in properties %}
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <span>
+      <strong>{{ property.label }}</strong> - {{ property.address_line_1 }}
+      {% if is_staff_user and property.route_number %}
+      <small class="text-muted">Route: {{ property.route_number }}</small>
+      {% endif %}
+    </span>
+
+    <!-- New service package status span -->
+    <span class="me-3">
+      <small class="text-muted">
+        Service:
+        {% with package=property_packages|dict_get:property.id %}
+        {% if package %}
+        {{ package }}
+        {% else %}
+        Inactive
+        {% endif %}
+        {% endwith %}
+
+
+      </small>
+    </span>
+
+    <span>
+      <a href="{% url 'edit_property' property.id %}" class="btn btn-sm btn-secondary">Edit</a>
+      <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+        data-id="{{ property.id }}" data-label="{{ property.label }}">
+        Delete
+      </button>
+    </span>
+  </li>
+  {% empty %}
+  <li class="list-group-item">No properties yet.</li>
+  {% endfor %}
 </ul>
 
 <!-- Delete Modal -->
@@ -51,22 +69,20 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function () {
     const deleteModal = document.getElementById('deleteModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const propertyId = button.getAttribute('data-id');
-        const propertyLabel = button.getAttribute('data-label');
-        const form = document.getElementById('deleteForm');
+      const button = event.relatedTarget;
+      const propertyId = button.getAttribute('data-id');
+      const propertyLabel = button.getAttribute('data-label');
+      const form = document.getElementById('deleteForm');
 
-        document.getElementById('modalPropertyLabel').textContent = propertyLabel;
+      document.getElementById('modalPropertyLabel').textContent = propertyLabel;
 
-        // Use correct URL with 'account/' prefix
-        form.action = `/accounts/properties/delete/${propertyId}/`;
+      // Use correct URL with 'accounts/' prefix
+      form.action = `/accounts/properties/delete/${propertyId}/`;
     });
-});
-
-
+  });
 </script>
 
 {% endblock %}
