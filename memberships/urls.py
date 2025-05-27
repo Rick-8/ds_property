@@ -1,3 +1,4 @@
+from memberships.views import stripe_webhook
 from .views import create_checkout_session
 from django.urls import path
 from . import views
@@ -18,4 +19,6 @@ urlpatterns = [
 
     # route for AJAX sidebar content fetching
     path('sidebar-fragment/', views.sidebar_fragment, name='sidebar_fragment'),
+    # Webhook for Stripe payments
+    path('webhooks/stripe/', stripe_webhook, name='stripe_webhook'),
 ]

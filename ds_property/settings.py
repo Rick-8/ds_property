@@ -15,6 +15,7 @@ import os
 import dj_database_url
 from django.contrib.messages import constants as messages
 
+
 if os.path.isfile('env.py'):
     import env
 
@@ -28,6 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+# Stripe configuration
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
 DEBUG = False
 
@@ -143,10 +149,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Stripe configuration
-STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+
 
 
 # Database

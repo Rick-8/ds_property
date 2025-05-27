@@ -3,19 +3,21 @@
 {% load i18n %}
 
 {% block content %}
-<h1 class="mb-4 dark-opaque large-gold-text">Select Your Service Package</h1>
+<h1 class="mb-4 dark-opaque text-gold display-6 display-md-4 display-lg-2">
+  Select Your Service Package
+</h1>
 
-<div class="row">
-  <div class="col-md-8">
+<div class="row g-4">
+  <div class="col-12 col-md-8">
     {% for package in packages %}
     <div class="package border rounded p-3 mb-3 shadow-sm dark-opaque">
-      <h6 class="mb-1">{{ package.name }}</h6>
+      <h6 class="gold mb-1 fs-4">{{ package.name }}</h6>
       <p class="mb-1"><strong>{% trans "Tier:" %}</strong> {{ package.get_tier_display }}</p>
-      <p class="mb-2"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
+      <p class="mb-2 silver-text"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
       <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
         data-package-id="{{ package.id }}" data-category="{{ package.category }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-outline-primary btn-sm select-btn">{% trans "Select This Package" %}</button>
+        <button type="submit" class="btn btn-outline-green">{% trans "Select This Package" %}</button>
       </form>
     </div>
     {% empty %}
@@ -23,9 +25,8 @@
     {% endfor %}
   </div>
 
-  <div class="col-md-4">
-    <button class="btn btn-secondary w-100 mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
-      aria-controls="sidebar">{% trans "View Selected Packages" %}</button>
+  <div class="col-12 col-md-4">
+    
 
     <div class="offcanvas offcanvas-end dark-opaque text-gold" tabindex="-1" id="sidebar"
       aria-labelledby="sidebarLabel" aria-modal="true" role="dialog">

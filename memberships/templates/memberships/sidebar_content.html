@@ -1,32 +1,48 @@
 {% load static %}
-
 {% with selected_packages=request.session.selected_packages %}
-<div class="p-3">
-    <h5 class="border-bottom pb-2 mb-3">Selected Packages</h5>
+<div class="p-4 bg-dark text-white position-relative min-vh-100">
+
+    <!-- Close Button (visible over dark background) -->
+    <button type="button"
+        class="position-absolute top-0 end-0 m-3 p-3 bg-white bg-opacity-25 rounded-circle shadow-lg border border-white"
+        data-bs-dismiss="offcanvas" aria-label="Close">
+    </button>
+
+    <!-- Heading -->
+    <h5 class="border-bottom border-light pb-3 mb-4">Selected Packages</h5>
 
     {% if selected_packages %}
+    <div class="d-flex flex-column gap-4">
         {% for category, package in selected_packages.items %}
-            <div class="mb-3 border rounded p-2 bg-light">
-                <h6 class="fw-bold">{{ package.name }}</h6>
-                <p class="mb-1"><strong>Category:</strong> {{ package.category }}</p>
-                <p class="mb-1"><strong>Tier:</strong> {{ package.tier }}</p>
-                <p class="mb-1"><strong>Price:</strong> ${{ package.price_usd }}</p>
+        <div class="p-4 border border-light rounded bg-white text-dark shadow-sm">
+
+            <h6 class="fw-bold text-primary">{{ package.name }}</h6>
+
+            <ul class="list-unstyled mb-3">
+                <li><strong>Category:</strong> {{ package.category }}</li>
+                <li><strong>Tier:</strong> {{ package.tier }}</li>
+                <li><strong>Price:</strong> ${{ package.price_usd }}</li>
 
                 {% if package.property_id %}
-                    <p class="mb-1"><strong>Property:</strong> {{ package.property_label }}</p>
-                    <p class="mb-1 text-muted">{{ package.property_address_summary }}</p>
+                <li><strong>Property:</strong> {{ package.property_label }}</li>
+                <li class="text-muted small">{{ package.property_address_summary }}</li>
                 {% else %}
-                    <p class="text-warning small mb-1">No property selected.</p>
+                <li class="text-warning small">No property selected.</li>
                 {% endif %}
+            </ul>
 
-                <form method="POST" class="remove-package-form mt-2" data-package-id="{{ package.id }}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                </form>
-            </div>
+            <form method="POST" class="remove-package-form" data-package-id="{{ package.id }}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                    <i class="bi bi-x-circle me-1"></i> Remove Package
+                </button>
+            </form>
+
+        </div>
         {% endfor %}
+    </div>
     {% else %}
-        <p class="text-muted">No packages selected yet.</p>
+    <p class="text-muted">No packages selected yet.</p>
     {% endif %}
 </div>
 {% endwith %}
