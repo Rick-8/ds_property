@@ -16,11 +16,16 @@
                     <th>Property Label</th>
                     <th>Property Address</th>
                     <th>Service Package</th>
-                    <th>Category</th>
-                    <th>Tier</th>
+                    {# Assuming ServicePackage has 'category' and 'tier' fields/methods. If not, remove these. #}
+                    {# <th>Category</th> #}
+                    {# <th>Tier</th> #}
                     <th>Price</th>
-                    <th>Date Created</th>
+                    <th>Start Date</th> {# Changed from Date Created #}
+                    <th>Status</th> {# New field #}
                     <th>Active?</th>
+                    <th>Stripe Sub ID</th> {# New field #}
+                    <th>Amount Paid</th> {# New field #}
+                    <th>End Date</th> {# Existing field, now displayed #}
                 </tr>
             </thead>
             <tbody>
@@ -31,10 +36,12 @@
                     <td>{{ agreement.property.label }}</td>
                     <td>{{ agreement.property.address_summary }}</td>
                     <td>{{ agreement.service_package.name }}</td>
-                    <td>{{ agreement.service_package.get_category_display }}</td>
-                    <td>{{ agreement.service_package.get_tier_display }}</td>
+                    {# Removed Category and Tier if ServicePackage doesn't have them, or update accordingly #}
+                    {# <td>{{ agreement.service_package.get_category_display }}</td> #}
+                    {# <td>{{ agreement.service_package.get_tier_display }}</td> #}
                     <td>${{ agreement.service_package.price_usd|floatformat:2 }}</td>
-                    <td>{{ agreement.date_created|date:"M d, Y H:i" }}</td>
+                    <td>{{ agreement.start_date|date:"M d, Y H:i" }}</td> {# Displaying new start_date field #}
+                    <td><span class="badge bg-primary">{{ agreement.status|capfirst }}</span></td> {# Displaying new status field #}
                     <td>
                         {% if agreement.active %}
                             <span class="badge bg-success">Active</span>
@@ -42,6 +49,9 @@
                             <span class="badge bg-danger">Inactive</span>
                         {% endif %}
                     </td>
+                    <td>{{ agreement.stripe_subscription_id|default:"N/A" }}</td> {# Displaying Stripe Sub ID #}
+                    <td>${{ agreement.amount_paid|floatformat:2|default:"0.00" }}</td> {# Displaying amount_paid #}
+                    <td>{{ agreement.end_date|date:"M d, Y"|default:"N/A" }}</td> {# Displaying end_date #}
                 </tr>
                 {% endfor %}
             </tbody>

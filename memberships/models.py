@@ -40,6 +40,12 @@ class ServiceAgreement(models.Model):
     stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True, unique=True,
                                             help_text="Stripe Subscription ID associated with this agreement.")
 
+    start_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=50, default='pending')
+    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
     def billing_address(self):
         profile = self.user.profile
         return {

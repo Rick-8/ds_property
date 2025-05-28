@@ -1,48 +1,72 @@
-{% load static %}
-{% with selected_packages=request.session.selected_packages %}
+{% load i18n %}
+
+{# This template is dynamically loaded by JavaScript into the sidebar #}
+
 <div class="p-4 bg-dark text-white position-relative min-vh-100">
 
-    <!-- Close Button (visible over dark background) -->
     <button type="button"
         class="position-absolute top-0 end-0 m-3 p-3 bg-white bg-opacity-25 rounded-circle shadow-lg border border-white"
         data-bs-dismiss="offcanvas" aria-label="Close">
     </button>
 
-    <!-- Heading -->
-    <h5 class="border-bottom border-light pb-3 mb-4">Selected Packages</h5>
+    <h5 class="border-bottom border-light pb-3 mb-4">{% trans "Your Selected Packages" %}</h5>
 
     {% if selected_packages %}
     <div class="d-flex flex-column gap-4">
-        {% for category, package in selected_packages.items %}
-        <div class="p-4 border border-light rounded bg-white text-dark shadow-sm">
+        {% for category, pkg in selected_packages.items %}
+        <div class="p-4 border border-light rounded bg-white text-dark shadow-sm" data-package-id="{{ pkg.id }}">
 
-            <h6 class="fw-bold text-primary">{{ package.name }}</h6>
+            <h6 class="fw-bold text-primary">{{ pkg.name }}</h6>
 
             <ul class="list-unstyled mb-3">
-                <li><strong>Category:</strong> {{ package.category }}</li>
-                <li><strong>Tier:</strong> {{ package.tier }}</li>
-                <li><strong>Price:</strong> ${{ package.price_usd }}</li>
+                <li><strong>{% trans "Category:" %}</strong> {{ pkg.category }}</li>
+                <li><strong>{% trans "Tier:" %}</strong> {{ pkg.tier }}</li>
+                <li><strong>{% trans "Price:" %}</strong> ${{ pkg.price_usd }}</li>
 
-                {% if package.property_id %}
-                <li><strong>Property:</strong> {{ package.property_label }}</li>
-                <li class="text-muted small">{{ package.property_address_summary }}</li>
-                {% else %}
-                <li class="text-warning small">No property selected.</li>
-                {% endif %}
+                <li class="mt-2">
+                    <label for="property-select-sidebar-{{ pkg.id }}" class="form-label text-dark"><strong>{% trans "Select Property:" %}</strong></label>
+                    <select name="property_id" id="property-select-sidebar-{{ pkg.id }}"
+                        class="form-select mb-2 property-select-sidebar" data-package-id="{{ pkg.id }}">
+                        <option value="" {% if not pkg.property_id %}selected{% endif %}>-- {% trans "Select Property" %} --</option>
+                        {% for prop in user_properties %}
+                        <option value="{{ prop.id }}"
+                            {% if prop.id == pkg.property_id %}selected{% endif %}
+                            {% if prop.has_active_agreement and prop.active_agreements.0.service_package.id != pkg.id %}disabled{% endif %}
+                            >
+                            {{ prop.label }} - {{ prop.address_line_1 }}
+                            {% if prop.has_active_agreement %}
+                                {% if prop.active_agreements.0.service_package.id == pkg.id %}
+                                    ({% trans "Currently active with this package" %})
+                                {% else %}
+                                    ({% trans "Active with" %} {{ prop.current_package_name }})
+                                {% endif %}
+                            {% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li class="mb-2">
+                    {% if pkg.property_label %}
+                    <strong>{% trans "Selected Property:" %}</strong> {{ pkg.property_label }}<br>
+                    <span class="text-muted small">{{ pkg.property_address_summary }}</span>
+                    {% else %}
+                    <span class="text-warning small">{% trans "No property selected." %}</span>
+                    {% endif %}
+                </li>
             </ul>
 
-            <form method="POST" class="remove-package-form" data-package-id="{{ package.id }}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm w-100">
-                    <i class="bi bi-x-circle me-1"></i> Remove Package
-                </button>
-            </form>
+            <a href="{% url 'confirm_contract' pkg.id %}?property_id={{ pkg.property_id }}" class="btn btn-success btn-sm w-100 mb-2" data-package-id="{{ pkg.id }}">
+                {% trans "Continue" %}
+            </a>
+
+            <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-package-btn" data-package-id="{{ pkg.id }}">
+                <i class="bi bi-x-circle me-1"></i> {% trans "Remove Package" %}
+            </button>
 
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <p class="text-muted">No packages selected yet.</p>
+    <p class="text-muted">{% trans "No packages selected yet." %}</p>
     {% endif %}
 </div>
-{% endwith %}

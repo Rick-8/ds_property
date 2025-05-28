@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Prefetch
 
 from memberships.models import ServiceAgreement
 from .models import Profile, Property
@@ -67,53 +68,28 @@ def view_profile(request):
 
 @login_required
 def list_properties(request):
+    # Define the Prefetch object once for reuse
+    active_agreements_prefetch = Prefetch(
+        'serviceagreement_set', # Accesses related ServiceAgreement objects
+        queryset=ServiceAgreement.objects.filter(active=True).select_related('service_package'),
+        to_attr='active_agreements' # Attaches the found active agreements to 'active_agreements' list on each Property
+    )
+
     # Determine which properties to list based on user role
     if request.user.is_staff or request.user.is_superuser:
         # Staff see all properties, ordered by route number and label
-        properties = Property.objects.all().order_by('route_number', 'label')
-        user = None  # For staff, no specific user filtering on agreements
+        # Apply prefetch_related here for staff as well
+        properties = Property.objects.all().order_by('route_number', 'label').prefetch_related(active_agreements_prefetch)
     else:
         # Normal users see only their own properties, ordered by label
-        properties = request.user.profile.properties.all().order_by('label')
-        user = request.user
+        # Apply prefetch_related here for regular users
+        properties = request.user.profile.properties.all().order_by('label').prefetch_related(active_agreements_prefetch)
 
-    # Dictionary to hold property ID as key and active service package name or status as value
-    property_packages = {}
-
-    # If we have a regular user, check their active service agreements for each property
-    if user:
-        for prop in properties:
-            try:
-                # Try to get exactly one active ServiceAgreement for this user and property
-                agreement = ServiceAgreement.objects.get(user=user, property=prop, active=True)
-                # If found, map property id to the service package name (converted to string)
-                property_packages[prop.id] = str(agreement.service_package)
-                print(f"[DEBUG] Active agreement found: Property ID {prop.id} has package '{agreement.service_package}'")
-            except ServiceAgreement.DoesNotExist:
-                # No active agreement found for this property
-                property_packages[prop.id] = "Inactive"
-                print(f"[DEBUG] No active agreement for Property ID {prop.id} - marked Inactive")
-            except ServiceAgreement.MultipleObjectsReturned:
-                # More than one active agreement exists, pick the first or handle as needed
-                agreements = ServiceAgreement.objects.filter(user=user, property=prop, active=True)
-                first_agreement = agreements.first()
-                property_packages[prop.id] = str(first_agreement.service_package)
-                print(f"[WARNING] Multiple active agreements for Property ID {prop.id}. Using first: '{first_agreement.service_package}'")
-    else:
-        # For staff users with all properties, just assign empty string (or you could assign other logic)
-        for prop in properties:
-            property_packages[prop.id] = ""
-
-    # Render the template with:
-    # - properties queryset
-    # - property_packages dict to check each property's package status
-    # - a flag indicating if current user is staff or superuser
     return render(request, 'account/property_list.html', {
         'properties': properties,
-        'property_packages': property_packages,
+        # 'property_packages': property_packages, # This is no longer needed by the template
         'is_staff_user': request.user.is_staff or request.user.is_superuser,
     })
-
 
 
 @login_required
@@ -196,6 +172,23 @@ def profile_setup(request):
     else:
         form = ProfileForm(instance=profile, user=request.user)
     return render(request, 'account/profile.html', {'form': form})
+
+
+@login_required
+def property_list(request):
+    properties = Property.objects.filter(profile__user=request.user).prefetch_related(
+        Prefetch(
+            'serviceagreement_set',
+            queryset=ServiceAgreement.objects.filter(active=True).select_related('service_package'),
+            to_attr='active_agreements'
+        )
+    )
+
+    context = {
+        'properties': properties
+    }
+    return render(request, 'account/property_list.html', context)
+
 
 
 @login_required

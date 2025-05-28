@@ -1,82 +1,247 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %} {# Added i18n for translations in JavaScript #}
 
 {% block content %}
 <div class="container dark-opaque p-5 rounded shadow">
-  <h2 class="mb-5 text-gold text-center">Confirm Your Subscription</h2>
+    <h2 class="mb-5 text-gold text-center">Confirm Your Subscription</h2>
 
-  <section class="mb-5">
-    <h4 class="text-gold mb-4 border-bottom pb-2 text-center">Selected Package Details</h4>
+    <section class="mb-5">
+        <h4 class="text-gold mb-4 border-bottom pb-2 text-center">Selected Package Details</h4>
 
-    <div class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Package</h6>
-          <p class="mb-0">{{ package.name }}</p>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Package</h6>
+                    <p class="mb-0">{{ package.name }}</p>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Tier</h6>
+                    <p class="mb-0">{{ package.get_tier_display }}</p>
+                </div>
+
+                {% if property %}
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Property Label</h6>
+                    <p class="mb-0">{{ property.label }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-5">
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Category</h6>
+                    <p class="mb-0">{{ package.get_category_display }}</p>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Price</h6>
+                    <p class="mb-0">${{ package.price_usd }} / month</p>
+                </div>
+
+                {% if property %}
+                <div class="mb-3 text-center">
+                    <h6 class="text-gold mb-1">Address</h6>
+                    <p class="mb-0">{{ property.address_summary }}</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
+    </section>
 
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Tier</h6>
-          <p class="mb-0">{{ package.get_tier_display }}</p>
-        </div>
+    <section class="mb-5">
+        <h4 class="text-gold mb-3 border-bottom pb-2">Terms and Conditions</h4>
+        <p class="gold">By subscribing to this service, you agree to the following:</p>
+        <ol class="pl-4" style="max-width: 50vw; margin: 0 auto; line-height: 1.5;">
+            <li>You authorize us to charge your selected payment method on a monthly basis for the selected service
+                package.
+            </li>
+            <li>You acknowledge that the service will automatically renew each month unless cancelled by providing a
+                written
+                30-day notice.</li>
+            <li>You understand that all services will be provided as outlined in your selected service tier and
+                category, and
+                subject to availability.</li>
+            <li>You accept the responsibilities and limitations as described in the full service agreement.</li>
+            <li>By proceeding, you agree to all terms and conditions as outlined in the document linked below.</li>
+        </ol>
 
-        {% if property %}
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Property Label</h6>
-          <p class="mb-0">{{ property.label }}</p>
-        </div>
-        {% endif %}
-      </div>
+        <p class="mt-4 text-center">
+            <a href="{% static 'pdfs/dsp-terms-conditions.pdf' %}" target="_blank" class="btn btn-outline-grey">
+                Download Full Terms & Conditions (PDF)
+            </a>
+        </p>
+    </section>
 
-      <div class="col-md-5">
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Category</h6>
-          <p class="mb-0">{{ package.get_category_display }}</p>
-        </div>
+    {# NEW: Payment section with Stripe Elements #}
+    <section class="mb-5">
+        <h4 class="text-gold mb-3 border-bottom pb-2 text-center">Payment Details</h4>
+        <form id="payment-form" class="mx-auto" style="max-width: 400px;">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="card-element" class="form-label text-gold">Credit or debit card</label>
+                <div id="card-element" class="form-control"
+                    style="background-color: #343a40; border-color: #495057; color: #f8f9fa;">
+                </div>
+                <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+            </div>
 
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Price</h6>
-          <p class="mb-0">${{ package.price_usd }} / month</p>
-        </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                <label class="form-check-label" for="acceptTerms">
+                    I agree to the <a href="{% static 'pdfs/dsp-terms-conditions.pdf' %}" target="_blank">terms and
+                        conditions</a>.
+                </label>
+            </div>
 
-        {% if property %}
-        <div class="mb-3 text-center">
-          <h6 class="text-gold mb-1">Address</h6>
-          <p class="mb-0">{{ property.address_summary }}</p>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </section>
-
-  <section class="mb-5">
-    <h4 class="text-gold mb-3 border-bottom pb-2">Terms and Conditions</h4>
-    <p class="gold">By subscribing to this service, you agree to the following:</p>
-    <ol class="pl-4" style="max-width: 50vw; margin: 0 auto; line-height: 1.5;">
-      <li>You authorize us to charge your selected payment method on a monthly basis for the selected service package.
-      </li>
-      <li>You acknowledge that the service will automatically renew each month unless cancelled by providing a written
-        30-day notice.</li>
-      <li>You understand that all services will be provided as outlined in your selected service tier and category, and
-        subject to availability.</li>
-      <li>You accept the responsibilities and limitations as described in the full service agreement.</li>
-      <li>By proceeding, you agree to all terms and conditions as outlined in the document linked below.</li>
-    </ol>
-
-    <p class="mt-4 text-center">
-      <a href="{% static 'pdfs/dsp-terms-conditions.pdf' %}" target="_blank" class="btn btn-outline-grey">
-        Download Full Terms & Conditions (PDF)
-      </a>
-    </p>
-  </section>
-
-  <form method="post" class="text-center">
-    {% csrf_token %}
-    <input type="hidden" name="accepted_terms" value="true">
-    <a href="{% url 'payment' package.id %}?property_id={{ property.id }}" class="btn btn-outline-green">
-      Agree and Continue to Payment
-    </a>
-  <button type="button" class="btn btn-outline-gold " onclick="window.history.back();">Cancel</button>
-  </form>
+            <button type="submit" id="submit-button" class="btn btn-outline-green w-100 mb-3">
+                Confirm Subscription & Pay
+            </button>
+            <button type="button" class="btn btn-outline-gold w-100" onclick="window.history.back();">Cancel</button>
+            <div id="payment-message" class="text-danger text-center mt-3"></div>
+        </form>
+    </section>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    // Helper to get CSRF token from cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (const c of cookies) {
+                const cookie = c.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const stripe = Stripe('{{ stripe_publishable_key }}'); // Passed from your Django view context
+    const elements = stripe.elements();
+
+    // Custom styling for Stripe Elements (optional, but good for dark theme)
+    const style = {
+        base: {
+            color: '#F8F9FA', // Light text for dark background
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#6c757d', // Grey placeholder text
+            },
+        },
+        invalid: {
+            color: '#dc3545', // Red for invalid input
+            iconColor: '#dc3545',
+        },
+    };
+
+    const card = elements.create('card', { style: style });
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.on('change', function (event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-button');
+    const paymentMessage = document.getElementById('payment-message');
+    const acceptTermsCheckbox = document.getElementById('acceptTerms');
+
+    // Get package and property IDs from Django template context
+    const packageId = "{{ package.id }}";
+    const propertyId = "{{ property.id }}"; // This will be empty if 'property' is not passed
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        paymentMessage.textContent = ''; // Clear previous messages
+        submitButton.disabled = true;
+
+        if (!acceptTermsCheckbox.checked) {
+            paymentMessage.textContent = "{% trans 'You must agree to the terms and conditions.' %}";
+            submitButton.disabled = false;
+            return;
+        }
+
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: card,
+            billing_details: {
+                email: '{{ request.user.email }}',
+            },
+        });
+
+        if (error) {
+            paymentMessage.textContent = error.message;
+            submitButton.disabled = false;
+        } else {
+            // Send the paymentMethod.id to your Django backend via AJAX
+            try {
+                const response = await fetch(`/memberships/payment/${packageId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'X-Requested-With': 'XMLHttpRequest', // Important for Django views expecting AJAX
+                    },
+                    body: JSON.stringify({
+                        payment_method_id: paymentMethod.id,
+                        property_id: propertyId, // Pass the property ID if it exists
+                    }),
+                });
+
+                const data = await response.json();
+
+                // Correctly handle the JSON response from your Django backend
+                if (data.success_url) {
+                    // Payment succeeded immediately OR trial started
+                    window.location.href = data.success_url;
+                } else if (data.requires_action) {
+                    // Handle 3D Secure or other required actions
+                    const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(data.payment_intent_client_secret);
+
+                    if (confirmError) {
+                        paymentMessage.textContent = confirmError.message;
+                        submitButton.disabled = false;
+                    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                        // Payment confirmed after action, redirect to success
+                        window.location.href = data.success_url || '/memberships/subscription-success/';
+                    } else {
+                        // This case should ideally not happen if confirmCardPayment succeeded but status isn't 'succeeded'
+                        console.error("Unexpected paymentIntent status after confirmation:", paymentIntent);
+                        paymentMessage.textContent = "{% trans 'Payment action completed, but status unexpected. Please check your account.' %}";
+                        submitButton.disabled = false;
+                    }
+                } else if (data.error) {
+                    // Display error message sent from the backend
+                    paymentMessage.textContent = data.error;
+                    submitButton.disabled = false;
+                } else {
+                    // Fallback for any other unexpected response structure from the backend
+                    console.error("Unexpected response from backend:", data);
+                    paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing. Please try again.' %}";
+                    submitButton.disabled = false;
+                }
+
+            } catch (fetchError) { // This `catch` block is crucial for network errors or unhandled fetch issues
+                console.error('Error during payment fetch:', fetchError);
+                paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing.' %}";
+                submitButton.disabled = false;
+            }
+        }
+    });
+</script>
 {% endblock %}

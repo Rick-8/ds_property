@@ -178,3 +178,41 @@ Tutors or mentors
 
 17. Contact Information
 Your professional contact details or portfolio
+
+# Project Update: Resolution of Critical Software Bugs and Implementation of Subscription Features
+
+---
+
+This report outlines the successful resolution of several critical bugs and the subsequent implementation of key features related to property management and service agreement display within the `ds_property` application. These efforts have significantly enhanced the application's stability, functionality, and user experience.
+
+---
+
+## Identified Bugs and Remediation Strategies
+
+The following issues were identified and addressed:
+
+1.  **Initial Bug: `SyntaxError: expected ':', got 'indent'`**
+    * **Description:** An initial syntax error, primarily caused by incorrect indentation within the Python codebase, prevented the application from running. Python's strict indentation rules are fundamental for defining code blocks correctly.
+    * **Resolution:** The problematic indentation in the affected Python file was precisely corrected to adhere to Python's syntax requirements, restoring code executability.
+
+2.  **Bug: `TypeError: ServiceAgreement() got unexpected keyword arguments`**
+    * **Description:** When attempting to create `ServiceAgreement` objects, a `TypeError` was encountered. This indicated that specific keyword arguments (e.g., `start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, `amount_paid`) were being passed to the `ServiceAgreement.objects.create()` method but were not defined as fields within the `ServiceAgreement` model in `memberships/models.py`.
+    * **Resolution:** The `ServiceAgreement` model in `memberships/models.py` was updated to include these missing fields (`start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, and `amount_paid`) with their appropriate data types. Subsequently, Django database migrations (`python manage.py makemigrations` and `python manage.py migrate`) were executed to apply these schema changes to the underlying database.
+
+3.  **Bug: `NoReverseMatch` for 'property_detail' URL**
+    * **Description:** The `property_list.html` template generated a `NoReverseMatch` error because it contained a reference to a URL pattern named `'property_detail'` that did not exist in the project's URL configuration. A separate "property detail" page was also re-evaluated and deemed unnecessary for the current scope.
+    * **Resolution:** The problematic link referencing the non-existent `property_detail` URL was removed from the `accounts/templates/account/property_list.html` template, effectively resolving the `NoReverseMatch` error.
+
+4.  **Missing Property Action Buttons (Add, Edit, Delete)**
+    * **Description:** Following previous template modifications, the essential "Add," "Edit," and "Delete" buttons for property management were inadvertently removed from the `property_list.html` display. Although the backend views for these actions (`add_property`, `edit_property`, `delete_property`) were in place, the front-end links were absent.
+    * **Resolution:** The `accounts/templates/account/property_list.html` template was updated to re-incorporate these critical buttons. This included a prominent "Add New Property" button and, for each listed property, distinct "Edit" and "Delete" buttons. The "Delete" functionality was implemented using a secure POST request via an HTML form for data integrity.
+
+5.  **Incorrect "Inactive Packages" Display on Property List**
+    * **Description:** Properties on the `property_list.html` page consistently showed "Inactive" package statuses, despite corresponding active service agreements existing. This issue arose because the `list_properties` view was using an outdated, inefficient manual loop to determine agreement status, while the template was designed to rely on a `property.active_agreements` attribute populated by Django's `prefetch_related` method, which was missing from the view.
+    * **Resolution:** The `list_properties` view in `accounts/views.py` was refactored to incorporate Django's **`prefetch_related`** method. A `Prefetch` object was defined to efficiently fetch only active `ServiceAgreement` instances (and their related `ServicePackage` details) and attach them directly to each `Property` object as `active_agreements`. The redundant manual loop for status determination was subsequently removed from the view.
+
+---
+
+## Conclusion
+
+All identified software bugs have been successfully resolved, resulting in a stable and fully functional property listing page. The implementation of efficient data fetching mechanisms, coupled with the re-establishment of essential property management actions, significantly enhances both the reliability and user experience of the `ds_property` application.
