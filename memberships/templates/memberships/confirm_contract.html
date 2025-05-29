@@ -74,7 +74,7 @@
         </p>
     </section>
 
-    {# NEW: Payment section with Stripe Elements #}
+    {# Payment section with Stripe Elements #}
     <section class="mb-5">
         <h4 class="text-gold mb-3 border-bottom pb-2 text-center">Payment Details</h4>
         <form id="payment-form" class="mx-auto" style="max-width: 400px;">
@@ -104,7 +104,22 @@
     </section>
 </div>
 
+<div id="full-screen-loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loading-content">
+        <lottie-player src="{% static 'animations/payment_loader.json' %}"
+                        background="transparent"
+                        speed="1"
+                        style="width: 250px; height: 250px; margin: 0 auto;"
+                        loop
+                        autoplay>
+        </lottie-player>
+        <p class="text-gold mt-3 h4">Processing your payment...</p>
+        <p class="text-gold">Please do not refresh or close this page.</p>
+    </div>
+</div>
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> {# Ensure Lottie Player script is included #}
+
 
 <script>
     // Helper to get CSRF token from cookie
@@ -123,6 +138,7 @@
         return cookieValue;
     }
 
+    // --- ORIGINAL STRIPE.JS INITIALIZATION AND CARD ELEMENT HANDLING ---
     const stripe = Stripe('{{ stripe_publishable_key }}'); // Passed from your Django view context
     const elements = stripe.elements();
 
@@ -155,7 +171,9 @@
             displayError.textContent = '';
         }
     });
+    // --- END ORIGINAL STRIPE.JS INITIALIZATION AND CARD ELEMENT HANDLING ---
 
+    // Get DOM elements
     const form = document.getElementById('payment-form');
     const submitButton = document.getElementById('submit-button');
     const paymentMessage = document.getElementById('payment-message');
@@ -165,31 +183,67 @@
     const packageId = "{{ package.id }}";
     const propertyId = "{{ property.id }}"; // This will be empty if 'property' is not passed
 
+    // --- NEW JAVASCRIPT FOR LOADING OVERLAY LOGIC ---
+    // Reference the full-screen loading overlay
+    const fullScreenLoadingOverlay = document.getElementById('full-screen-loading-overlay');
+
+    // Function to show the loading overlay
+    function showLoadingOverlay() {
+        fullScreenLoadingOverlay.style.display = 'flex'; // Use 'flex' to enable centering
+        // A slight delay to allow the 'display' change to register before adding 'visible' for transition
+        setTimeout(() => {
+            fullScreenLoadingOverlay.classList.add('visible');
+        }, 10);
+        document.body.style.overflow = 'hidden'; // Prevent scrolling while overlay is active
+    }
+
+    // Function to hide the loading overlay
+    function hideLoadingOverlay() {
+        fullScreenLoadingOverlay.classList.remove('visible'); // Start fade-out animation
+        // Hide completely after the transition completes
+        fullScreenLoadingOverlay.addEventListener('transitionend', function handler() {
+            fullScreenLoadingOverlay.style.display = 'none';
+            fullScreenLoadingOverlay.removeEventListener('transitionend', handler); // Clean up event listener
+        }, { once: true }); // Use { once: true } to automatically remove the listener after it fires
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    // --- END NEW JAVASCRIPT FOR LOADING OVERLAY LOGIC ---
+
+    // --- ORIGINAL SUBMIT BUTTON EVENT LISTENER (NOW INCLUDING LOADER CALLS) ---
     form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        paymentMessage.textContent = ''; // Clear previous messages
+        e.preventDefault(); // Prevent default form submission
+
+        // Clear previous messages and disable the submit button
+        paymentMessage.textContent = '';
         submitButton.disabled = true;
 
+        // Client-side validation: Check if terms are accepted
         if (!acceptTermsCheckbox.checked) {
             paymentMessage.textContent = "{% trans 'You must agree to the terms and conditions.' %}";
-            submitButton.disabled = false;
-            return;
+            submitButton.disabled = false; // Re-enable button
+            return; // Exit if terms not accepted
         }
 
-        const { paymentMethod, error } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: card,
-            billing_details: {
-                email: '{{ request.user.email }}',
-            },
-        });
+        // Show the full-screen loading overlay as payment processing begins
+        showLoadingOverlay();
 
-        if (error) {
-            paymentMessage.textContent = error.message;
-            submitButton.disabled = false;
-        } else {
-            // Send the paymentMethod.id to your Django backend via AJAX
-            try {
+        try {
+            // Create PaymentMethod with Stripe
+            const { paymentMethod, error: createPaymentMethodError } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+                billing_details: {
+                    email: '{{ request.user.email }}',
+                },
+            });
+
+            if (createPaymentMethodError) {
+                // Handle errors from Stripe's createPaymentMethod
+                paymentMessage.textContent = createPaymentMethodError.message;
+                submitButton.disabled = false; // Re-enable button
+                hideLoadingOverlay(); // Hide loader on error
+            } else {
+                // Send the paymentMethod.id to your Django backend via AJAX
                 const response = await fetch(`/memberships/payment/${packageId}/`, {
                     method: 'POST',
                     headers: {
@@ -203,19 +257,25 @@
                     }),
                 });
 
-                const data = await response.json();
+                const data = await response.json(); // Parse the JSON response from your backend
 
-                // Correctly handle the JSON response from your Django backend
+                // Hide the loading animation and re-enable button after backend response (unless redirecting)
+                // Note: If data.success_url leads to an immediate redirect, hideLoadingOverlay might not fully complete.
+                // This is generally fine as the page will change quickly.
+                hideLoadingOverlay();
+                submitButton.disabled = false;
+
                 if (data.success_url) {
-                    // Payment succeeded immediately OR trial started
+                    // Payment succeeded immediately or trial started, redirect to success page
                     window.location.href = data.success_url;
                 } else if (data.requires_action) {
                     // Handle 3D Secure or other required actions
-                    const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(data.payment_intent_client_secret);
+                    // Note: Stripe will typically handle displaying its own modal/popup for 3D Secure.
+                    const { error: confirmCardPaymentError, paymentIntent } = await stripe.confirmCardPayment(data.payment_intent_client_secret);
 
-                    if (confirmError) {
-                        paymentMessage.textContent = confirmError.message;
-                        submitButton.disabled = false;
+                    if (confirmCardPaymentError) {
+                        paymentMessage.textContent = confirmCardPaymentError.message;
+                        submitButton.disabled = false; // Re-enable button on 3D Secure error
                     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
                         // Payment confirmed after action, redirect to success
                         window.location.href = data.success_url || '/memberships/subscription-success/';
@@ -228,20 +288,22 @@
                 } else if (data.error) {
                     // Display error message sent from the backend
                     paymentMessage.textContent = data.error;
-                    submitButton.disabled = false;
+                    submitButton.disabled = false; // Re-enable button on backend error
                 } else {
                     // Fallback for any other unexpected response structure from the backend
                     console.error("Unexpected response from backend:", data);
                     paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing. Please try again.' %}";
                     submitButton.disabled = false;
                 }
-
-            } catch (fetchError) { // This `catch` block is crucial for network errors or unhandled fetch issues
-                console.error('Error during payment fetch:', fetchError);
-                paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing.' %}";
-                submitButton.disabled = false;
             }
+        } catch (fetchError) {
+            // This catch block handles network errors or unhandled fetch issues
+            console.error('Error during payment fetch:', fetchError);
+            paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing.' %}";
+            submitButton.disabled = false; // Re-enable button
+            hideLoadingOverlay(); // Hide loader on network error
         }
     });
+    // --- END ORIGINAL SUBMIT BUTTON EVENT LISTENER ---
 </script>
 {% endblock %}

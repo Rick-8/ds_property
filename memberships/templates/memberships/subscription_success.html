@@ -1,13 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
 
 {% block content %}
-<div class="container py-5 dark-opaque ">
-  <div class="row justify-content-center">
-    <div class="col-md-8 text-center">
-      <h2 class="large-gold-text mb-4">Subscription Successful!</h2>
-      <p class="lead mb-4">Thank you for subscribing to the <strong>{{ package.name }}</strong> service.</p>
-      <a href="{% url 'list_properties' %}" class="btn btn-primary btn-lg">Go to My Properties</a>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 text-center dark-opaque p-5 rounded shadow">
+            <h2 class="text-gold mb-4 display-4">Subscription Successful!</h2> {# Larger, more prominent heading #}
+
+            {# Lottie Animation Container #}
+            <div class="animation-container mb-4">
+                <lottie-player src="{% static 'animations/payment_success_animation.json' %}"
+                               background="transparent"
+                               speed="1"
+                               style="width: 200px; height: 200px; margin: 0 auto;"
+                               autoplay
+                               loop> {# Added loop if you want it to continuously play #}
+                </lottie-player>
+            </div>
+
+            <p class="lead mb-4 text-light">
+                Thank you for subscribing to the <strong class="text-gold">{{ package.name }}</strong> service.
+                Your account has been updated, and you're all set to get started!
+            </p>
+
+            {# Optional: Add more details if relevant, e.g., next billing date #}
+            {% if package.trial_days %}
+            <p class="text-light">
+                You're currently on a **{{ package.trial_days }} day free trial**. Your first billing will occur after the trial period.
+            </p>
+            {% else %}
+            <p class="text-light">
+                Your subscription is now active.
+            </p>
+            {% endif %}
+
+            <div class="mt-5 d-flex flex-column flex-sm-row justify-content-center">
+                <a href="{% url 'list_properties' %}" class="btn btn-outline-gold btn-lg mx-2 mb-3 mb-sm-0"> {# Added mb-3 for spacing on small screens #}
+                    <i class="fas fa-th-list me-2"></i> Go to My Properties
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-outline-grey btn-lg mx-2"> {# Changed to 'home' for common homepage URL #}
+                    <i class="fas fa-home me-2"></i> Back to Home
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
+{# Lottie Player Script - Important for the animation to work #}
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 {% endblock %}

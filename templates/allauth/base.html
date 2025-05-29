@@ -96,15 +96,15 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-block d-lg-none">Menu</span> <!-- Show on small only -->
-                            <i class="fa-solid fa-ellipsis-vertical d-none d-lg-inline"></i> <!-- Show on large only -->
+                            <span class="d-block d-lg-none">Menu</span>
+                            <i class="fa-solid fa-ellipsis-vertical d-none d-lg-inline"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a href="{% url 'servicepackage_list' %}" class="dropdown-item">Service Packages</a>
                             </li>
+                            <li><a class="dropdown-item" href="{% url 'account_dashboard' %}">Dashboard</a></li>
                             <li><a class="dropdown-item" href="{% url 'view_profile' %}">My Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_properties' %}">My Properties</a></li>
-                            <li><a class="dropdown-item" href="{% url 'account_dashboard' %}">My Account</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -208,6 +208,10 @@
 
                     <!-- Bootstrap JS Bundle -->
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                    <!-- Lottie Player-->
+                    <script src="https://js.stripe.com/v3/"></script>
+                    {# Lottie Player script - load it once in base.html if used across multiple pages #}
+                    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
                     <script src="{% static 'js/script.js' %}"></script>
 
 </body>
