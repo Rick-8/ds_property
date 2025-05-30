@@ -24,7 +24,13 @@ class ServicePackage(models.Model):
     description = RichTextField()
     price_usd = models.DecimalField(max_digits=6, decimal_places=2)
     is_active = models.BooleanField(default=True)
-    stripe_price_id = models.CharField(max_length=100, blank=True, null=True)
+    stripe_price_id = models.CharField(
+        max_length=100, blank=True, null=True, unique=True,
+        help_text="Stripe Price ID associated with this package."
+    )
+
+    stripe_product_id = models.CharField(max_length=100, blank=True, null=True, unique=True,
+                                         help_text="Stripe Product ID associated with this package.")
 
     def __str__(self):
         return f"{self.get_category_display()} {self.get_tier_display()}"
@@ -37,8 +43,10 @@ class ServiceAgreement(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     end_date = models.DateField(null=True, blank=True, help_text="Date service agreement ended/cancelled")
-    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True, unique=True,
-                                            help_text="Stripe Subscription ID associated with this agreement.")
+    stripe_subscription_id = models.CharField(
+        max_length=255, blank=True, null=True, unique=True,
+        help_text="Stripe Subscription ID associated with this agreement."
+    )
 
     start_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=50, default='pending')

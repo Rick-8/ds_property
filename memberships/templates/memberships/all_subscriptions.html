@@ -8,76 +8,105 @@
     <h2 class="mb-4 dark-opaque">All Active Service Agreements</h2>
 
     {% if agreements %}
-    <div class="table-responsive">
-        <table class="table table-striped table-hover caption-top">
-            <thead>
-                <tr>
-                    <th scope="col">Customer</th>
-                    <th scope="col">Property</th>
-                    <th scope="col">Package</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Start Date</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Active?</th>
-                    <th scope="col">Stripe ID</th>
-                    <th scope="col">Paid</th>
-                    <th scope="col">End Date</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="row">
+        <div class="col-md-3 d-none d-md-block">
+            <nav id="navbar-agreements" class="h-100 flex-column align-items-stretch pe-4 border-end">
+                <nav class="nav nav-pills flex-column">
+                    {% for agreement in agreements %}
+                        <a class="nav-link" href="#agreement-{{ agreement.id }}">
+                            {{ agreement.property.label }} ({{ agreement.user.get_full_name|default:agreement.user.username }})
+                        </a>
+                    {% endfor %}
+                </nav>
+            </nav>
+        </div>
+        <div class="col-md-9">
+            <div data-bs-spy="scroll" data-bs-target="#navbar-agreements" data-bs-smooth-scroll="true" class="scrollspy-example p-3 rounded-2" tabindex="0" style="height: 75vh; overflow-y: scroll;">
                 {% for agreement in agreements %}
-                <tr>
-                    <td>
-                        <strong>{{ agreement.user.get_full_name|default:agreement.user.username }}</strong><br>
-                        <small class="text-muted">{{ agreement.user.email }}</small>
-                    </td>
-                    <td>
-                        <strong>{{ agreement.property.label }}</strong><br>
-                        <small class="text-muted">{{ agreement.property.address_summary }}</small>
-                    </td>
-                    <td>{{ agreement.service_package.name }}</td>
-                    <td>{{ agreement.service_package.get_category_display }}</td>
-                    <td>${{ agreement.service_package.price_usd|floatformat:2 }}</td>
-                    <td>{{ agreement.start_date|date:"M d, Y" }}</td> {# Removed time for brevity #}
-                    <td><span class="badge bg-primary">{{ agreement.status|capfirst }}</span></td>
-                    <td>
-                        {% if agreement.active %}
-                            <span class="badge bg-success">Active</span>
-                        {% else %}
-                            <span class="badge bg-danger">Inactive</span>
-                        {% endif %}
-                    </td>
-                    <td><small>{{ agreement.stripe_subscription_id|default:"N/A" }}</small></td>
-                    <td>${{ agreement.amount_paid|floatformat:2|default:"0.00" }}</td>
-                    <td>{{ agreement.end_date|date:"M d, Y"|default:"N/A" }}</td>
-                    <td>
-                        {% if agreement.active and agreement.stripe_subscription_id %}
-                            <button type="button"
-                                    class="btn btn-danger btn-sm cancel-agreement-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#cancelConfirmationModal"
-                                    data-agreement-id="{{ agreement.id }}"
-                                    data-agreement-name="{{ agreement.service_package.name }}"
-                                    data-property-address="{{ agreement.property.address_summary }}"
-                                    title="Cancel Subscription">
-                                Cancel
-                            </button>
-                        {% else %}
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>Inactive</button>
-                        {% endif %}
-                    </td>
-                </tr>
+                <section id="agreement-{{ agreement.id }}" class="mb-5">
+                    <h3 class="dark-opaque border-bottom pb-2 mb-3">{{ agreement.property.label }} - <small class="text-muted">{{ agreement.service_package.name }}</small></h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover caption-top">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Property Details</th>
+                                    <th scope="col">Package</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Active?</th>
+                                    <th scope="col">Stripe ID</th>
+                                    <th scope="col">Paid</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>{{ agreement.user.get_full_name|default:agreement.user.username }}</strong><br>
+                                        <small class="text-muted">{{ agreement.user.email }}</small>
+                                    </td>
+                                    <td>
+                                        <strong>{{ agreement.property.label }}</strong><br>
+                                        <small class="text-muted">{{ agreement.property.address_summary }}</small>
+                                    </td>
+                                    <td>{{ agreement.service_package.name }}</td>
+                                    <td>{{ agreement.service_package.get_category_display }}</td>
+                                    <td>${{ agreement.service_package.price_usd|floatformat:2 }}</td>
+                                    <td>{{ agreement.start_date|date:"M d, Y" }}</td>
+                                    <td><span class="badge bg-primary">{{ agreement.status|capfirst }}</span></td>
+                                    <td>
+                                        {% if agreement.active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small>{{ agreement.stripe_subscription_id|default:"N/A" }}</small></td>
+                                    <td>${{ agreement.amount_paid|floatformat:2|default:"0.00" }}</td>
+                                    <td>{{ agreement.end_date|date:"M d, Y"|default:"N/A" }}</td>
+                                    <td>
+                                        <div class="d-flex flex-column gap-2">
+                                            {% if agreement.active and agreement.stripe_subscription_id %}
+                                                <button type="button"
+                                                        class="btn btn-danger btn-sm cancel-agreement-btn"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#cancelConfirmationModal"
+                                                        data-agreement-id="{{ agreement.id }}"
+                                                        data-agreement-name="{{ agreement.service_package.name }}"
+                                                        data-property-address="{{ agreement.property.address_summary }}"
+                                                        title="Cancel Subscription">
+                                                    Cancel
+                                                </button>
+                                            {% else %}
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled>Inactive</button>
+                                            {% endif %}
+                                            <form action="{% url 'resend_confirmation_email' agreement_id=agreement.id %}" method="post" class="d-inline-block">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-info btn-sm" title="Resend Confirmation Email">
+                                                    Resend Email
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
     {% else %}
-    <p class="alert alert-info">No service agreements found.</p>
+    <p class="alert alert-info">No active service agreements found.</p>
     {% endif %}
 </div>
 
+{# Existing Modal for Cancellation (keep this) #}
 <div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content dark-opaque">
@@ -96,5 +125,36 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var cancelModal = document.getElementById('cancelConfirmationModal');
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var agreementId = button.getAttribute('data-agreement-id');
+            var agreementName = button.getAttribute('data-agreement-name');
+            var propertyAddress = button.getAttribute('data-property-address');
+
+            var modalPackageName = cancelModal.querySelector('#modalPackageName');
+            var modalPropertyAddress = cancelModal.querySelector('#modalPropertyAddress');
+            var confirmCancelButton = cancelModal.querySelector('#confirmCancelButton');
+
+            modalPackageName.textContent = agreementName;
+            modalPropertyAddress.textContent = propertyAddress;
+            confirmCancelButton.onclick = function() {
+                window.location.href = `/agreements/cancel/${agreementId}/`; 
+            };
+        });
+
+        var scrollSpyContent = document.querySelector('.scrollspy-example');
+        if (scrollSpyContent) {
+            new bootstrap.ScrollSpy(document.body, {
+                target: '#navbar-agreements',
+                smoothScroll: true
+            });
+        }
+    });
+</script>
 {% endblock %}

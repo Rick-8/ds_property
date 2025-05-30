@@ -122,7 +122,6 @@
 
 
 <script>
-    // Helper to get CSRF token from cookie
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -138,23 +137,21 @@
         return cookieValue;
     }
 
-    // --- ORIGINAL STRIPE.JS INITIALIZATION AND CARD ELEMENT HANDLING ---
-    const stripe = Stripe('{{ stripe_publishable_key }}'); // Passed from your Django view context
+    const stripe = Stripe('{{ stripe_publishable_key }}');
     const elements = stripe.elements();
 
-    // Custom styling for Stripe Elements (optional, but good for dark theme)
     const style = {
         base: {
-            color: '#F8F9FA', // Light text for dark background
+            color: '#F8F9FA',
             fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
             fontSmoothing: 'antialiased',
             fontSize: '16px',
             '::placeholder': {
-                color: '#6c757d', // Grey placeholder text
+                color: '#6c757d',
             },
         },
         invalid: {
-            color: '#dc3545', // Red for invalid input
+            color: '#dc3545',
             iconColor: '#dc3545',
         },
     };
@@ -162,7 +159,6 @@
     const card = elements.create('card', { style: style });
     card.mount('#card-element');
 
-    // Handle real-time validation errors from the card Element.
     card.on('change', function (event) {
         const displayError = document.getElementById('card-errors');
         if (event.error) {
@@ -171,64 +167,49 @@
             displayError.textContent = '';
         }
     });
-    // --- END ORIGINAL STRIPE.JS INITIALIZATION AND CARD ELEMENT HANDLING ---
 
-    // Get DOM elements
     const form = document.getElementById('payment-form');
     const submitButton = document.getElementById('submit-button');
     const paymentMessage = document.getElementById('payment-message');
     const acceptTermsCheckbox = document.getElementById('acceptTerms');
 
-    // Get package and property IDs from Django template context
     const packageId = "{{ package.id }}";
-    const propertyId = "{{ property.id }}"; // This will be empty if 'property' is not passed
+    const propertyId = "{{ property.id }}";
 
-    // --- NEW JAVASCRIPT FOR LOADING OVERLAY LOGIC ---
-    // Reference the full-screen loading overlay
     const fullScreenLoadingOverlay = document.getElementById('full-screen-loading-overlay');
 
-    // Function to show the loading overlay
     function showLoadingOverlay() {
-        fullScreenLoadingOverlay.style.display = 'flex'; // Use 'flex' to enable centering
-        // A slight delay to allow the 'display' change to register before adding 'visible' for transition
+        fullScreenLoadingOverlay.style.display = 'flex';
         setTimeout(() => {
             fullScreenLoadingOverlay.classList.add('visible');
         }, 10);
-        document.body.style.overflow = 'hidden'; // Prevent scrolling while overlay is active
+        document.body.style.overflow = 'hidden';
     }
 
-    // Function to hide the loading overlay
     function hideLoadingOverlay() {
-        fullScreenLoadingOverlay.classList.remove('visible'); // Start fade-out animation
-        // Hide completely after the transition completes
+        fullScreenLoadingOverlay.classList.remove('visible');
         fullScreenLoadingOverlay.addEventListener('transitionend', function handler() {
             fullScreenLoadingOverlay.style.display = 'none';
-            fullScreenLoadingOverlay.removeEventListener('transitionend', handler); // Clean up event listener
-        }, { once: true }); // Use { once: true } to automatically remove the listener after it fires
-        document.body.style.overflow = ''; // Restore scrolling
+            fullScreenLoadingOverlay.removeEventListener('transitionend', handler);
+        }, { once: true });
+        document.body.style.overflow = '';
     }
-    // --- END NEW JAVASCRIPT FOR LOADING OVERLAY LOGIC ---
 
-    // --- ORIGINAL SUBMIT BUTTON EVENT LISTENER (NOW INCLUDING LOADER CALLS) ---
     form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-        // Clear previous messages and disable the submit button
         paymentMessage.textContent = '';
         submitButton.disabled = true;
 
-        // Client-side validation: Check if terms are accepted
         if (!acceptTermsCheckbox.checked) {
             paymentMessage.textContent = "{% trans 'You must agree to the terms and conditions.' %}";
-            submitButton.disabled = false; // Re-enable button
-            return; // Exit if terms not accepted
+            submitButton.disabled = false;
+            return;
         }
 
-        // Show the full-screen loading overlay as payment processing begins
         showLoadingOverlay();
 
         try {
-            // Create PaymentMethod with Stripe
             const { paymentMethod, error: createPaymentMethodError } = await stripe.createPaymentMethod({
                 type: 'card',
                 card: card,
@@ -238,72 +219,57 @@
             });
 
             if (createPaymentMethodError) {
-                // Handle errors from Stripe's createPaymentMethod
                 paymentMessage.textContent = createPaymentMethodError.message;
-                submitButton.disabled = false; // Re-enable button
-                hideLoadingOverlay(); // Hide loader on error
+                submitButton.disabled = false;
+                hideLoadingOverlay();
             } else {
-                // Send the paymentMethod.id to your Django backend via AJAX
                 const response = await fetch(`/memberships/payment/${packageId}/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': getCookie('csrftoken'),
-                        'X-Requested-With': 'XMLHttpRequest', // Important for Django views expecting AJAX
+                        'X-Requested-With': 'XMLHttpRequest',
                     },
                     body: JSON.stringify({
                         payment_method_id: paymentMethod.id,
-                        property_id: propertyId, // Pass the property ID if it exists
+                        property_id: propertyId,
                     }),
                 });
 
-                const data = await response.json(); // Parse the JSON response from your backend
-
-                // Hide the loading animation and re-enable button after backend response (unless redirecting)
-                // Note: If data.success_url leads to an immediate redirect, hideLoadingOverlay might not fully complete.
-                // This is generally fine as the page will change quickly.
+                const data = await response.json();
                 hideLoadingOverlay();
                 submitButton.disabled = false;
 
                 if (data.success_url) {
-                    // Payment succeeded immediately or trial started, redirect to success page
                     window.location.href = data.success_url;
                 } else if (data.requires_action) {
-                    // Handle 3D Secure or other required actions
-                    // Note: Stripe will typically handle displaying its own modal/popup for 3D Secure.
                     const { error: confirmCardPaymentError, paymentIntent } = await stripe.confirmCardPayment(data.payment_intent_client_secret);
 
                     if (confirmCardPaymentError) {
                         paymentMessage.textContent = confirmCardPaymentError.message;
-                        submitButton.disabled = false; // Re-enable button on 3D Secure error
+                        submitButton.disabled = false;
                     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                        // Payment confirmed after action, redirect to success
                         window.location.href = data.success_url || '/memberships/subscription-success/';
                     } else {
-                        // This case should ideally not happen if confirmCardPayment succeeded but status isn't 'succeeded'
                         console.error("Unexpected paymentIntent status after confirmation:", paymentIntent);
                         paymentMessage.textContent = "{% trans 'Payment action completed, but status unexpected. Please check your account.' %}";
                         submitButton.disabled = false;
                     }
                 } else if (data.error) {
-                    // Display error message sent from the backend
                     paymentMessage.textContent = data.error;
-                    submitButton.disabled = false; // Re-enable button on backend error
+                    submitButton.disabled = false;
                 } else {
-                    // Fallback for any other unexpected response structure from the backend
                     console.error("Unexpected response from backend:", data);
                     paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing. Please try again.' %}";
                     submitButton.disabled = false;
                 }
             }
         } catch (fetchError) {
-            // This catch block handles network errors or unhandled fetch issues
             console.error('Error during payment fetch:', fetchError);
             paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing.' %}";
-            submitButton.disabled = false; // Re-enable button
-            hideLoadingOverlay(); // Hide loader on network error
+            submitButton.disabled = false;
+            hideLoadingOverlay();
         }
     });
-    // --- END ORIGINAL SUBMIT BUTTON EVENT LISTENER ---
 </script>
 {% endblock %}

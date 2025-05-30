@@ -216,3 +216,9 @@ The following issues were identified and addressed:
 ## Conclusion
 
 All identified software bugs have been successfully resolved, resulting in a stable and fully functional property listing page. The implementation of efficient data fetching mechanisms, coupled with the re-establishment of essential property management actions, significantly enhances both the reliability and user experience of the `ds_property` application.
+
+
+
+## credits 
+
+https://lottiefiles.com/ - payment animations

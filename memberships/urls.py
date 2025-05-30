@@ -13,6 +13,7 @@ urlpatterns = [
     path('confirm-contract/<int:package_id>/', views.confirm_contract, name='confirm_contract'),
     path('update-package-property/<int:package_id>/', views.update_package_property, name='update_package_property'),
     path('sidebar-fragment/', views.sidebar_fragment, name='sidebar_fragment'),
+    path('agreements/<int:agreement_id>/resend-confirmation/', views.resend_confirmation_email, name='resend_confirmation_email'),
 
     # Core Stripe Subscription Flow Views
     path('payment/<int:package_id>/', views.payment, name='payment'),

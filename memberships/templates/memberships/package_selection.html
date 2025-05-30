@@ -3,35 +3,45 @@
 {% load i18n %}
 
 {% block content %}
-<h1 class="mb-4 dark-opaque text-gold display-6 display-md-4 display-lg-2">
-    Select Your Service Package
-</h1>
+<div class="container my-5"> {# Added a Bootstrap container for consistent padding and max-width #}
+    <h1 class="mb-4 text-center dark-opaque text-gold display-6 display-md-4 display-lg-2">
+        {% trans "Select Your Service Package" %}
+    </h1>
 
-<div class="row g-4">
-    <div class="col-12 col-md-8">
-        {% for package in packages %}
-        <div class="package border rounded p-3 mb-3 shadow-sm dark-opaque">
-            <h6 class="gold mb-1 fs-4">{{ package.name }}</h6>
-            <p class="mb-1"><strong>{% trans "Tier:" %}</strong> {{ package.get_tier_display }}</p>
-            <p class="mb-2 silver-text"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
-            <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
-                data-package-id="{{ package.id }}" data-category="{{ package.category }}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-green">{% trans "Select This Package" %}</button>
-            </form>
+    <div class="row justify-content-center g-4"> {# Centered the row content #}
+        <div class="col-12 col-lg-8"> {# Adjusted column for larger screens to give more space for the sidebar #}
+            {% for package in packages %}
+            <div class="package border rounded p-3 mb-3 shadow-sm dark-opaque">
+                <h6 class="gold mb-1 fs-4">{{ package.name }}</h6>
+                <p class="mb-1"><strong>{% trans "Tier:" %}</strong> {{ package.get_tier_display }}</p>
+                <p class="mb-2 silver-text"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
+                <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
+                    data-package-id="{{ package.id }}" data-category="{{ package.category }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-green w-100 w-sm-auto">{% trans "Select This Package" %}</button> {# Made button full width on small screens, auto on larger #}
+                </form>
+            </div>
+            {% empty %}
+            <p class="text-center">{% trans "No packages available at the moment." %}</p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>{% trans "No packages available at the moment." %}</p>
-        {% endfor %}
+        {# Sidebar will be dynamically loaded here by JavaScript #}
+        <div class="col-12 col-lg-4" id="sidebar-container">
+            {# The sidebar content (selected packages) will be loaded into this div by the JavaScript #}
+            <div class="d-none d-lg-block"> {# Hide on small screens, show on large and up #}
+                <h4>{% trans "Your Selections" %}</h4>
+                <p>{% trans "Loading your selected packages..." %}</p>
+            </div>
+        </div>
     </div>
+</div>
 
-
+{# Offcanvas remains the same as it's inherently responsive #}
 <div class="offcanvas offcanvas-end dark-opaque text-gold" tabindex="-1" id="packageOffcanvas"
     aria-labelledby="packageOffcanvasLabel" aria-modal="true" role="dialog">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="packageOffcanvasLabel">{% trans "Confirm Package Selection" %}</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="{% trans "
-            Close" %}"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="{% trans "Close" %}"></button>
     </div>
 
     <div class="offcanvas-body">
@@ -49,11 +59,10 @@
             </option>
             {% endfor %}
         </select>
-
-
         <button class="btn btn-success" id="offcanvas-confirm-btn">{% trans "Confirm" %}</button>
     </div>
 </div>
+
 <script>
     // Helper: Get CSRF token from cookie
     function getCookie(name) {
@@ -87,7 +96,6 @@
         return offcanvas;
     }
 
-    // AJAX: Update package's selected property on server
     function updatePackageProperty(pkgId, propertyId) {
         return fetch(`/memberships/update-package-property/${pkgId}/`, {
             method: 'POST',
@@ -104,7 +112,6 @@
             });
     }
 
-    // AJAX: Load sidebar content (NEW FUNCTION)
     function loadSidebarContent() {
         fetch('/memberships/sidebar-fragment/', {
             method: 'GET',
@@ -121,9 +128,8 @@
                     const sidebarContainer = document.getElementById('sidebar-container');
                     if (sidebarContainer) {
                         sidebarContainer.innerHTML = data.html;
-                        // Re-attach event listeners to the newly loaded sidebar content
                         attachRemoveHandlers();
-                        attachPropertySelectHandlers(); // Call to attach handlers for sidebar dropdowns
+                        attachPropertySelectHandlers();
                     }
                 } else {
                     console.error('Failed to load sidebar content:', data.error);
@@ -134,10 +140,8 @@
             });
     }
 
-    // Attach Remove buttons event handlers
     function attachRemoveHandlers() {
         document.querySelectorAll('.remove-package-btn').forEach(button => {
-            // Remove existing listener to prevent duplicates
             button.removeEventListener('click', handleRemovePackageClick);
             button.addEventListener('click', handleRemovePackageClick);
         });
@@ -162,7 +166,6 @@
             })
             .then(data => {
                 if (data.success) {
-                    // Refresh sidebar after removal
                     loadSidebarContent();
                 } else {
                     alert(data.error || 'Failed to remove package.');
@@ -175,16 +178,13 @@
     }
 
 
-    // Helper: Attach property select change handlers for the sidebar (newly loaded content) (NEW FUNCTION)
     function attachPropertySelectHandlers() {
-        document.querySelectorAll('#sidebar .property-select-sidebar').forEach(select => {
-            // Remove existing listener to prevent duplicates
+        document.querySelectorAll('#sidebar-container .property-select-sidebar').forEach(select => {
             select.removeEventListener('change', handlePropertySelectChange);
             select.addEventListener('change', handlePropertySelectChange);
         });
     }
 
-    // New handler function to use for both initial load and re-attaching (NEW FUNCTION)
     function handlePropertySelectChange(e) {
         const packageId = e.target.getAttribute('data-package-id');
         const propertyId = e.target.value;
@@ -194,7 +194,7 @@
                     if (!data.success) {
                         alert(data.error || 'Failed to update property.');
                     }
-                    loadSidebarContent(); // Refresh sidebar after update
+                    loadSidebarContent();
                 })
                 .catch(err => {
                     console.error('Error updating property:', err);
@@ -205,10 +205,8 @@
 
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Initial load of the sidebar content
-        loadSidebarContent(); // <--- CALL THIS ON DOM LOAD
+        loadSidebarContent();
 
-        // Handle selecting a package (form submit via AJAX)
         document.querySelectorAll('.select-form').forEach(form => {
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
@@ -227,7 +225,6 @@
                     })
                     .then(data => {
                         if (data.success) {
-                            // Prepare offcanvas confirmation
                             const offcanvasPackageIdInput = document.getElementById('offcanvas-package-id');
                             const offcanvasPackageNameEl = document.getElementById('offcanvas-package-name');
 
@@ -239,7 +236,7 @@
                             }
 
                             openOffcanvas('packageOffcanvas');
-                            loadSidebarContent(); // Refresh sidebar after selecting a package
+                            loadSidebarContent();
                         } else {
                             alert(data.error || 'Failed to select package.');
                         }
@@ -251,7 +248,6 @@
             });
         });
 
-        // Confirm button in offcanvas
         const confirmBtn = document.getElementById('offcanvas-confirm-btn');
         if (confirmBtn) {
             confirmBtn.addEventListener('click', () => {
@@ -264,17 +260,14 @@
                     return;
                 }
 
-                // Call AJAX update and wait for success before redirecting
                 updatePackageProperty(pkgId, propertyId)
                     .then(data => {
                         if (data.success) {
-                            // Hide the offcanvas
                             const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('packageOffcanvas'));
                             if (offcanvas) offcanvas.hide();
 
-                            loadSidebarContent(); // Refresh sidebar after confirming property in offcanvas
+                            loadSidebarContent();
 
-                            // Redirect to confirmation page with property_id in query params
                             window.location.href = `/memberships/confirm-contract/${pkgId}/?property_id=${propertyId}`;
                         } else {
                             alert(data.error || 'Failed to update property.');
@@ -287,9 +280,6 @@
             });
         }
 
-        // attachRemoveHandlers() is called within loadSidebarContent(), so no need to call it here directly.
-        // Same for attachPropertySelectHandlers().
     });
 </script>
-
 {% endblock content %}

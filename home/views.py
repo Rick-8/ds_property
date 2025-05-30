@@ -41,28 +41,30 @@ class SuperuserRequiredMixin(UserPassesTestMixin):
 
 class ServicePackageListView(ListView):
     model = ServicePackage
-    template_name = 'memberships/servicepackage_list.html'
+    template_name = 'memberships/servicepackage_list.html' # Keep this as is, assuming it exists
     context_object_name = 'packages'
 
 
 class ServicePackageCreateView(SuperuserRequiredMixin, CreateView):
     model = ServicePackage
-    fields = ['name', 'price', 'description']
-    template_name = 'memberships/servicepackage_form.html'
-    success_url = reverse_lazy('memberships:servicepackage_list')
+    fields = ['name', 'category', 'tier', 'price_usd', 'description', 'is_active', 'stripe_price_id']
+    # CORRECTED: Point to the existing form.html
+    template_name = 'memberships/form.html'
+    success_url = reverse_lazy('servicepackage_list') # Assuming 'servicepackage_list' is in home/urls.py
 
 
 class ServicePackageUpdateView(SuperuserRequiredMixin, UpdateView):
     model = ServicePackage
-    fields = ['name', 'price', 'description']
-    template_name = 'memberships/servicepackage_form.html'
-    success_url = reverse_lazy('memberships:servicepackage_list')
+    fields = ['name', 'category', 'tier', 'price_usd', 'description', 'is_active', 'stripe_price_id']
+    # CORRECTED: Point to the existing form.html
+    template_name = 'memberships/form.html'
+    success_url = reverse_lazy('servicepackage_list') # Assuming 'servicepackage_list' is in home/urls.py
 
 
 class ServicePackageDeleteView(SuperuserRequiredMixin, DeleteView):
     model = ServicePackage
-    template_name = 'memberships/servicepackage_confirm_delete.html'
-    success_url = reverse_lazy('memberships:servicepackage_list')
+    template_name = 'memberships/servicepackage_confirm_delete.html' # Keep this as is, assuming it exists
+    success_url = reverse_lazy('servicepackage_list')
 
 
 # Optional test-only views to simulate errors:

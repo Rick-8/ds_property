@@ -1,38 +1,208 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Your {{ package_name }} Subscription is Confirmed!</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-        .header { background-color: #f4f4f4; padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
-        .content { padding: 20px 0; }
-        .footer { font-size: 0.9em; text-align: center; color: #777; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px; }
-        .button { display: inline-block; padding: 10px 20px; margin-top: 15px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title>Your {{ package.name }} Subscription is Confirmed!</title>
+    <style type="text/css">
+        /* Client-specific resets */
+        body, table, td, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff; /* Professional blue for links */
+        }
+        /* iOS and Gmail link overrides */
+        a[x-apple-data-detectors],
+        a[href^="tel"],
+        a[href^="sms"] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        /* General Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Modern web-safe sans-serif stack */
+            line-height: 1.6;
+            color: #333333; /* Dark charcoal for easy reading */
+            background-color: #F5F5DC; /* Cream background */
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased; /* Smoother fonts */
+        }
+        .wrapper {
+            background-color: #F5F5DC; /* Cream background for the entire email wrapper */
+            padding: 20px 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            background-color: #FFFFFF; /* White content area */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            overflow: hidden;
+        }
+        .header {
+            background-color: #E6E6CC; /* Slightly darker cream for header */
+            padding: 20px 25px;
+            text-align: center;
+            border-bottom: 1px solid #D4D4B5; /* Subtle border */
+            color: #444444; /* Darker grey for header text */
+            font-size: 20px; /* Smaller, professional header size */
+            font-weight: bold;
+        }
+        .content {
+            padding: 25px;
+            color: #333333; /* Content text color */
+            font-size: 15px; /* Easy-to-read base font size */
+            line-height: 1.8;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .highlight {
+            color: #007bff; /* Consistent professional blue for highlights */
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 20px;
+            background-color: #007bff; /* Professional blue button */
+            color: #ffffff !important; /* White text on button */
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle button shadow */
+        }
+        /* Outlook-specific button styling (VML fallback) */
+        .button-outlook {
+            mso-padding-alt: 12px 25px;
+            background-color: #007bff;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .button-outlook a {
+            color: #ffffff;
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 120%;
+            text-align: center;
+            text-decoration: none;
+        }
+        .contact-list {
+            list-style-type: none; /* Remove default bullet points */
+            padding-left: 0;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .contact-list li {
+            margin-bottom: 8px;
+            color: #555555; /* Slightly lighter text for contact details */
+        }
+        .contact-list a {
+            color: #007bff; /* Consistent link color */
+            text-decoration: underline;
+        }
+        .footer {
+            font-size: 0.85em;
+            text-align: center;
+            color: #777777; /* Lighter grey for footer text */
+            border-top: 1px solid #EEEEEE;
+            padding: 15px 25px;
+            margin-top: 25px;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        /* Basic Responsive Adjustments */
+        @media only screen and (max-width: 480px) {
+            .container { margin: 10px auto; border-radius: 0; }
+            .header, .content, .footer { padding-left: 15px; padding-right: 15px; }
+            .header { font-size: 18px; }
+            .content { font-size: 14px; }
+            .highlight { font-size: 15px; }
+            .button { padding: 10px 20px; font-size: 14px; }
+            .button-outlook { mso-padding-alt: 10px 20px; }
+            .button-outlook a { font-size: 14px; }
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h2>Subscription Confirmation for {{ site_name }}</h2>
-        </div>
-        <div class="content">
-            <p>Dear {{ user_name }},</p>
-            <p>Thank you for subscribing to our **{{ package_name }}** package!</p>
-            <p>Your service officially started on **{{ start_date }}**. Your first payment of **&pound;{{ package_price|floatformat:2 }}** has been processed successfully.</p>
-            <p>We're thrilled to have you as a customer and look forward to providing you with excellent service.</p>
-            <p>You can manage your subscription and view all your service details by logging into your account dashboard:</p>
-            <p style="text-align: center;">
-                <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'subscription_success' %}" class="button">Go to My Dashboard</a>
-            </p>
-            <p>If you have any questions or need assistance, please don't hesitate to contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
-            <p>Sincerely,</p>
-            <p>The {{ site_name }} Team</p>
-        </div>
-        <div class="footer">
-            <p>&copy; {{ current_year }} {{ site_name }}. All rights reserved.</p>
-        </div>
-    </div>
+<body style="background-color: #F5F5DC; margin: 0; padding: 0;">
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="wrapper" style="background-color: #F5F5DC;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table class="container" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td class="header" style="background-color: #E6E6CC; padding: 20px 25px; text-align: center; border-bottom: 1px solid #D4D4B5; color: #444444; font-size: 20px; font-weight: bold;">
+                            <h1 style="margin: 0; font-size: 20px; color: #444444;">Subscription Confirmed for {{ site_name }}</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content" style="padding: 25px; color: #333333; font-size: 15px; line-height: 1.8;">
+                            <p style="margin-bottom: 15px;">Dear {% if user.first_name %}{{ user.first_name }}{% elif user.username %}{{ user.username }}{% else %}Customer{% endif %},</p>
+
+                            <p style="margin-bottom: 15px;">Thank you for subscribing to our <span class="highlight">{{ package.name }}</span> package!</p>
+
+                            <p style="margin-bottom: 15px;">Your subscription has been successfully activated on <span class="highlight">{{ subscription_start_date_display }}</span>. This date marks your official sign-up.</p>
+                            
+                            <p style="margin-bottom: 15px;">Your first payment of <span class="highlight">£{% if agreement.amount_paid %}{{ agreement.amount_paid|floatformat:2 }}{% else %}0.00{% endif %}</span> has been processed successfully.</p>
+
+                            <p style="margin-bottom: 15px;">We will be in contact within <span class="highlight">5 working days</span> to confirm your specific service start date and any necessary setup details. If you wish to get this sorted sooner, please don't hesitate to:</p>
+                            
+                            <ul class="contact-list" style="list-style-type: none; padding-left: 0; margin-top: 15px; margin-bottom: 20px;">
+                                <li style="margin-bottom: 8px; color: #555555;">WhatsApp: <a href="https://wa.me/{{ whatsapp_number }}" style="color: #007bff; text-decoration: underline;">{{ whatsapp_number }}</a></li>
+                                <li style="margin-bottom: 8px; color: #555555;">Office: <a href="tel:{{ office_phone_number }}" style="color: #007bff; text-decoration: underline;">{{ office_phone_number }}</a></li>
+                            </ul>
+
+                            <p style="margin-bottom: 15px;">We're thrilled to have you as a customer and look forward to providing you with excellent service.</p>
+
+                            <p style="margin-bottom: 15px;">You can manage your subscription and view all your service details by logging into your account dashboard:</p>
+
+                            <p style="text-align: center; margin-top: 20px;">
+                                <a href="{{ dashboard_url }}" class="button" style="background-color: #007bff; color: #ffffff !important; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; padding: 12px 25px; display: inline-block; border: none;">Go to My Dashboard</a>
+                            </p>
+
+                            <p style="margin-bottom: 0;">If you have any general questions or need assistance, please don't hesitate to contact our support team. </p>
+                            <p style="margin-top: 15px; margin-bottom: 0;">Sincerely,</p>
+                            <p style="margin-top: 5px;">The {{ site_name }} Team</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="footer" style="font-size: 0.85em; text-align: center; color: #777777; border-top: 1px solid #EEEEEE; padding: 15px 25px; margin-top: 25px;">
+                            <p style="margin-bottom: 0;">&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
