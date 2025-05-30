@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container my-5"> {# Added a Bootstrap container for consistent padding and max-width #}
+<div class="container my-5">
     <h1 class="mb-4 text-center dark-opaque text-gold display-6 display-md-4 display-lg-2">
         {% trans "Select Your Service Package" %}
     </h1>
@@ -18,25 +18,21 @@
                 <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
                     data-package-id="{{ package.id }}" data-category="{{ package.category }}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-green w-100 w-sm-auto">{% trans "Select This Package" %}</button> {# Made button full width on small screens, auto on larger #}
+                    <button type="submit" class="btn btn-outline-green w-100 w-sm-auto">{% trans "Select This Package" %}</button> 
                 </form>
             </div>
             {% empty %}
             <p class="text-center">{% trans "No packages available at the moment." %}</p>
             {% endfor %}
         </div>
-        {# Sidebar will be dynamically loaded here by JavaScript #}
+      
         <div class="col-12 col-lg-4" id="sidebar-container">
-            {# The sidebar content (selected packages) will be loaded into this div by the JavaScript #}
-            <div class="d-none d-lg-block"> {# Hide on small screens, show on large and up #}
-                <h4>{% trans "Your Selections" %}</h4>
-                <p>{% trans "Loading your selected packages..." %}</p>
-            </div>
+            
+           
         </div>
     </div>
 </div>
 
-{# Offcanvas remains the same as it's inherently responsive #}
 <div class="offcanvas offcanvas-end dark-opaque text-gold" tabindex="-1" id="packageOffcanvas"
     aria-labelledby="packageOffcanvasLabel" aria-modal="true" role="dialog">
     <div class="offcanvas-header">
@@ -64,7 +60,6 @@
 </div>
 
 <script>
-    // Helper: Get CSRF token from cookie
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -80,7 +75,6 @@
         return cookieValue;
     }
 
-    // Bootstrap Offcanvas helper to open offcanvas by id
     function openOffcanvas(id) {
         if (typeof bootstrap === 'undefined') {
             alert('Bootstrap JS not loaded. Cannot open sidebar.');

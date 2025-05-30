@@ -3,9 +3,11 @@ from . import views
 
 urlpatterns = [
     # Service Package Management Views
-    path('', views.servicepackage_list, name='servicepackage_list'),
     path('create/', views.package_create, name='servicepackage_create'),
+    path('', views.servicepackage_list, name='servicepackage_list'),
     path('delete/<int:pk>/', views.package_delete, name='servicepackage_delete'),
+    path('update/<int:pk>/', views.package_update, name='servicepackage_update'),
+
 
     # Package Selection and Contract Views
     path('select-package/', views.package_selection, name='package_selection'),

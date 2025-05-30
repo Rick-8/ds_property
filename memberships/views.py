@@ -132,22 +132,60 @@ def package_create(request):
 
     return render(request, 'memberships/servicepackage_form.html', {'form': form, 'title': 'Create Service Package'})
 
-
 @superuser_required
 def package_update(request, pk):
-    """
-    Allows superusers to update existing service packages.
-    """
     package = get_object_or_404(ServicePackage, pk=pk)
+    old_price = package.price_usd  # Track if price changed
+
     if request.method == 'POST':
         form = ServicePackageForm(request.POST, instance=package)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Service package updated successfully!")
-            return redirect('servicepackage_list')
+            updated_package = form.save(commit=False)
+            display_name = f"{updated_package.get_category_display()} {updated_package.get_tier_display()} - {updated_package.name}"
+
+            try:
+                # Update Stripe Product
+                if updated_package.stripe_product_id:
+                    stripe.Product.modify(
+                        updated_package.stripe_product_id,
+                        name=display_name,
+                        description=updated_package.description,
+                        active=updated_package.is_active,
+                        metadata={
+                            'category': updated_package.category,
+                            'tier': updated_package.tier,
+                            'django_package_id': updated_package.id,
+                        }
+                    )
+
+                # If price changed, create a new Stripe Price (Stripe prices are immutable)
+                if updated_package.price_usd != old_price:
+                    new_stripe_price = stripe.Price.create(
+                        product=updated_package.stripe_product_id,
+                        unit_amount=int(updated_package.price_usd * 100),
+                        currency='usd',
+                        recurring={'interval': 'month'},
+                        active=updated_package.is_active,
+                        metadata={
+                            'category': updated_package.category,
+                            'tier': updated_package.tier,
+                            'django_package_id': updated_package.id,
+                        }
+                    )
+                    updated_package.stripe_price_id = new_stripe_price.id
+
+                updated_package.save()
+                messages.success(request, "Service package updated successfully and Stripe updated.")
+                return redirect('servicepackage_list')
+
+            except stripe.error.StripeError as e:
+                logger.error(f"Stripe error during update of '{updated_package.name}': {e}", exc_info=True)
+                messages.error(request, f"Error updating Stripe: {e.user_message or str(e)}")
+
     else:
         form = ServicePackageForm(instance=package)
-    return render(request, 'memberships/form.html', {'form': form, 'title': 'Update Service Package'})
+
+    return render(request, 'memberships/servicepackage_form.html', {'form': form, 'title': 'Update Service Package'})
 
 
 @superuser_required
