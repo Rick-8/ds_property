@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Service Packages{% endblock %}
+{% load static %}
 
 {% block content %}
 <div class="container py-4 px-3 px-md-5">
@@ -121,4 +122,10 @@
     <p class="text-white text-center mt-4">No active service packages available.</p>
     {% endif %}
 </div>
+
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
 {% endblock %}

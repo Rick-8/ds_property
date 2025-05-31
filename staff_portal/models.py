@@ -3,7 +3,9 @@ from django.contrib.auth import get_user_model
 from accounts.models import Property
 from memberships.models import ServiceAgreement
 
+
 User = get_user_model()
+
 
 JOB_STATUS_CHOICES = [
     ('PENDING', 'Pending'),
@@ -11,6 +13,7 @@ JOB_STATUS_CHOICES = [
     ('COMPLETED', 'Completed'),
     ('MISSED', 'Missed'),
 ]
+
 
 class Route(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -24,8 +27,8 @@ class Route(models.Model):
 class Job(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    service_agreement = models.ForeignKey(ServiceAgreement, on_delete=models.SET_NULL, null=True, blank=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='jobs')
+    service_agreement = models.ForeignKey(ServiceAgreement, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
     route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True)
     assigned_staff = models.ManyToManyField(User, related_name='assigned_jobs', blank=True)
 

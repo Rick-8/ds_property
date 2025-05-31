@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
   <div class="dark-opaque rounded p-4 text-center" style="max-width: 400px; width: 100%;">
@@ -16,6 +16,10 @@
           View All Subscriptions
         </a>
         <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
+      </li>
+
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+        <a href="{% url 'staff_portal:staff_dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">Staff Portal</a>
       </li>
 
       {% endif %}
@@ -57,4 +61,10 @@
     </ul>
   </div>
 </div>
+
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
 {% endblock content %}

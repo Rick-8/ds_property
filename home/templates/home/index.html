@@ -52,6 +52,10 @@
 </div>
   <a href="{% url 'servicepackage_list' %}" class="btn-glass-gold">Service Packages</a>
 
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
 
 
 {% endblock %}

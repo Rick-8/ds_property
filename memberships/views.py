@@ -16,6 +16,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.decorators.http import require_POST
 from django.db import transaction
 
+from staff_portal.services import create_subscription_job
+from staff_portal.models import Job
 from .models import ServiceAgreement, ServicePackage
 from .forms import ServicePackageForm
 from accounts.models import Property, Profile
@@ -529,180 +531,149 @@ def payment(request, package_id):
         return JsonResponse({"error": "An unexpected error occurred during payment processing."}, status=500)
 
 
+
 @login_required
 def subscription_success(request):
     """
     Page displayed after a successful subscription.
-    This view also handles sending confirmation emails to the user and office.
+    This view also handles:
+    - Activating the service agreement and property
+    - Creating a job for staff portal
+    - Sending confirmation email to the user
+    - Sending notification emails to all superusers
     """
+
     user = request.user
     package = None
     agreement = None
 
     logger.debug(f"*** DEBUG START for user: {user.id} ({user.email}) ***")
-    logger.debug(f"Session data: {request.session.keys()}")
+    logger.debug(f"Session keys: {list(request.session.keys())}")
 
+    # Retrieve package from session
     package_id = request.session.get('last_subscribed_package_id')
-    logger.debug(f"Session 'last_subscribed_package_id': {package_id}")
-
     if package_id:
         try:
             package = ServicePackage.objects.get(id=package_id)
-            logger.debug(f"Retrieved Package: {package.name} (ID: {package.id})")
+            logger.debug(f"Found package: {package.name} (ID: {package.id})")
         except ServicePackage.DoesNotExist:
-            logger.error(f"Package with ID {package_id} not found for user {user.id}.")
+            logger.error(f"Package with ID {package_id} not found.")
             messages.error(request, "Subscription package details not found. Please contact support.")
     else:
-        logger.warning(f"No package ID found in session for user {user.id}.")
+        logger.warning("No package ID found in session.")
         messages.warning(request, "No subscription package information found. Please contact support.")
 
+    # Retrieve agreement from session or fallback
     if package:
-        agreement_id_from_session = request.session.get('last_subscribed_agreement_id')
-        logger.debug(f"Session 'last_subscribed_agreement_id': {agreement_id_from_session}")
-
+        agreement_id = request.session.get('last_subscribed_agreement_id')
         try:
-            if agreement_id_from_session:
-                agreement = ServiceAgreement.objects.get(id=agreement_id_from_session, user=user, service_package=package)
-                logger.debug(f"ServiceAgreement found via session ID: {agreement.id}")
+            if agreement_id:
+                agreement = ServiceAgreement.objects.get(id=agreement_id, user=user, service_package=package)
+                logger.debug(f"Found agreement via session ID: {agreement.id}")
             else:
-                agreement = ServiceAgreement.objects.filter(
-                    user=user,
-                    service_package=package,
-                    active=True
-                ).order_by('-date_created', '-id').first()
-
+                # fallback: get most recent active agreement for this user/package
+                agreement = ServiceAgreement.objects.filter(user=user, service_package=package, active=True).order_by('-date_created', '-id').first()
                 if agreement:
-                    logger.debug(f"ServiceAgreement found via fallback: {agreement.id}")
+                    logger.debug(f"Found agreement via fallback: {agreement.id}")
                 else:
-                    logger.warning(f"No ServiceAgreement found via fallback for user {user.id} and package {package.id}.")
-                    messages.warning(request, "Your subscription agreement could not be fully loaded. Please contact support.")
-
+                    messages.warning(request, "Your subscription agreement could not be found. Please contact support.")
+                    logger.warning(f"No active agreement found for user {user.id} and package {package.id}.")
         except ServiceAgreement.DoesNotExist:
-            logger.warning(f"ServiceAgreement with ID {agreement_id_from_session} not found for user {user.id} and package {package.id}.")
-            messages.warning(request, "Your subscription agreement could not be found. Please contact support.")
+            messages.error(request, "Subscription agreement details not found. Please contact support.")
+            logger.error(f"Agreement with ID {agreement_id} not found for user {user.id}.")
         except Exception as e:
-            logger.error(f"Error retrieving ServiceAgreement for user {user.id}, package {package.id}: {e}", exc_info=True)
-            messages.error(request, "An error occurred while loading your subscription details. Please contact support.")
+            messages.error(request, "Error retrieving subscription details. Please contact support.")
+            logger.error(f"Error fetching agreement for user {user.id}: {e}", exc_info=True)
     else:
-        logger.warning(f"Skipping ServiceAgreement retrieval as no package was found for user {user.id}.")
+        logger.warning("Skipping agreement retrieval because package not found.")
 
-    subscription_start_date_display = datetime.now().strftime("%B %d, %Y")
-    amount_paid_display = "0.00"
-
-    logger.debug(f"Current 'agreement' object before context: {agreement}")
-    if agreement:
-        logger.debug(f"Agreement ID: {agreement.id}, Amount Paid DB: {agreement.amount_paid}, Start Date DB: {agreement.start_date}")
-
-        if agreement.start_date:
-            subscription_start_date_display = agreement.start_date.strftime("%B %d, %Y")
-            logger.debug(f"Using agreement start_date: {subscription_start_date_display}")
-        else:
-            logger.warning(f"ServiceAgreement {agreement.id} has no start_date set. Using current date.")
-
-        if agreement.amount_paid is not None:
-            amount_paid_display = f"{agreement.amount_paid:.2f}"
-            logger.debug(f"Using agreement amount_paid: {amount_paid_display}")
-        else:
-            logger.warning(f"ServiceAgreement {agreement.id} has amount_paid as None. Displaying '0.00'.")
-    else:
-        logger.debug("No agreement object found. Using default date and '0.00' for amount.")
-
-    dashboard_url = request.build_absolute_uri(reverse('account_dashboard'))
-
-    email_context = {
-        'user': user,
-        'package': package,
-        'agreement': agreement,
-        'site_name': 'DS Property Management',
-        'dashboard_url': dashboard_url,
-        'subscription_start_date_display': subscription_start_date_display,
-        'amount_paid_display': amount_paid_display,
-        'whatsapp_number': '+447911123456',
-        'office_phone_number': '+441234567890',
-    }
-
-    if user.email:
+    # Activate agreement and property if not already active
+    if agreement and package:
         try:
-            html_message = render_to_string('emails/package_confirmation_email.html', email_context)
-            plain_message = strip_tags(html_message)
+            if not agreement.active:
+                agreement.active = True
+                if not agreement.start_date:
+                    agreement.start_date = datetime.now().date()
+                agreement.save()
+                logger.info(f"Activated agreement {agreement.id}")
 
-            pdf_file_name = 'dsp-terms-conditions.pdf'
-            pdf_path = os.path.join(settings.BASE_DIR, 'static', 'pdfs', pdf_file_name)
-
-            pdf_attachment = None
-            if not os.path.exists(pdf_path):
-                logger.error(f"PDF file not found at: {pdf_path}. Cannot attach terms and conditions.")
-            else:
-                with open(pdf_path, 'rb') as pdf_file:
-                    pdf_data = pdf_file.read()
-                pdf_attachment = (pdf_file_name, pdf_data, 'application/pdf')
-
-            user_email = EmailMultiAlternatives(
-                subject=f"Welcome to {email_context['site_name']}! Your Subscription is Confirmed - Terms Included",
-                body=plain_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[user.email],
-            )
-            user_email.attach_alternative(html_message, "text/html")
-
-            if pdf_attachment:
-                user_email.attach(*pdf_attachment)
-
-            user_email.send(fail_silently=False)
-            logger.info(f"Subscription confirmation email (with PDF) sent to {user.email} for package {package_id}.")
+            if hasattr(agreement, 'property') and agreement.property:
+                if not agreement.property.is_active:
+                    agreement.property.is_active = True
+                    agreement.property.has_active_service = True
+                    agreement.property.save()
+                    logger.info(f"Activated property {agreement.property.id}")
 
         except Exception as e:
-            logger.error(f"Failed to send subscription confirmation email to {user.email}: {e}", exc_info=True)
-            messages.error(request, "Failed to send confirmation email to you. Please contact support.")
-    else:
-        logger.warning(f"Subscription success for user {user.id} but no email address to send user confirmation.")
-        messages.warning(request, "Subscription successful, but no email address to send confirmation to.")
+            messages.error(request, "Failed to activate subscription details. Please contact support.")
+            logger.error(f"Error activating agreement or property for agreement {agreement.id}: {e}", exc_info=True)
 
-    if package:
+        # ✅ Refactored job creation
         try:
-            superuser_emails = list(User.objects.filter(is_superuser=True).exclude(email='').values_list('email', flat=True))
+            job = create_subscription_job(agreement, package)
+            logger.info(f"Created Job {job.id} for subscription agreement {agreement.id}")
+        except Exception as e:
+            messages.error(request, "Failed to create job for subscription. Please contact support.")
+            logger.error(f"Job creation failed for agreement {agreement.id}: {e}", exc_info=True)
 
-            if superuser_emails:
-                office_email_context = {
-                    'subscriber_user': user,
+        # Prepare data for emails
+        dashboard_url = request.build_absolute_uri(reverse('account_dashboard'))
+
+        # Send confirmation email to the user
+        try:
+            subject = f"Subscription Confirmation - {package.name}"
+            html_content = render_to_string('emails/package_confirmation_email.html', {
+                'user': user,
+                'package': package,
+                'agreement': agreement,
+                'dashboard_url': dashboard_url,
+            })
+            text_content = strip_tags(html_content)
+
+            email = EmailMultiAlternatives(subject, text_content, 'noreply@dsproperty.com', [user.email])
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+            logger.info(f"Sent subscription confirmation email to {user.email}")
+        except Exception as e:
+            logger.error(f"Failed to send confirmation email to {user.email}: {e}", exc_info=True)
+
+        # Notify all superusers
+        try:
+            superusers = User.objects.filter(is_superuser=True).values_list('email', flat=True)
+            if superusers:
+                subject = f"New Subscription: {user.get_full_name()} - {package.name}"
+                admin_html_content = render_to_string('emails/office_notification_email.html', {
+                    'user': user,
                     'package': package,
-                    'site_name': 'DS Property Management',
-                    'admin_url': request.build_absolute_uri('/admin/'),
-                    'agreement_id': agreement.id if agreement else 'N/A',
-                    'amount_paid_display': amount_paid_display,
-                }
+                    'agreement': agreement,
+                })
+                admin_text_content = strip_tags(admin_html_content)
 
-                office_html_message = render_to_string('emails/office_notification_email.html', office_email_context)
-                office_plain_message = strip_tags(office_html_message)
-
-                office_notification_email = EmailMultiAlternatives(
-                    subject=f"New Subscription: {package.name} for {user.get_full_name() or user.username} - {office_email_context['site_name']}",
-                    body=office_plain_message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=superuser_emails,
-                )
-                office_notification_email.attach_alternative(office_html_message, "text/html")
-                office_notification_email.send(fail_silently=False)
-                logger.info(f"Office notification email sent to superusers for new subscription by {user.email}.")
-            else:
-                logger.warning("No superusers with email addresses found to send office notification.")
-
+                admin_email = EmailMultiAlternatives(subject, admin_text_content, 'noreply@dsproperty.com', list(superusers))
+                admin_email.attach_alternative(admin_html_content, "text/html")
+                admin_email.send()
+                logger.info("Sent notification emails to superusers.")
         except Exception as e:
-            logger.error(f"Failed to send office notification email for new subscription by {user.email}: {e}", exc_info=True)
-    else:
-        logger.warning(f"Skipping office notification: No package found for user {user.id} during subscription success.")
+            logger.error(f"Failed to send notification emails to superusers: {e}", exc_info=True)
 
-    if 'last_subscribed_agreement_id' in request.session:
-        del request.session['last_subscribed_agreement_id']
-    if 'last_subscribed_package_id' in request.session:
-        del request.session['last_subscribed_package_id']
+    # Clean session variables related to subscription
+    for key in ['last_subscribed_package_id', 'last_subscribed_agreement_id']:
+        if key in request.session:
+            del request.session[key]
     request.session.modified = True
 
-    return render(request, 'memberships/subscription_success.html', {
+    # Prepare display data for template
+    subscription_start_date_display = agreement.start_date.strftime("%B %d, %Y") if agreement and agreement.start_date else datetime.now().strftime("%B %d, %Y")
+    amount_paid_display = f"{agreement.amount_paid:.2f}" if agreement and agreement.amount_paid else "0.00"
+
+    context = {
         'package': package,
         'agreement': agreement,
-        'amount_paid_display': amount_paid_display
-    })
+        'amount_paid_display': amount_paid_display,
+        'subscription_start_date_display': subscription_start_date_display,
+    }
+
+    return render(request, 'memberships/subscription_success.html', context)
 
 
 @login_required
@@ -1145,9 +1116,11 @@ def stripe_webhook(request):
 @user_passes_test(staff_or_superuser_required)
 def all_subscriptions(request):
     """
-    Displays a list of all service agreements (subscriptions) for staff/superusers.
+    Displays a list of all active service agreements (subscriptions) for staff/superusers.
     """
-    agreements = ServiceAgreement.objects.select_related('user', 'service_package', 'property').all().order_by('-date_created')
+    agreements = ServiceAgreement.objects.select_related('user', 'service_package', 'property')\
+                .filter(active=True)\
+                .order_by('-date_created')
     return render(request, 'memberships/all_subscriptions.html', {
         'agreements': agreements,
     })
@@ -1177,4 +1150,4 @@ def sidebar_fragment(request):
     context = {
         'user_properties': user_properties,
     }
-    return render(request, 'memberships/sidebar_fragment.html', context)
+    return render(request, 'memberships/sidebar_content.html', context)

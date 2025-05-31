@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Job Detail</h2>
+    <p><strong>Customer:</strong> {{ job.customer }}</p>
+    <p><strong>Description:</strong> {{ job.description }}</p>
+    <p><strong>Status:</strong> {{ job.get_status_display }}</p> <!-- better for display -->
+
+    {% if job.status != 'complete' %}
+      <form method="POST" action="{% url 'staff_portal:mark_job_complete' job.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success mt-3">Mark as Complete</button>
+      </form>
+    {% else %}
+      <p><em>This job is completed.</em></p>
+    {% endif %}
+  </div>
+
+  {% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

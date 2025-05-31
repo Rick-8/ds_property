@@ -1,6 +1,5 @@
 {% load i18n %}
-
-{# This template is dynamically loaded by JavaScript into the sidebar #}
+{% load static %}
 
 <div class="p-4 bg-dark text-white position-relative min-vh-100">
 
@@ -69,4 +68,10 @@
     {% else %}
     <p class="text-muted">{% trans "No packages selected yet." %}</p>
     {% endif %}
+
+    {% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
 </div>

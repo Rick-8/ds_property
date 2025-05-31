@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Delete Service Package{% endblock %}
 {% block content %}
 <div class="container glass-container dark-opaque" style="max-width: 600px; margin: 2rem auto; padding: 2rem; border-radius: 15px;">
   <h1 class="large-gold-text mb-4 text-center">Delete Service Package</h1>
 
-  <p class="text-white fs-5">Are you sure you want to delete the package <strong class="text-gold">{{ package.name }}</strong>?</p>
+  <p class="text-gold fs-5">Are you sure you want to delete the package <strong class="text-gold">{{ package.name }}</strong>?</p>
 
   <form method="post" class="d-flex justify-content-between mt-4">
     {% csrf_token %}
@@ -12,4 +13,10 @@
     <a href="{% url 'servicepackage_list' %}" class="btn btn-secondary btn-glass">Cancel</a>
   </form>
 </div>
+
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
 {% endblock %}

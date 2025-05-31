@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container-fluid py-4 ">
     <div class="container-fluid py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center dark-opaque large-gold-text mb-4">
             <h2 class="mb-0 title-gold-text">Active Service Agreements</h2>
             <a href="{% url 'home' %}" class="btn btn-outline-grey btn-lg">
                 <i class="fas fa-home me-2"></i> Back to Home
@@ -150,4 +150,10 @@
             });
         });
     </script>
+
+    {% block extra_scripts %}
+    <script src="{% static 'js/whatsapp.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    {% endblock %}
+
     {% endblock %}

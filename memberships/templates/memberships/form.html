@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ title }}{% endblock %}
+{% load static %}
 {% block content %}
 <div class="container glass-container dark-opaque"
   style="max-width: 600px; margin: 2rem auto; padding: 2rem; border-radius: 15px;">
@@ -17,4 +18,10 @@
     </div>
   </form>
 </div>
+
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
 {% endblock %}
