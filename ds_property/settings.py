@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'memberships',
     'crispy_forms',
     'crispy_bootstrap5',
+    'staff_portal',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
