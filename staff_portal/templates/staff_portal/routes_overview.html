@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Routes Overview{% endblock %}
+
+{% block content %}
+<h2 class="large-gold-text dark-opaque">All Routes and Their Jobs</h2>
+
+{% for route in routes %}
+  <div class="card my-3">
+    <div class="card-header">
+      <h4>{{ route.name }}</h4>
+      <p>{{ route.description }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for job in route.job_set.all %}
+        <li class="list-group-item">
+          <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a> - Scheduled: {{ job.scheduled_date }} - Status: {{ job.get_status_display }}
+        </li>
+      {% empty %}
+        <li class="list-group-item">No jobs assigned to this route.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% empty %}
+  <p>No routes found.</p>
+{% endfor %}
+{% endblock %}

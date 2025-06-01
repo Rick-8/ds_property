@@ -203,15 +203,18 @@
                         </div>
                     </footer>
 
-                    <!-- Add FontAwesome CDN for icons -->
+                    <!-- FontAwesome for icons -->
                     <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
 
-                    <!-- Bootstrap JS Bundle -->
+                    <!-- Bootstrap JS Bundle (includes Popper) -->
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-                    <!-- Lottie Player-->
+
+                    <!-- Stripe.js payment library -->
                     <script src="https://js.stripe.com/v3/"></script>
-                    {# Lottie Player script - load it once in base.html if used across multiple pages #}
+
+                    <!-- Lottie Player for animations -->
                     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
                     {% block extra_scripts %}
                     <script src="{% static 'js/whatsapp.js' %}"></script>
                     <script src="{% static 'script.js' %}"></script>

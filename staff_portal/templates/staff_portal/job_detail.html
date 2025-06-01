@@ -1,25 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %}Job Detail - {{ job.title }}{% endblock %}
+
 {% block content %}
-  <div class="container mt-4">
-    <h2>Job Detail</h2>
-    <p><strong>Customer:</strong> {{ job.customer }}</p>
-    <p><strong>Description:</strong> {{ job.description }}</p>
-    <p><strong>Status:</strong> {{ job.get_status_display }}</p> <!-- better for display -->
-
-    {% if job.status != 'complete' %}
-      <form method="POST" action="{% url 'staff_portal:mark_job_complete' job.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success mt-3">Mark as Complete</button>
-      </form>
+<div class="container mt-5">
+  <h2 class="large-gold-text">{{ job.title }}</h2>
+  <p><strong>Property:</strong> {{ job.property.label }}</p>
+  <p><strong>Scheduled Date:</strong> {{ job.scheduled_date }}</p>
+  <p><strong>Status:</strong> {{ job.get_status_display }}</p>
+  <p><strong>Description:</strong> {{ job.description|default:"No description provided." }}</p>
+  <p><strong>Route:</strong> {{ job.route.name if job.route else "Not assigned" }}</p>
+  <p><strong>Assigned Staff:</strong> 
+    {% if job.assigned_staff.all %}
+      {{ job.assigned_staff.all|join:", " }}
     {% else %}
-      <p><em>This job is completed.</em></p>
+      None
     {% endif %}
-  </div>
+  </p>
+  
+  <h5>Staff Feedback:</h5>
+  <p>{{ job.staff_feedback|default:"No feedback yet." }}</p>
 
-  {% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
-{% endblock %}
+  {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
+  <form method="POST" action="{% url 'mark_complete' job.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Mark as Complete</button>
+  </form>
+  {% endif %}
 
-{% endblock %}
+  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock content %}

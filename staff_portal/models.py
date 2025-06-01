@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from accounts.models import Property
 from memberships.models import ServiceAgreement
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -56,3 +58,18 @@ class JobPhoto(models.Model):
 
     def __str__(self):
         return f"Photo for {self.job.title} by {self.uploaded_by}"
+
+
+class StaffRouteAssignment(models.Model):
+    staff = models.ForeignKey(User, on_delete=models.CASCADE)
+    route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    shift_type = models.CharField(max_length=50, choices=[('MORNING', 'Morning'), ('AFTERNOON', 'Afternoon'), ('EVENING', 'Evening')], default='MORNING')
+
+    class Meta:
+        ordering = ['start_date']
+        unique_together = ('staff', 'route', 'start_date', 'end_date', 'shift_type')
+
+    def __str__(self):
+        return f"{self.staff} on {self.route} from {self.start_date} to {self.end_date} ({self.shift_type})"

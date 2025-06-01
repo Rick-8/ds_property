@@ -4,10 +4,24 @@
 {% block title %}Staff Dashboard{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
 
-{% if user.is_superuser %}
-<div class="mt-5">
-  <h3 class=" dark-opaque large-gold-text">Unassigned Jobs</h3>
+  <!-- Navigation Links -->
+  <nav class="mb-4">
+    <div class="btn-group" role="group" aria-label="Staff portal navigation">
+      <a href="{% url 'staff_schedule_planner' %}" class="btn btn-outline-gold">Schedule Planner</a>
+      <a href="{% url 'staff_job_list' %}" class="btn btn-outline-gold">My Jobs</a>
+      {% if user.is_superuser %}
+        <a href="{% url 'routes_overview' %}" class="btn btn-outline-gold">Routes Overview</a>
+        <a href="{% url 'completed_jobs' %}" class="btn btn-outline-gold">Completed Jobs</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+
+  {% if user.is_superuser %}
+  <h3 class="dark-opaque large-gold-text">Unassigned Jobs</h3>
   {% if unassigned_jobs %}
   <ul class="list-group mt-3">
     {% for job in unassigned_jobs %}
@@ -18,18 +32,18 @@
         Scheduled for: {{ job.scheduled_date }}<br>
       </div>
       <div>
-        <!-- Button that triggers popover -->
+        <!-- Popover Assign Route Button -->
         <button type="button" class="btn btn-sm btn-primary assign-route-btn" data-bs-toggle="popover"
           data-job-id="{{ job.id }}" title="Assign Route" data-bs-html="true" data-bs-content='
-                  <form class="assign-route-form" data-job-id="{{ job.id }}">
-                    <select name="route_id" class="form-select form-select-sm mb-2">
-                      {% for route in routes %}
-                        <option value="{{ route.id }}">{{ route.name }}</option>
-                      {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-glass-gold">Assign</button>
-                  </form>
-                '>
+            <form class="assign-route-form" data-job-id="{{ job.id }}">
+              <select name="route_id" class="form-select form-select-sm mb-2">
+                {% for route in routes %}
+                  <option value="{{ route.id }}">{{ route.name }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-glass-gold btn-sm w-100">Assign</button>
+            </form>
+          '>
           Assign Route
         </button>
       </div>
@@ -39,13 +53,30 @@
   {% else %}
   <p>No unassigned jobs.</p>
   {% endif %}
+  {% else %}
+  <h4 class="dark-opaque large-gold-text">Your Assigned Jobs</h4>
+  {% if assigned_jobs %}
+  <ul class="list-group mt-3">
+    {% for job in assigned_jobs %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ job.title }}</strong><br>
+        {{ job.property.label }}<br>
+        Scheduled: {{ job.scheduled_date }}
+      </div>
+      <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary btn-sm">View</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No jobs currently assigned.</p>
+  {% endif %}
+  {% endif %}
 </div>
-{% endif %}
 
 {% block extra_scripts %}
 <script src="{% static 'js/whatsapp.js' %}"></script>
-<script src="{% static 'staff_portal/js/assign_route.js' %}"></script>
+<script src="{% static 'staff_portal/js/pop-overs.js' %}"></script>
 {% endblock %}
-
 
 {% endblock content %}

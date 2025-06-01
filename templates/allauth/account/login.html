@@ -4,7 +4,6 @@
 {% load allauth account %}
 {% load widget_tweaks %}
 
-
 {% block head_title %}
 {% trans "Sign In" %}
 {% endblock head_title %}
@@ -20,71 +19,68 @@
 
                 {% if not SOCIALACCOUNT_ONLY %}
                 <p class="text-center">
-                    {% blocktrans %}If you have not created an account yet, then please <a href="{{ signup_url }}"
-                        class="text-warning">sign up</a> first.{% endblocktrans %}
+                    {% blocktrans %}
+                        If you have not created an account yet, then please
+                        <a href="{{ signup_url }}" class="text-warning">sign up</a> first.
+                    {% endblocktrans %}
                 </p>
                 {% endif %}
 
                 <form method="post" action="{% url 'account_login' %}" class="form-group">
                     {% csrf_token %}
 
-                    <!-- Form Fields -->
-                    <form method="post" action="{% url 'account_login' %}" class="form-group">
-                        {% csrf_token %}
-
-                        {# Show non-field errors at the top in red #}
-                        {% if form.non_field_errors %}
-                        <div class="alert alert-danger mb-3">
-                            {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        <!-- Form Fields -->
-                        {% for field in form %}
-                        <div class="form-group mb-3">
-                            {% if field.field.widget.input_type == "checkbox" %}
-                            <div class="form-check">
-                                {{ field|add_class:"form-check-input" }}
-                                <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
-                            </div>
-                            {% else %}
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            {{ field|add_class:"form-control" }}
-                            {% endif %}
-
-                            {# Field-specific errors in red right under the field #}
-                            {% if field.errors %}
-                            <small class="text-danger">{{ field.errors|striptags }}</small>
-                            {% endif %}
-                        </div>
+                    {# Show non-field errors at the top in red #}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-3">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
                         {% endfor %}
-
-                        <!-- Submit Button -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-warning btn-lg">
-                                {% trans "Sign In" %}
-                            </button>
-                        </div>
-                    </form>
-
-
-                    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        {% if PASSKEY_LOGIN_ENABLED %}
-                        <a href="#" id="passkey_login" class="btn btn-outline-primary">
-                            {% trans "Sign in with a passkey" %}
-                        </a>
-                        {% endif %}
-                        {% if LOGIN_BY_CODE_ENABLED %}
-                        <a href="{{ request_login_code_url }}" class="btn btn-outline-primary">
-                            {% trans "Send me a sign-in code" %}
-                        </a>
-                        {% endif %}
                     </div>
                     {% endif %}
+
+                    <!-- Form Fields -->
+                    {% for field in form %}
+                    <div class="form-group mb-3">
+                        {% if field.field.widget.input_type == "checkbox" %}
+                        <div class="form-check">
+                            {{ field|add_class:"form-check-input" }}
+                            <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
+                        </div>
+                        {% else %}
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% endif %}
+
+                        {# Field-specific errors in red right under the field #}
+                        {% if field.errors %}
+                        <small class="text-danger">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            {% trans "Sign In" %}
+                        </button>
+                    </div>
+                </form>
+
+                {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+                <hr>
+                <div class="d-flex justify-content-between">
+                    {% if PASSKEY_LOGIN_ENABLED %}
+                    <a href="#" id="passkey_login" class="btn btn-outline-primary">
+                        {% trans "Sign in with a passkey" %}
+                    </a>
+                    {% endif %}
+                    {% if LOGIN_BY_CODE_ENABLED %}
+                    <a href="{{ request_login_code_url }}" class="btn btn-outline-primary">
+                        {% trans "Send me a sign-in code" %}
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

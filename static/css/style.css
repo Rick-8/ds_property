@@ -419,7 +419,7 @@ body.error-page {
 .btn-outline-green {
     color: #25d366;
     border: 2px solid #25d366;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-outline-green:hover {
@@ -427,11 +427,21 @@ body.error-page {
     color: black;
 }
 
+.btn-outline-silver {
+    color: silver;
+    border: 2px solid gold;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.btn-outline-silver:hover {
+    background-color: silver;
+    color: black;
+}
 
 .btn-outline-gold {
     color: gold;
     border: 2px solid gold;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-outline-gold:hover {
