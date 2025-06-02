@@ -4,31 +4,93 @@
 {% block title %}Job Detail - {{ job.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="large-gold-text">{{ job.title }}</h2>
-  <p><strong>Property:</strong> {{ job.property.label }}</p>
-  <p><strong>Scheduled Date:</strong> {{ job.scheduled_date }}</p>
-  <p><strong>Status:</strong> {{ job.get_status_display }}</p>
-  <p><strong>Description:</strong> {{ job.description|default:"No description provided." }}</p>
-  <p><strong>Route:</strong> {{ job.route.name if job.route else "Not assigned" }}</p>
-  <p><strong>Assigned Staff:</strong> 
-    {% if job.assigned_staff.all %}
-      {{ job.assigned_staff.all|join:", " }}
-    {% else %}
-      None
-    {% endif %}
-  </p>
-  
-  <h5>Staff Feedback:</h5>
-  <p>{{ job.staff_feedback|default:"No feedback yet." }}</p>
+<div class="container mt-5 dark-opaque py-4 px-3">
+  <h2 class="large-gold-text mb-4">{{ job.title }}</h2>
 
-  {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
-  <form method="POST" action="{% url 'mark_complete' job.id %}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-success">Mark as Complete</button>
-  </form>
-  {% endif %}
+  <div class="row g-4">
+    <!-- Top Left: Job Details -->
+    <section class="col-12 col-lg-6 border rounded p-4 border-gold">
+      <h4 class="mb-3">Job Details</h4>
+      <p><strong>Property:</strong> {{ job.property.label }}</p>
+      <p><strong>Scheduled Date:</strong> {{ job.scheduled_date }}</p>
+      <p><strong>Status:</strong> {{ job.get_status_display }}</p>
+      <p><strong>Description:</strong> {{ job.description|default:"No description provided." }}</p>
+      <p><strong>Route:</strong>
+        {% if job.route %}
+          {{ job.route.name }}
+        {% else %}
+          Not assigned
+        {% endif %}
+      </p>
+      <p><strong>Assigned Staff:</strong>
+        {% if job.assigned_staff.exists %}
+          {{ job.assigned_staff.all|join:", " }}
+        {% else %}
+          None
+        {% endif %}
+      </p>
+    </section>
 
-  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    <!-- Top Right: Property Notes -->
+    <section class="col-12 col-lg-6 border rounded p-4 border-gold" style="background: transparent; min-height: 300px; overflow:auto;">
+      <h4 class="mb-3">Property Notes</h4>
+      {% if job.property.notes %}
+        <div class="property-notes">
+          {{ job.property.notes|safe }}
+        </div>
+      {% else %}
+        <p>No notes available.</p>
+      {% endif %}
+    </section>
+
+    <!-- Bottom Left: Staff Feedback -->
+    <section class="col-12 col-lg-6 border rounded p-4 border-gold" style="min-height: 300px; overflow:auto;">
+      <h4 class="mb-3">Job Notes / Staff Feedback</h4>
+      {% if user.is_authenticated %}
+        {% if user.is_superuser or user in job.assigned_staff.all %}
+          <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.feedback }}
+
+            {% if job.status != 'COMPLETED' %}
+              <button type="submit" class="btn btn-primary mt-3">Save Feedback</button>
+            {% else %}
+              <p class="text-muted mt-3">Feedback is locked because the job is completed.</p>
+            {% endif %}
+          </form>
+        {% else %}
+          {% if job.jobfeedback_set.exists %}
+            {% for fb in job.jobfeedback_set.all %}
+              <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
+            {% endfor %}
+          {% else %}
+            <p>No feedback available.</p>
+          {% endif %}
+        {% endif %}
+      {% else %}
+        {% if job.jobfeedback_set.exists %}
+          {% for fb in job.jobfeedback_set.all %}
+            <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
+          {% endfor %}
+        {% else %}
+          <p>No feedback available.</p>
+        {% endif %}
+      {% endif %}
+    </section>
+
+    <!-- Bottom Right: Buttons -->
+    <section class="col-12 col-lg-6 d-flex flex-column justify-content-start border rounded p-4 border-gold" style="background: transparent;">
+      <!-- Mark as complete button for superusers -->
+      {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
+        <form method="POST" action="{% url 'mark_job_complete' job.id %}" class="mb-3">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success w-100">Mark as Complete</button>
+        </form>
+      {% endif %}
+
+      <!-- Back to dashboard -->
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100">Back to Dashboard</a>
+    </section>
+  </div>
 </div>
 {% endblock content %}

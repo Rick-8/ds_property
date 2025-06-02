@@ -22,6 +22,10 @@ body {
     color: gold !important;
 }
 
+.border-gold {
+    border: 2px solid gold !important;
+}
+
 .large-gold-text {
     color: gold;
     font-weight: bold;

@@ -4,27 +4,32 @@
 {% block title %}My Jobs{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="large-gold-text">My Assigned Jobs</h2>
+<div class="container d-flex justify-content-center mt-5">
+  <div class="dark-opaque p-4 w-100" style="max-width: 700px;">
 
-  {% if jobs %}
-  <ul class="list-group mt-3">
-    {% for job in jobs %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <div>
-        <a href="{% url 'job_detail' job.pk %}" class="fw-bold">{{ job.title }}</a><br>
-        {{ job.property.label }}<br>
-        Scheduled for: {{ job.scheduled_date }}<br>
-        Status: {{ job.get_status_display }}
+    <h2 class="large-gold-text text-center mb-4">My Assigned Jobs</h2>
+
+    {% if jobs %}
+    <div class="list-group">
+      {% for job in jobs %}
+      <div class="list-group-item bg-transparent text-white mb-3 rounded">
+        <h5 class="mb-1">{{ job.title }}</h5>
+        <p class="mb-1">{{ job.property.label }}</p>
+        <small>Scheduled for: {{ job.scheduled_date }}</small><br>
+        <small>Status: {{ job.get_status_display }}</small><br>
+        <a href="{% url 'job_detail' job.pk %}" class="btn btn-outline-gold mt-2">View Job</a>
       </div>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>You have no assigned jobs.</p>
-  {% endif %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-white text-center">You have no assigned jobs.</p>
+    {% endif %}
 
-  <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    <div class="text-center mt-4">
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
+    </div>
+
+  </div>
 </div>
 
 {% block extra_scripts %}
@@ -33,4 +38,3 @@
 {% endblock %}
 
 {% endblock content %}
-

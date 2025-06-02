@@ -73,3 +73,16 @@ class StaffRouteAssignment(models.Model):
 
     def __str__(self):
         return f"{self.staff} on {self.route} from {self.start_date} to {self.end_date} ({self.shift_type})"
+
+
+class JobFeedback(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='feedback_entries')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    feedback = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Feedback on {self.job.title} by {self.user} at {self.created_at}"

@@ -20,6 +20,8 @@ urlpatterns = [
 
     # Staff jobs list (jobs assigned to logged-in user)
     path('jobs/staff/', views.staff_job_list, name='staff_job_list'),
+    path('jobs/<int:job_id>/feedback/', views.submit_feedback, name='submit_feedback'),
+
 
     # Route management (superuser only)
     path('routes/', views.routes_overview, name='routes_overview'),
