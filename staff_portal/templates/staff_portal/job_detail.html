@@ -80,7 +80,6 @@
 
     <!-- Bottom Right: Buttons -->
     <section class="col-12 col-lg-6 d-flex flex-column justify-content-start border rounded p-4 border-gold" style="background: transparent;">
-      <!-- Mark as complete button for superusers -->
       {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
         <form method="POST" action="{% url 'mark_job_complete' job.id %}" class="mb-3">
           {% csrf_token %}
@@ -88,7 +87,6 @@
         </form>
       {% endif %}
 
-      <!-- Back to dashboard -->
       <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100">Back to Dashboard</a>
     </section>
   </div>

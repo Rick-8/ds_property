@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="dark-opaque large-gold-text">User Admin Panel</h2>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Is Staff</th>
+        <th>Is Superuser</th>
+        <th>Is Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>
+          {% if user.get_full_name %}
+            {{ user.get_full_name }}
+          {% else %}
+            {{ user.username }}
+          {% endif %}
+        </td>
+        <td>{{ user.is_staff }}</td>
+        <td>{{ user.is_superuser }}</td>
+        <td>{{ user.is_active }}</td>
+        <td>
+          <!-- Staff toggle button -->
+          <a href="{% url 'toggle_staff' user.id %}"
+             class="btn btn-sm {% if user.is_staff %}btn-outline-blue{% else %}btn-outline-blue{% endif %}">
+            {% if user.is_staff %}Staff{% else %}Hire{% endif %}
+          </a>
+
+          <!-- Superuser toggle button -->
+          <a href="{% url 'toggle_superuser' user.id %}"
+             class="btn btn-sm {% if user.is_superuser %}btn-outline-gold btn{% else %}btn-outline-gold btn{% endif %}">
+            {% if user.is_superuser %}Superuser{% else %}{% if user.is_staff %}Promote{% else %}User{% endif %}{% endif %}
+          </a>
+
+          <!-- Active toggle button -->
+          <a href="{% url 'toggle_active' user.id %}"
+             class="btn btn-sm {% if user.is_active %}btn-outline-green{% else %}btn-red-in{% endif %}">
+            {% if user.is_active %}Active{% else %}Inactive{% endif %}
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db.models import Prefetch
 
@@ -36,7 +38,6 @@ def view_profile(request):
 
             profile.save()
 
-            # Add to property list if selected
             if form.cleaned_data.get('add_as_property'):
                 exists = Property.objects.filter(
                     profile=profile,
@@ -68,28 +69,58 @@ def view_profile(request):
 
 @login_required
 def list_properties(request):
-    # Define the Prefetch object once for reuse
     active_agreements_prefetch = Prefetch(
-        'serviceagreement_set', # Accesses related ServiceAgreement objects
+        'serviceagreement_set',
         queryset=ServiceAgreement.objects.filter(active=True).select_related('service_package'),
-        to_attr='active_agreements' # Attaches the found active agreements to 'active_agreements' list on each Property
+        to_attr='active_agreements'
     )
 
-    # Determine which properties to list based on user role
-    if request.user.is_staff or request.user.is_superuser:
-        # Staff see all properties, ordered by route number and label
-        # Apply prefetch_related here for staff as well
-        properties = Property.objects.all().order_by('route_number', 'label').prefetch_related(active_agreements_prefetch)
-    else:
-        # Normal users see only their own properties, ordered by label
-        # Apply prefetch_related here for regular users
-        properties = request.user.profile.properties.all().order_by('label').prefetch_related(active_agreements_prefetch)
+    properties = (
+        request.user.profile.properties
+        .all()
+        .order_by('label')
+        .prefetch_related(active_agreements_prefetch)
+    )
 
     return render(request, 'account/property_list.html', {
         'properties': properties,
-        # 'property_packages': property_packages, # This is no longer needed by the template
-        'is_staff_user': request.user.is_staff or request.user.is_superuser,
+        'is_staff_user': request.user.is_staff,
     })
+
+
+@staff_member_required
+def list_all_properties(request):
+    """
+    Superuser-only view to see and edit all properties with search and filter.
+    """
+    active_agreements_prefetch = Prefetch(
+        'serviceagreement_set',
+        queryset=ServiceAgreement.objects.filter(active=True).select_related('service_package'),
+        to_attr='active_agreements'
+    )
+
+    properties = Property.objects.all().order_by('route_number', 'label').prefetch_related(active_agreements_prefetch)
+
+    search_query = request.GET.get('search', '').strip()
+    filter_status = request.GET.get('filter', 'all')
+
+    if search_query:
+        properties = properties.filter(
+            Q(label__icontains=search_query) |
+            Q(address_summary__icontains=search_query)
+        )
+
+    if filter_status == 'subscribed':
+        properties = properties.filter(active_agreements__isnull=False).distinct()
+    elif filter_status == 'not_subscribed':
+        properties = properties.filter(active_agreements__isnull=True)
+
+    context = {
+        'properties': properties,
+        'search_query': search_query,
+        'filter_status': filter_status,
+    }
+    return render(request, 'account/property_list_all.html', context)
 
 
 @login_required
@@ -200,3 +231,23 @@ def account_dashboard(request):
 def user_agreements(request):
     agreements = ServiceAgreement.objects.filter(user=request.user, active=True)
     return render(request, 'memberships/user_agreements.html', {'agreements': agreements})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_property_list(request):
+    active_agreements_prefetch = Prefetch(
+        'serviceagreement_set',
+        queryset=ServiceAgreement.objects.filter(active=True).select_related('service_package'),
+        to_attr='active_agreements'
+    )
+
+    properties = (
+        Property.objects
+        .all()
+        .order_by('route_number', 'label')
+        .prefetch_related(active_agreements_prefetch)
+    )
+
+    return render(request, 'admin/property_list.html', {
+        'properties': properties,
+    })

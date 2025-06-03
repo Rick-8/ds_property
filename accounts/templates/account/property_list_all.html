@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Properties{% endblock %}
+
+{% block content %}
+<div class="container mt-4 dark-opaque">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Properties</h2>
+    </div>
+
+    <!-- Search and Filter Form -->
+    <form method="get" class="row g-3 mb-3">
+        <div class="col-md-6">
+            <input type="search" name="search" value="{{ search_query }}" class="form-control" placeholder="Search by label or address" aria-label="Search properties">
+        </div>
+        <div class="col-md-4">
+            <select name="filter" class="form-select" aria-label="Filter by subscription status">
+                <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All Properties</option>
+                <option value="subscribed" {% if filter_status == 'subscribed' %}selected{% endif %}>Subscribed</option>
+                <option value="not_subscribed" {% if filter_status == 'not_subscribed' %}selected{% endif %}>Not Subscribed</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-outline-gold">Filter</button>
+        </div>
+    </form>
+
+    {% if properties %}
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <!-- Desktop Table View -->
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Address</th>
+                            <th>Subscribed?</th>
+                            <th>Active Package</th>
+                            <th>Price</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for property in properties %}
+                        <tr>
+                            <td>{{ property.label }}</td>
+                            <td>{{ property.address_summary }}</td>
+                            <td>
+                                {% if property.active_agreements %}
+                                    <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                    <span class="badge bg-danger">No</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if property.active_agreements %}
+                                    {% with active_agreement=property.active_agreements.0 %}
+                                        {{ active_agreement.service_package.name }}
+                                    {% endwith %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if property.active_agreements %}
+                                    {% with active_agreement=property.active_agreements.0 %}
+                                        ${{ active_agreement.service_package.price_usd|floatformat:2 }}
+                                    {% endwith %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td class="text-center text-nowrap">
+                                <a href="{% url 'edit_property' property.id %}" class="btn btn-sm btn-info me-2" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{% url 'delete_property' property.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete {{ property.label }}?');" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="d-md-none p-3">
+                {% for property in properties %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ property.label }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ property.address_summary }}</h6>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Subscribed:
+                                {% if property.active_agreements %}
+                                    <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                    <span class="badge bg-danger">No</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Active Package:
+                                {% if property.active_agreements %}
+                                    {% with active_agreement=property.active_agreements.0 %}
+                                        {{ active_agreement.service_package.name }}
+                                    {% endwith %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Price:
+                                {% if property.active_agreements %}
+                                    {% with active_agreement=property.active_agreements.0 %}
+                                        ${{ active_agreement.service_package.price_usd|floatformat:2 }}
+                                    {% endwith %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'edit_property' property.id %}" class="btn btn-sm btn-info me-2">
+                                Edit
+                            </a>
+                            <form action="{% url 'delete_property' property.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete {{ property.label }}?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center" role="alert">
+        <p class="mb-0">No properties found.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static 'js/whatsapp.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}

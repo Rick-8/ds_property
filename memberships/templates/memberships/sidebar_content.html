@@ -54,11 +54,11 @@
                 </li>
             </ul>
 
-            <a href="{% url 'confirm_contract' pkg.id %}?property_id={{ pkg.property_id }}" class="btn btn-success btn-sm w-100 mb-2" data-package-id="{{ pkg.id }}">
+            <a href="{% url 'confirm_contract' pkg.id %}?property_id={{ pkg.property_id }}" class="btn btn-outline-green btn-sm w-100 mb-2" data-package-id="{{ pkg.id }}">
                 {% trans "Continue" %}
             </a>
 
-            <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-package-btn" data-package-id="{{ pkg.id }}">
+            <button type="button" class="btn btn-red-in btn-sm w-100 remove-package-btn" data-package-id="{{ pkg.id }}">
                 <i class="bi bi-x-circle me-1"></i> {% trans "Remove Package" %}
             </button>
 

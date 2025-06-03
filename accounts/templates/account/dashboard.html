@@ -6,65 +6,75 @@
     <h2 class="large-gold-text mb-4">Account Dashboard</h2>
     <ul class="list-group list-group-flush d-flex flex-column align-items-center gap-3">
 
-      {# View All Subscriptions button #}
-      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-
-      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-        {% if user.is_authenticated %}
+      {% if user.is_authenticated %}
         {% if user.is_staff or user.is_superuser %}
-        <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-          View All Subscriptions
-        </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
-      </li>
+        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+          <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+            View All Subscriptions
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
+        </li>
 
-      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-        <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">Staff Portal</a>
-      </li>
+        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+          <a href="{% url 'list_all_properties' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+            All Properties
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
+        </li>
 
+        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+          <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+            Staff Portal
+          </a>
+          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
+        </li>
+
+        {% if user.is_superuser %}
+        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+          <a href="{% url 'user_admin_panel' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+            User Admin Panel
+          </a>
+          <i class="bi bi-shield-lock text-gold fs-5 ms-3"></i>
+        </li>
+        {% endif %}
+        {% endif %}
       {% endif %}
-      {% endif %}
-      </li>
 
-      {# Forgot / Reset Password button #}
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_reset_password' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Forgot / Reset Password
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
+        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
-      {# Change Password button #}
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center"
-          style="min-width: 280px;">
+        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Change Password
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
+        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
-      {# Manage Email Address button #}
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_email' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Manage Email Address
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
+        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
-      {# Log Out button #}
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_logout' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Log Out
         </a>
-        <i class="bi bi-box-arrow-right text-gold fs-5 ms-3"></i> {# Added ms-3 for spacing #}
+        <i class="bi bi-box-arrow-right text-gold fs-5 ms-3"></i>
       </li>
+
     </ul>
   </div>
 </div>
 
 {% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/whatsapp.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
 {% endblock content %}

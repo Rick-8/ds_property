@@ -34,8 +34,7 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
-DEBUG = False
-
+DEBUG = 'DEVELOPMENT' in os.environ
 
 ALLOWED_HOSTS = [
     'ds-property-group-04ec2ca20d25.herokuapp.com',
@@ -64,6 +63,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'staff_portal',
+    'management'
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"

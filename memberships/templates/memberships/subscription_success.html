@@ -15,7 +15,7 @@
                                speed="1"
                                style="width: 200px; height: 200px; margin: 0 auto;"
                                autoplay
-                               loop> {# Added loop if you want it to continuously play #}
+                               loop>
                 </lottie-player>
             </div>
 
@@ -24,16 +24,10 @@
                 Your account has been updated, and you're all set to get started!
             </p>
 
-            {# Optional: Add more details if relevant, e.g., next billing date #}
-            {% if package.trial_days %}
-            <p class="text-light">
-                You're currently on a **{{ package.trial_days }} day free trial**. Your first billing will occur after the trial period.
-            </p>
-            {% else %}
             <p class="text-light">
                 Your subscription is now active.
             </p>
-            {% endif %}
+           
 
             <div class="mt-5 d-flex flex-column flex-sm-row justify-content-center">
                 <a href="{% url 'list_properties' %}" class="btn btn-outline-gold btn-lg mx-2 mb-3 mb-sm-0"> {# Added mb-3 for spacing on small screens #}
