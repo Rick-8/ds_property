@@ -30,9 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // No validation for empty fields — allow empty selects to submit
+
     try {
       const formData = new FormData(form);
-      const response = await fetch("/staff-portal/save-schedule/", {
+
+      const response = await fetch(saveScheduleUrl, {
         method: "POST",
         headers: {
           "X-CSRFToken": getCookie("csrftoken"),
@@ -51,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
           msg.classList.remove("d-none");
           setTimeout(() => msg.classList.add("d-none"), 3000);
         } else {
-          alert("Schedule saved successfully."); // fallback alert
+          alert("Schedule saved successfully.");
         }
       } else {
         alert("Error saving schedule: " + (data.error || "Unknown error"));

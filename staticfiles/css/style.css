@@ -1,681 +1,701 @@
 /* Global Font Styles */
 body {
-    font-family: "Exo", sans-serif;
-    background-image: url("../media/sky-and-grass.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    height: 100vh;
-    margin: 0;
-    padding-top: 60px; /* Push content below fixed navbar */
-    color: white;
-    text-align: center;
+  font-family: "Exo", sans-serif;
+  background-image: url("../media/sky-and-grass.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  margin: 0;
+  padding-top: 60px; /* Push content below fixed navbar */
+  color: white;
+  text-align: center;
 }
 
 /* Text Color Utilities */
 .text-white {
-    color: white !important;
+  color: white !important;
 }
 
 .text-gold {
-    color: gold !important;
+  color: gold !important;
+}
+
+.border-gold {
+  border: 2px solid gold !important;
 }
 
 .large-gold-text {
-    color: gold;
-    font-weight: bold;
-    text-align: center;
-    padding-bottom: 3rem;
+  color: gold;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 3rem;
 }
 
 /* Buttons */
 .btn-gold {
-    background-color: #d4af37;
-    color: white;
-    border: none;
+  background-color: #d4af37;
+  color: white;
+  border: none;
 }
 
 .btn-gold:hover {
-    background-color: #b38b2b;
+  background-color: #b38b2b;
 }
 
 /* Toast styles */
 #toast-container .toast-success {
-    background-color: rgba(25, 135, 84, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(25, 135, 84, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 #toast-container .toast-error {
-    background-color: rgba(220, 53, 69, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(220, 53, 69, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 #toast-container .toast-warning {
-    background-color: rgba(255, 193, 7, 0.8) !important;
-    border: 2px solid gold !important;
-    color: black !important;
+  background-color: rgba(255, 193, 7, 0.8) !important;
+  border: 2px solid gold !important;
+  color: black !important;
 }
 
 #toast-container .toast-info {
-    background-color: rgba(13, 110, 253, 0.8) !important;
-    border: 2px solid gold !important;
-    color: white !important;
+  background-color: rgba(13, 110, 253, 0.8) !important;
+  border: 2px solid gold !important;
+  color: white !important;
 }
 
 /* Toast close button color */
 #toast-container .btn-close {
-    filter: invert(1);
+  filter: invert(1);
 }
 
 /* Typography */
 .bad-script {
-    font-family: "Bad Script", cursive;
-    font-weight: 400;
-    font-style: normal;
+  font-family: "Bad Script", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Dark Opaque Backgrounds */
 .dark-opaque {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 2rem;
-    border-radius: 1rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 1rem;
 }
 
 .dark-opaque-nav {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
 }
 
 .dark-opaque-small {
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    margin-inline-end: 2rem;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-inline-end: 2rem;
 }
 
 /* Navbar Styles */
 nav.navbar {
-    position: fixed; /* Fixed to top */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background-color: rgba(0, 0, 0, 0.8);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1030;
-    display: flex;
-    align-items: flex-start; /* Align children to top */
-    padding: 0 1rem;
-    overflow: visible;
+  position: fixed; /* Fixed to top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1030;
+  display: flex;
+  align-items: flex-start; /* Align children to top */
+  padding: 0 1rem;
+  overflow: visible;
 }
 
 .navbar-brand {
-    height: 60px;
-    display: flex;
-    align-items: flex-start; /* Top align */
-    padding-top: 0;
-    line-height: 60px; /* Vertically center text if text-based */
-    transition: all 0.3s ease;
-    font-size: 3rem; /* Desktop size */
-    font-weight: bold;
-    color: #000;
+  height: 60px;
+  display: flex;
+  align-items: flex-start; /* Top align */
+  padding-top: 0;
+  line-height: 60px; /* Vertically center text if text-based */
+  transition: all 0.3s ease;
+  font-size: 3rem; /* Desktop size */
+  font-weight: bold;
+  color: #000;
 }
 
 .navbar-logo {
-    position: absolute;
-    left: 15px;
-    top: 100%;
-    transform: translateY(-50%);
-    height: 60px;
-    width: auto;
-    border-radius: 50%;
-    border: 2px solid black;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: absolute;
+  left: 15px;
+  top: 100%;
+  transform: translateY(-50%);
+  height: 60px;
+  width: auto;
+  border-radius: 50%;
+  border: 2px solid black;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar-logo:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .nav-link {
-    font-weight: 700;
-    color: white !important;
-    text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
-    transition: text-shadow 0.3s ease;
-    font-size: 1.5rem;
+  font-weight: 700;
+  color: white !important;
+  text-shadow: 1px 1px 0 #000, 2px 2px 2px rgba(0, 0, 0, 0.5);
+  transition: text-shadow 0.3s ease;
+  font-size: 1.5rem;
 }
 
 .nav-link:hover,
 .navbar-brand:hover {
-    text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
+  text-shadow: 2px 2px 5px #fff, 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
 .gold {
-    color: gold !important;
-    font-weight: 600;
+  color: gold !important;
+  font-weight: 600;
 }
 .nav-link.gold:hover {
-    color: gold !important;
-    text-shadow:
-        0 0 5px gold,
-        0 0 10px gold,
-        0 0 15px gold,
-        0 0 20px gold,
-        0 0 25px gold;
-    transition: text-shadow 0.3s ease, color 0.3s ease;
+  color: gold !important;
+  text-shadow: 0 0 5px gold, 0 0 10px gold, 0 0 15px gold, 0 0 20px gold,
+    0 0 25px gold;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
 }
 
 .nav-link.green {
-    color: #32cd32 !important;
-    font-weight: 600;
+  color: #32cd32 !important;
+  font-weight: 600;
 }
 
 .nav-link.green:hover {
-    color: #32cd32 !important; /* bright green */
-    text-shadow:
-        0 0 5px #32cd32,
-        0 0 10px #32cd32,
-        0 0 15px #32cd32,
-        0 0 20px #32cd32,
-        0 0 25px #32cd32;
-    transition: text-shadow 0.3s ease, color 0.3s ease;
+  color: #32cd32 !important; /* bright green */
+  text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32, 0 0 15px #32cd32,
+    0 0 20px #32cd32, 0 0 25px #32cd32;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
 }
 
 .nav-link.blue {
-    color: #007bff !important;
-    font-weight: 600;
+  color: #007bff !important;
+  font-weight: 600;
 }
 
 .nav-link.blue:hover {
-    color: #007bff !important;
-    text-shadow:
-        0 0 5px #007bff,
-        0 0 10px #007bff,
-        0 0 15px #007bff,
-        0 0 20px #007bff,
-        0 0 25px #007bff;
-    transition: text-shadow 0.3s ease, color 0.3s ease;
+  color: #007bff !important;
+  text-shadow: 0 0 5px #007bff, 0 0 10px #007bff, 0 0 15px #007bff,
+    0 0 20px #007bff, 0 0 25px #007bff;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
 }
 
 .brand-center {
-    font-size: 1.5rem;
-    transform: scale(1.1);
-    text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0, 0, 0, 0.4);
+  font-size: 1.5rem;
+  transform: scale(1.1);
+  text-shadow: 2px 2px 0 #333, 4px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-toggler {
-    background-color: #000;
-    border: 2px solid #d4af37;
+  background-color: #000;
+  border: 2px solid #d4af37;
 }
 
 .navbar-toggler-icon {
-    background-color: #d4af37;
-    border-radius: 1px;
+  background-color: #d4af37;
+  border-radius: 1px;
 }
 
 .navbar-toggler i {
-    color: #d4af37;
-    font-size: 30px;
+  color: #d4af37;
+  font-size: 30px;
 }
 
 /* DS Property - index.html Layout */
 .ds-services-section {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 2rem auto;
-    background-color: rgba(0, 0, 0, 0.85);
-    border-radius: 1rem;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-    flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 2rem auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 1rem;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  flex-wrap: nowrap;
 }
 
 /* Dropdown menu background */
 .navbar-collapse .dropdown-menu {
-    background-color: rgba(0, 0, 0, 0.7) !important;
-    border: none;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  border: none;
 }
 
 .navbar-collapse .dropdown-menu .dropdown-item {
-    color: white !important;
+  color: white !important;
 }
 
 .navbar-collapse .dropdown-menu .dropdown-item:hover,
 .navbar-collapse .dropdown-menu .dropdown-item:focus {
-    background-color: #d4af37 !important;
-    color: black !important;
+  background-color: #d4af37 !important;
+  color: black !important;
 }
 
 .round-image-container {
-    width: 300px;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
 .round-image-container img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .ds-services-content {
-    flex: 2;
-    padding: 1.5rem;
-    background-color: #222;
-    border-radius: 1rem;
-    color: white;
-    text-align: center;
+  flex: 2;
+  padding: 1.5rem;
+  background-color: #222;
+  border-radius: 1rem;
+  color: white;
+  text-align: center;
 }
 
 .ds-services-content h2 {
-    font-size: 2rem;
-    color: #d4af37;
-    margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #d4af37;
+  margin-bottom: 1rem;
 }
 
 .ds-services-content p {
-    line-height: 1.6;
-    font-size: 1.1rem;
+  line-height: 1.6;
+  font-size: 1.1rem;
 }
 
 /* Signup and register styles */
 .form-text {
-    color: white !important;
-    margin-top: 2px;
+  color: white !important;
+  margin-top: 2px;
 }
 
 /* Border 2 Border page layout styles */
 .carousel-item img {
-    max-height: 500px;
-    object-fit: contain;
+  max-height: 500px;
+  object-fit: contain;
 }
 
 /* 404 page styles */
 body.error-page {
-    background-color: #111;
-    color: gold;
-    font-family: "Exo", sans-serif;
-    text-align: center;
-    padding: 60px 20px;
+  background-color: #111;
+  color: gold;
+  font-family: "Exo", sans-serif;
+  text-align: center;
+  padding: 60px 20px;
 }
 
 .error-page h1 {
-    font-size: 4rem;
-    margin-bottom: 1rem;
+  font-size: 4rem;
+  margin-bottom: 1rem;
 }
 
 .error-icon {
-    font-size: 5rem;
-    color: red;
+  font-size: 5rem;
+  color: red;
 }
 
 .btn-home {
-    margin-top: 2rem;
-    padding: 10px 20px;
-    font-size: 1.1rem;
-    border: 2px solid gold;
-    color: gold;
-    background: transparent;
+  margin-top: 2rem;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border: 2px solid gold;
+  color: gold;
+  background: transparent;
 }
 
 .btn-home:hover {
-    background-color: gold;
-    color: black;
+  background-color: gold;
+  color: black;
 }
 
 /* WhatsApp Popup Styles */
 .whatsapp-popup {
-    position: fixed;
-    bottom: 90px;
-    right: 50px;
-    width: 120px;
-    height: auto;
-    padding: 10px;
-    z-index: 9999;
-    cursor: move;
-    user-select: none;
-    background-color: rgba(0, 0, 0, 0.85);
-    border-radius: 1rem;
-    font-family: "Exo", sans-serif;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    color: white;
-    text-align: center;
-    transition: background-color 0.3s ease;
+  position: fixed;
+  bottom: 90px;
+  right: 50px;
+  width: 120px;
+  height: auto;
+  padding: 10px;
+  z-index: 9999;
+  cursor: move;
+  user-select: none;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 1rem;
+  font-family: "Exo", sans-serif;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: white;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
 .whatsapp-popup:hover {
-    background-color: rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 1);
 }
 
 .whatsapp-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
 }
 
 .whatsapp-icon:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .whatsapp-text {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-    user-select: text;
-    white-space: nowrap;
-    color: gold;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  user-select: text;
+  white-space: nowrap;
+  color: gold;
 }
 
 .whatsapp-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    padding: 0;
-    line-height: 1;
-    transition: color 0.2s ease;
+  background: none;
+  border: none;
+  font-size: 20px;
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .whatsapp-close:hover {
-    color: #25d366;
+  color: #25d366;
 }
-
 
 /* Button styles */
 .btn-outline-grey {
-    color: white;
-    border: 2px solid gray;
-    background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: 2px solid gray;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .btn-outline-grey:hover {
-    background-color: gold;
-    color: black;
+  background-color: gold;
+  color: black;
 }
 
-
 .btn-outline-green {
-    color: #25d366;
-    border: 2px solid #25d366;
-    background-color: rgba(0, 0, 0, 0.6);
+  color: #25d366;
+  border: 2px solid #25d366;
+  background-color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
 }
 
 .btn-outline-green:hover {
-    background-color: #25d366;
-    color: black;
+  background-color: #25d366;
+  color: black;
+  font-weight: bold;
 }
 
+.btn-red-in {
+  background-color: red;
+  border: 2px solid black;
+  color: black;
+}
+
+.btn-red-in:hover {
+  background-color: black;
+  color: red;
+}
+
+.btn-outline-blue {
+  color: white;
+  border: 2px solid black;
+  background-color: royalblue;
+}
+.btn-outline-blue:hover {
+  color: black;
+  border: 2px solid black;
+  background-color: royalblue;
+}
+
+.btn-outline-silver {
+  color: silver;
+  border: 2px solid gold;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.btn-outline-silver:hover {
+  background-color: silver;
+  color: black;
+}
 
 .btn-outline-gold {
-    color: gold;
-    border: 2px solid gold;
-    background-color: rgba(0, 0, 0, 0.6);
+  color: gold;
+  border: 2px solid gold;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-outline-gold:hover {
-    background-color: gold;
-    color: black;
+  background-color: gold;
+  color: black;
 }
 
 /* service package button glow and styles */
 @keyframes pulse-gold {
-    0% {
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 215, 0, 1),
-                    0 0 40px rgba(255, 215, 0, 0.8);
-    }
-    100% {
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
 }
 
 .btn-glass-gold {
-    display: inline-block;
-    padding: 0.6rem 1.2rem;
-    border: 1px solid gold;
-    color: gold;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    animation: pulse-gold 2s infinite !important;
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid gold;
+  color: gold;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  animation: pulse-gold 2s infinite !important;
 }
 
 .btn-glass-gold:hover {
-    background: rgba(255, 215, 0, 0.1);
-    color: black;
-    border-color: black;
-    animation: none;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+  background: rgba(255, 215, 0, 0.1);
+  color: black;
+  border-color: black;
+  animation: none;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
 }
-
 
 /* Glass effect container for accordion */
 .glass-accordion {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.25rem;
 }
 
 /* Each accordion item as glass pane */
 .glass-item {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    margin-bottom: 0.5rem;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-    transition: background 0.3s ease;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
 }
 
 /* Accordion button styling */
 .glass-item .accordion-button {
-    background: transparent;
-    color: #ffd700; /* gold color for text */
-    font-weight: 600;
-    border-radius: 10px;
-    transition: background 0.3s ease, color 0.3s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: none;
+  background: transparent;
+  color: #ffd700; /* gold color for text */
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background 0.3s ease, color 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: none;
 }
 
 /* Active/open button */
 .glass-item .accordion-button:not(.collapsed) {
-    background: rgba(255, 255, 255, 0.25);
-    color: #222;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.25);
+  color: #222;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
 /* Accordion body */
 .glass-item .accordion-body {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 0 0 10px 10px;
-    color: #fff;
-    padding: 1rem 1.5rem;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 10px 10px;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Text shadow for readability */
 .glass-item .accordion-button,
 .glass-item .accordion-body {
-    text-shadow: 0 0 4px rgba(0,0,0,0.25);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 /* Smooth transitions */
 .accordion-button,
 .accordion-body {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    flex-direction: column;
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
 }
 
 .loading-overlay.visible {
-    opacity: 1; /* Make visible when 'visible' class is added */
+  opacity: 1;
 }
 
 .loading-content {
-    text-align: center;
-    padding: 2rem;
-    border-radius: 10px;
-    /* Optional: Add a subtle background to the content itself if needed */
-    /* background-color: rgba(52, 58, 64, 0.8); */
+  text-align: center;
+  padding: 2rem;
+  border-radius: 10px;
 }
-/* --- END NEW LOADING OVERLAY STYLES --- */
+
 
 /* Media Queries */
 
 /* Responsive Navbar Brand */
 @media (max-width: 991px) {
-    .brand-center {
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
+  .brand-center {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
 }
 
 /* Mobile and Desktop Responsiveness for Navbar */
 @media (max-width: 768px) {
-    .navbar-brand {
-        font-size: 1.4rem;
-        letter-spacing: 1px;
-    }
+  .navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
 }
 
 @media (min-width: 768px) {
-    .navbar-brand {
-        font-size: 3rem;
-    }
-    .navbar-logo {
-        height: 20vh;
-        object-fit: cover;
-        border-radius: 50%;
-        margin-left: 5vw;
-    }
+  .navbar-brand {
+    font-size: 3rem;
+  }
+  .navbar-logo {
+    height: 20vh;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-left: 5vw;
+  }
 }
 
 /* Responsive stacking for smaller screens */
 @media (max-width: 900px) {
-    .ds-services-section {
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem;
-    }
+  .ds-services-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
 
-    .ds-services-image,
-    .ds-services-content {
-        width: 90vw;
-    }
+  .ds-services-image,
+  .ds-services-content {
+    width: 90vw;
+  }
 
-    .round-image-container {
-        width: 250px;
-        height: 250px;
-    }
+  .round-image-container {
+    width: 250px;
+    height: 250px;
+  }
 }
 
 @media (max-width: 600px) {
-    .ds-services-section {
-        padding: 1rem 0.5rem;
-    }
+  .ds-services-section {
+    padding: 1rem 0.5rem;
+  }
 
-    .round-image-container {
-        width: 200px;
-        height: 200px;
-    }
+  .round-image-container {
+    width: 200px;
+    height: 200px;
+  }
 
-    .ds-services-content h2 {
-        font-size: 1.5rem;
-    }
+  .ds-services-content h2 {
+    font-size: 1.5rem;
+  }
 }
 
 /* Responsive WhatsApp popup on smaller screens */
 @media (max-width: 600px) {
-    .whatsapp-popup {
-        bottom: 20px;
-        right: 20px;
-        width: 90px;
-        font-size: 12px;
-        padding: 6px;
-    }
+  .whatsapp-popup {
+    bottom: 20px;
+    right: 20px;
+    width: 90px;
+    font-size: 12px;
+    padding: 6px;
+  }
 
-    .whatsapp-icon {
-        width: 40px;
-        height: 40px;
-    }
+  .whatsapp-icon {
+    width: 40px;
+    height: 40px;
+  }
 
-    .whatsapp-text {
-        display: none;
-    }
+  .whatsapp-text {
+    display: none;
+  }
 }
 /* Dropdown menu background matches navbar on mobile */
 @media (max-width: 768px) {
-    /* Dropdown menu background */
-    .navbar-collapse .dropdown-menu {
-        background-color: rgba(0, 0, 0, 0.7) !important;
-        border: none;
-    }
+  /* Dropdown menu background */
+  .navbar-collapse .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border: none;
+  }
 
-    .navbar-collapse .dropdown-menu .dropdown-item {
-        color: white !important;
-    }
+  .navbar-collapse .dropdown-menu .dropdown-item {
+    color: white !important;
+  }
 
-    .navbar-collapse .dropdown-menu .dropdown-item:hover,
-    .navbar-collapse .dropdown-menu .dropdown-item:focus {
-        background-color: #d4af37 !important; /* gold highlight */
-        color: black !important;
-    }
+  .navbar-collapse .dropdown-menu .dropdown-item:hover,
+  .navbar-collapse .dropdown-menu .dropdown-item:focus {
+    background-color: #d4af37 !important; /* gold highlight */
+    color: black !important;
+  }
 
-    /* Toggler menu (collapsed menu) background with gold border */
-    .navbar-collapse {
-        background-color: rgba(0, 0, 0, 0.7);
-        border: 2px solid #d4af37; /* Gold border */
-        border-radius: 0 0 0.5rem 0.5rem;
-        z-index: 9999;
-    }
+  /* Toggler menu (collapsed menu) background with gold border */
+  .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #d4af37; /* Gold border */
+    border-radius: 0 0 0.5rem 0.5rem;
+    z-index: 9999;
+  }
 }
