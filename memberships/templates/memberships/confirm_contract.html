@@ -1,72 +1,49 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %} {# Added i18n for translations in JavaScript #}
+{% load i18n %}
 
 {% block content %}
 <div class="container dark-opaque p-5 rounded shadow">
     <h2 class="mb-5 text-gold text-center">Confirm Your Subscription</h2>
 
+    <!-- Package Details -->
     <section class="mb-5">
         <h4 class="text-gold mb-4 border-bottom pb-2 text-center">Selected Package Details</h4>
-
         <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Package</h6>
-                    <p class="mb-0">{{ package.name }}</p>
-                </div>
-
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Tier</h6>
-                    <p class="mb-0">{{ package.get_tier_display }}</p>
-                </div>
-
+            <div class="col-md-5 text-center">
+                <h6 class="text-gold mb-1">Package</h6>
+                <p>{{ package.name }}</p>
+                <h6 class="text-gold mb-1">Tier</h6>
+                <p>{{ package.get_tier_display }}</p>
                 {% if property %}
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Property Label</h6>
-                    <p class="mb-0">{{ property.label }}</p>
-                </div>
+                <h6 class="text-gold mb-1">Property Label</h6>
+                <p>{{ property.label }}</p>
                 {% endif %}
             </div>
-
-            <div class="col-md-5">
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Category</h6>
-                    <p class="mb-0">{{ package.get_category_display }}</p>
-                </div>
-
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Price</h6>
-                    <p class="mb-0">${{ package.price_usd }} / month</p>
-                </div>
-
+            <div class="col-md-5 text-center">
+                <h6 class="text-gold mb-1">Category</h6>
+                <p>{{ package.get_category_display }}</p>
+                <h6 class="text-gold mb-1">Price</h6>
+                <p>${{ package.price_usd }} / month</p>
                 {% if property %}
-                <div class="mb-3 text-center">
-                    <h6 class="text-gold mb-1">Address</h6>
-                    <p class="mb-0">{{ property.address_summary }}</p>
-                </div>
+                <h6 class="text-gold mb-1">Address</h6>
+                <p>{{ property.address_summary }}</p>
                 {% endif %}
             </div>
         </div>
     </section>
 
+    <!-- Terms and Conditions -->
     <section class="mb-5">
         <h4 class="text-gold mb-3 border-bottom pb-2">Terms and Conditions</h4>
         <p class="gold">By subscribing to this service, you agree to the following:</p>
         <ol class="pl-4 pt-1" style="max-width: 50vw; margin: 0 auto; line-height: 1.5;">
-            <li>You authorize us to charge your selected payment method on a monthly basis for the selected service
-                package.
-            </li>
-            <li>You acknowledge that the service will automatically renew each month unless cancelled by providing a
-                written
-                30-day notice.</li>
-            <li>You understand that all services will be provided as outlined in your selected service tier and
-                category, and
-                subject to availability.</li>
-            <li>You accept the responsibilities and limitations as described in the full service agreement.</li>
-            <li>By proceeding, you agree to all terms and conditions as outlined in the document linked below.</li>
+            <li>You authorize us to charge your selected payment method monthly.</li>
+            <li>You acknowledge automatic renewal unless 30-day written notice is provided.</li>
+            <li>You agree to services as described in your selected tier and category.</li>
+            <li>You accept responsibilities and limitations described in the service agreement.</li>
+            <li>By proceeding, you agree to all terms and conditions linked below.</li>
         </ol>
-
         <p class="mt-4 text-center">
             <a href="{% static 'pdfs/dsp-terms-conditions.pdf' %}" target="_blank" class="btn btn-outline-grey">
                 Download Full Terms & Conditions (PDF)
@@ -74,7 +51,7 @@
         </p>
     </section>
 
-    {# Payment section with Stripe Elements #}
+    <!-- Payment Section -->
     <section class="mb-5">
         <h4 class="text-gold mb-3 border-bottom pb-2 text-center">Payment Details</h4>
         <form id="payment-form" class="mx-auto" style="max-width: 400px;">
@@ -82,11 +59,9 @@
             <div class="mb-3">
                 <label for="card-element" class="form-label text-gold">Credit or debit card</label>
                 <div id="card-element" class="form-control"
-                    style="background-color: #343a40; border-color: #495057; color: #f8f9fa;">
-                </div>
-                <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                    style="background-color: #343a40; border-color: #495057; color: #f8f9fa;"></div>
+                <div id="card-errors" class="text-danger mt-2"></div>
             </div>
-
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="acceptTerms" required>
                 <label class="form-check-label" for="acceptTerms">
@@ -94,7 +69,6 @@
                         conditions</a>.
                 </label>
             </div>
-
             <button type="submit" id="submit-button" class="btn btn-outline-green w-100 mb-3">
                 Confirm Subscription & Pay
             </button>
@@ -104,22 +78,23 @@
     </section>
 </div>
 
+<!-- Full-screen overlay -->
 <div id="full-screen-loading-overlay" class="loading-overlay" style="display: none;">
     <div class="loading-content">
         <lottie-player src="{% static 'animations/payment_loader.json' %}"
-                        background="transparent"
-                        speed="1"
-                        style="width: 250px; height: 250px; margin: 0 auto;"
-                        loop
-                        autoplay>
+                       background="transparent"
+                       speed="1"
+                       style="width: 250px; height: 250px; margin: 0 auto;"
+                       loop autoplay>
         </lottie-player>
         <p class="text-gold mt-3 h4">Processing your payment...</p>
         <p class="text-gold">Please do not refresh or close this page.</p>
     </div>
 </div>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> {# Ensure Lottie Player script is included #}
 
+<!-- Stripe + Lottie -->
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 <script>
     function getCookie(name) {
@@ -140,49 +115,36 @@
     const stripe = Stripe('{{ stripe_publishable_key }}');
     const elements = stripe.elements();
 
-    const style = {
-        base: {
-            color: '#F8F9FA',
-            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#6c757d',
+    const card = elements.create('card', {
+        style: {
+            base: {
+                color: '#F8F9FA',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': { color: '#6c757d' },
             },
-        },
-        invalid: {
-            color: '#dc3545',
-            iconColor: '#dc3545',
-        },
-    };
+            invalid: { color: '#dc3545', iconColor: '#dc3545' }
+        }
+    });
 
-    const card = elements.create('card', { style: style });
     card.mount('#card-element');
 
     card.on('change', function (event) {
-        const displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
-        }
+        document.getElementById('card-errors').textContent = event.error ? event.error.message : '';
     });
 
     const form = document.getElementById('payment-form');
     const submitButton = document.getElementById('submit-button');
     const paymentMessage = document.getElementById('payment-message');
-    const acceptTermsCheckbox = document.getElementById('acceptTerms');
+    const fullScreenLoadingOverlay = document.getElementById('full-screen-loading-overlay');
 
     const packageId = "{{ package.id }}";
     const propertyId = "{{ property.id }}";
 
-    const fullScreenLoadingOverlay = document.getElementById('full-screen-loading-overlay');
-
     function showLoadingOverlay() {
         fullScreenLoadingOverlay.style.display = 'flex';
-        setTimeout(() => {
-            fullScreenLoadingOverlay.classList.add('visible');
-        }, 10);
+        setTimeout(() => fullScreenLoadingOverlay.classList.add('visible'), 10);
         document.body.style.overflow = 'hidden';
     }
 
@@ -197,11 +159,10 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         paymentMessage.textContent = '';
         submitButton.disabled = true;
 
-        if (!acceptTermsCheckbox.checked) {
+        if (!document.getElementById('acceptTerms').checked) {
             paymentMessage.textContent = "{% trans 'You must agree to the terms and conditions.' %}";
             submitButton.disabled = false;
             return;
@@ -222,50 +183,55 @@
                 paymentMessage.textContent = createPaymentMethodError.message;
                 submitButton.disabled = false;
                 hideLoadingOverlay();
-            } else {
-                const response = await fetch(`/memberships/payment/${packageId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: JSON.stringify({
-                        payment_method_id: paymentMethod.id,
-                        property_id: propertyId,
-                    }),
-                });
-
-                const data = await response.json();
-                hideLoadingOverlay();
-                submitButton.disabled = false;
-
-                if (data.success_url) {
-                    window.location.href = data.success_url;
-                } else if (data.requires_action) {
-                    const { error: confirmCardPaymentError, paymentIntent } = await stripe.confirmCardPayment(data.payment_intent_client_secret);
-
-                    if (confirmCardPaymentError) {
-                        paymentMessage.textContent = confirmCardPaymentError.message;
-                        submitButton.disabled = false;
-                    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-                        window.location.href = data.success_url || '/memberships/subscription-success/';
-                    } else {
-                        console.error("Unexpected paymentIntent status after confirmation:", paymentIntent);
-                        paymentMessage.textContent = "{% trans 'Payment action completed, but status unexpected. Please check your account.' %}";
-                        submitButton.disabled = false;
-                    }
-                } else if (data.error) {
-                    paymentMessage.textContent = data.error;
-                    submitButton.disabled = false;
-                } else {
-                    console.error("Unexpected response from backend:", data);
-                    paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing. Please try again.' %}";
-                    submitButton.disabled = false;
-                }
+                return;
             }
+
+            const response = await fetch(`/memberships/payment/${packageId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({
+                    payment_method_id: paymentMethod.id,
+                    property_id: propertyId,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success_url) {
+                window.location.href = data.success_url;
+            } else if (data.requires_action) {
+                const { error: confirmCardPaymentError, paymentIntent } =
+                    await stripe.confirmCardPayment(data.payment_intent_client_secret);
+
+                if (confirmCardPaymentError) {
+                    paymentMessage.textContent = confirmCardPaymentError.message;
+                    submitButton.disabled = false;
+                    hideLoadingOverlay();
+                } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                    window.location.href = data.success_url || '/memberships/subscription-success/';
+                } else {
+                    console.error("Unexpected paymentIntent status:", paymentIntent);
+                    paymentMessage.textContent = "{% trans 'Payment action completed, but status unexpected. Please check your account.' %}";
+                    submitButton.disabled = false;
+                    hideLoadingOverlay();
+                }
+            } else if (data.error) {
+                paymentMessage.textContent = data.error;
+                submitButton.disabled = false;
+                hideLoadingOverlay();
+            } else {
+                console.error("Unexpected backend response:", data);
+                paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing. Please try again.' %}";
+                submitButton.disabled = false;
+                hideLoadingOverlay();
+            }
+
         } catch (fetchError) {
-            console.error('Error during payment fetch:', fetchError);
+            console.error('Payment fetch error:', fetchError);
             paymentMessage.textContent = "{% trans 'An unexpected error occurred during payment processing.' %}";
             submitButton.disabled = false;
             hideLoadingOverlay();
@@ -274,8 +240,7 @@
 </script>
 
 {% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/whatsapp.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
-
 {% endblock %}

@@ -44,7 +44,6 @@ def staff_dashboard(request):
 def job_detail(request, pk):
     job = get_object_or_404(Job, pk=pk)
 
-    # Try to get existing feedback for this job and user (or create empty)
     feedback_instance = JobFeedback.objects.filter(job=job, user=request.user).first()
 
     if request.method == 'POST':
@@ -70,15 +69,29 @@ def mark_job_complete(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
     if request.method == "POST":
-        if job.property.has_active_service:
-            # Property has active service, so reset job to pending for recycling
-            job.status = "PENDING"
-            job.completed_date = None  # Clear completed date
-        else:
-            # No active service, mark job as completed
-            job.status = "COMPLETED"
-            job.completed_date = timezone.now().date()
+
+        feedback = request.POST.get("feedback", "").strip()
+        if feedback:
+            JobFeedback.objects.create(
+                job=job,
+                user=request.user,
+                feedback=feedback,
+            )
+
+        job.status = "COMPLETED"
+        job.completed_date = timezone.now().date()
         job.save()
+
+        if job.property.has_active_service:
+            Job.objects.create(
+                title=job.title,
+                description=job.description,
+                property=job.property,
+                service_agreement=job.service_agreement,
+                scheduled_date=job.scheduled_date + timedelta(weeks=1),
+                status="PENDING",
+
+            )
 
     return redirect("dashboard")
 
@@ -99,11 +112,13 @@ def assign_job_route(request, job_id):
             return JsonResponse({'success': False, 'error': str(e)})
     return HttpResponseBadRequest('Invalid request method')
 
+
 @login_required
 @superuser_required
 def route_job_list(request):
     routes = Route.objects.prefetch_related('job_set').all()
     return render(request, 'staff_portal/route_job_list.html', {'routes': routes})
+
 
 @login_required
 def job_status_overview(request):
@@ -116,10 +131,12 @@ def job_status_overview(request):
         'missed': missed
     })
 
+
 @login_required
 def completed_jobs_view(request):
     completed_jobs = Job.objects.filter(status='COMPLETED').order_by('-completed_date')
     return render(request, 'staff_portal/completed_jobs.html', {'completed_jobs': completed_jobs})
+
 
 @login_required
 @superuser_required
@@ -150,6 +167,7 @@ def staff_schedule_planner(request):
         'assignment_lookup': assignment_lookup,
     }
     return render(request, 'staff_portal/Staff-Schedule-Planner.html', context)
+
 
 @csrf_exempt
 @login_required
@@ -191,28 +209,36 @@ def save_schedule(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
+
 @login_required
 def staff_job_list(request):
     user = request.user
     today = date.today()
+
     active_assignments = StaffRouteAssignment.objects.filter(
         staff=user,
         start_date__lte=today,
         end_date__gte=today
     )
     active_routes = [assignment.route for assignment in active_assignments if assignment.route]
+
     jobs = Job.objects.filter(
-        Q(assigned_staff=user) |
-        Q(route__in=active_routes),
+        (
+            Q(assigned_staff=user) |
+            Q(assigned_staff__isnull=True, route__in=active_routes)
+        ),
         status__in=["NEW", "PENDING"]
     ).distinct().order_by('scheduled_date')
+
     return render(request, 'staff_portal/staff_jobs.html', {'jobs': jobs})
+
 
 @superuser_required
 @login_required
 def routes_overview(request):
     routes = Route.objects.prefetch_related('job_set').all()
     return render(request, 'staff_portal/routes_overview.html', {'routes': routes})
+
 
 @login_required
 def jobs_by_status(request):
@@ -225,6 +251,7 @@ def jobs_by_status(request):
             Q(route__in=request.user.routes.all()) | Q(assigned_staff=request.user)
         ).distinct().order_by('scheduled_date')
     return render(request, 'staff_portal/jobs_by_status.html', {'jobs': jobs})
+
 
 @login_required
 def completed_jobs(request):
@@ -242,12 +269,10 @@ def completed_jobs(request):
 def submit_feedback(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
-    # Authorization: superusers or assigned staff only
     if not (request.user.is_superuser or request.user in job.assigned_staff.all()):
         messages.error(request, "You are not authorized to update this job.")
         return redirect('job_detail', job_id)
 
-    # Prevent feedback if job is completed
     if job.status == 'COMPLETED':
         messages.warning(request, "Job is already completed. Feedback cannot be updated.")
         return redirect('job_detail', job_id)

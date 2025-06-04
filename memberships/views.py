@@ -117,7 +117,6 @@ def package_create(request):
                     )
                     logger.info(f"Stripe Product/Price metadata updated with django_package_id: {package.id}")
 
-
                     messages.success(request, f"Service package '{package.name}' created successfully and linked to Stripe.")
                     return redirect('servicepackage_list')
 
@@ -134,10 +133,11 @@ def package_create(request):
 
     return render(request, 'memberships/servicepackage_form.html', {'form': form, 'title': 'Create Service Package'})
 
+
 @superuser_required
 def package_update(request, pk):
     package = get_object_or_404(ServicePackage, pk=pk)
-    old_price = package.price_usd  # Track if price changed
+    old_price = package.price_usd
 
     if request.method == 'POST':
         form = ServicePackageForm(request.POST, instance=package)
@@ -146,7 +146,6 @@ def package_update(request, pk):
             display_name = f"{updated_package.get_category_display()} {updated_package.get_tier_display()} - {updated_package.name}"
 
             try:
-                # Update Stripe Product
                 if updated_package.stripe_product_id:
                     stripe.Product.modify(
                         updated_package.stripe_product_id,
@@ -160,7 +159,6 @@ def package_update(request, pk):
                         }
                     )
 
-                # If price changed, create a new Stripe Price (Stripe prices are immutable)
                 if updated_package.price_usd != old_price:
                     new_stripe_price = stripe.Price.create(
                         product=updated_package.stripe_product_id,
@@ -486,9 +484,11 @@ def payment(request, package_id):
             request.session['last_subscribed_agreement_id'] = service_agreement_obj.id
             request.session['last_subscribed_package_id'] = package.id
 
+            # ✅ Update property flags
             property_obj.is_subscribed = True
+            property_obj.has_active_service = True
             property_obj.save()
-            logger.info(f"Property {property_obj.id} status updated to is_subscribed=True.")
+            logger.info(f"Property {property_obj.id} status updated to is_subscribed=True and has_active_service=True.")
 
         if subscription.latest_invoice:
             payment_intent = subscription.latest_invoice.get('payment_intent')
@@ -529,7 +529,6 @@ def payment(request, package_id):
     except Exception as e:
         logger.error(f"Unexpected error in payment view: {e}", exc_info=True)
         return JsonResponse({"error": "An unexpected error occurred during payment processing."}, status=500)
-
 
 
 @login_required
@@ -597,12 +596,11 @@ def subscription_success(request):
                 agreement.save()
                 logger.info(f"Activated agreement {agreement.id}")
 
-            if hasattr(agreement, 'property') and agreement.property:
-                if not agreement.property.is_active:
-                    agreement.property.is_active = True
-                    agreement.property.has_active_service = True
-                    agreement.property.save()
-                    logger.info(f"Activated property {agreement.property.id}")
+                if hasattr(agreement, 'property') and agreement.property:
+                    if not agreement.property.is_active:
+                        agreement.property.is_active = True
+                        agreement.property.has_active_service = True
+                        agreement.property.save()
 
         except Exception as e:
             messages.error(request, "Failed to activate subscription details. Please contact support.")
