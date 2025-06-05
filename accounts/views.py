@@ -221,7 +221,6 @@ def property_list(request):
     return render(request, 'account/property_list.html', context)
 
 
-
 @login_required
 def account_dashboard(request):
     return render(request, 'account/dashboard.html')

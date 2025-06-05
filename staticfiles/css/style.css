@@ -101,6 +101,14 @@ body {
   margin-inline-end: 2rem;
 }
 
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 1rem;
+  border-color: gold;
+  border-width: 2px;
+}
+
 /* Navbar Styles */
 nav.navbar {
   position: fixed; /* Fixed to top */
@@ -427,6 +435,7 @@ body.error-page {
 
 .btn-red-in:hover {
   background-color: black;
+  border: 2px solid gold;
   color: red;
 }
 
@@ -443,12 +452,13 @@ body.error-page {
 
 .btn-outline-silver {
   color: silver;
-  border: 2px solid gold;
+  border: 2px solid silver;
   background-color: rgba(0, 0, 0, 0.7);
 }
 
 .btn-outline-silver:hover {
   background-color: silver;
+  border: 2px solid gold;
   color: black;
 }
 
