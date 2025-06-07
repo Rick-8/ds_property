@@ -13,7 +13,6 @@
     </div>
 
     {% if agreements %}
-    <!-- Large screen table -->
     <div class="table-responsive d-none d-md-block">
         <table class="table table-striped align-middle">
             <thead class="table-dark">
@@ -89,13 +88,11 @@
         </table>
     </div>
 
-    <!-- Small screen card list -->
     <div class="d-md-none">
         <div class="list-group">
             {% for agreement in agreements %}
             <div id="agreement-card-{{ agreement.id }}" data-agreement-id="{{ agreement.id }}"
                 class="list-group-item mb-3 shadow-sm rounded">
-                <!-- Card header clickable to toggle collapse -->
                 <div class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
                     href="#collapseDetails{{ agreement.id }}" role="button" aria-expanded="false"
                     aria-controls="collapseDetails{{ agreement.id }}" style="cursor: pointer;">
@@ -105,7 +102,6 @@
                     <i class="fas fa-chevron-down"></i>
                 </div>
 
-                <!-- Collapsible details -->
                 <div class="collapse mt-3" id="collapseDetails{{ agreement.id }}">
                     <p class="mb-1"><i class="fas fa-box-open me-2 text-gold"></i><strong>Package:</strong> {{
                         agreement.service_package.name }} ({{ agreement.service_package.get_category_display }})</p>
@@ -116,7 +112,7 @@
                     <p class="mb-1"><i class="fas fa-calendar-alt me-2 text-gold"></i><strong>Start Date:</strong> {{
                         agreement.start_date|date:"M d, Y" }}</p>
                     <p class="mb-1"><i class="fas fa-info-circle me-2 text-gold"></i><strong>Status:</strong> <span
-                            class="badge bg-primary">{{ agreement.status|capfirst }}</span></p>
+                                class="badge bg-primary">{{ agreement.status|capfirst }}</span></p>
                     <p class="mb-1"><i class="fas fa-toggle-on me-2 text-gold"></i><strong>Active:</strong>
                         {% if agreement.active %}
                         <span class="badge bg-success">Active</span>
@@ -158,9 +154,7 @@
     {% endif %}
 </div>
 
-<!-- Modal for Cancellation -->
-<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" aria-labelledby="cancelConfirmationModalLabel">
     <div class="modal-dialog">
         <div class="modal-content modal-background">
             <div class="modal-header">
@@ -185,10 +179,22 @@
     </div>
 </div>
 
+<div id="savingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 9999; justify-content: center; align-items: center;">
+    <div id="savingLottie" style="width: 200px; height: 200px;"></div>
+    <p>Canceling Contract...</p>
+</div>
+
+
 {% block extra_scripts %}
-<script src="{% static 'memberships/js/cancelConfirmationModal.js' %}"></script>
+<!-- Lottie.js library for animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.0/lottie.min.js"></script>
+
+<!-- Your new dedicated cancellation modal JS -->
+<script src="{% static 'memberships/js/cancel_modal.js' %}"></script>
+
+<!-- Keep your other scripts here -->
 <script src="{% static 'js/whatsapp.js' %}"></script>
-<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
+
 
 {% endblock content %}

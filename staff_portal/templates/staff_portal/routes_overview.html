@@ -4,25 +4,84 @@
 {% block title %}Routes Overview{% endblock %}
 
 {% block content %}
-<h2 class="large-gold-text dark-opaque">All Routes and Their Jobs</h2>
+<div class="container my-4">
+  <h2 class="large-gold-text dark-opaque mb-4">All Routes Open Jobs</h2>
 
-{% for route in routes %}
-  <div class="card my-3">
-    <div class="card-header">
-      <h4>{{ route.name }}</h4>
-      <p>{{ route.description }}</p>
-    </div>
-    <ul class="list-group list-group-flush">
-      {% for job in route.job_set.all %}
-        <li class="list-group-item">
-          <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a> - Scheduled: {{ job.scheduled_date }} - Status: {{ job.get_status_display }}
-        </li>
-      {% empty %}
-        <li class="list-group-item">No jobs assigned to this route.</li>
-      {% endfor %}
-    </ul>
+  <!-- Dashboard Buttons -->
+  <div class="mb-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver me-2">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    <a href="{% url 'route_add' %}" class="btn btn-outline-gold">
+      <i class="bi bi-plus-circle"></i> Add New Route
+    </a>
   </div>
-{% empty %}
-  <p>No routes found.</p>
-{% endfor %}
+
+  {% if routes %}
+    {% for route in routes %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="mb-0">{{ route.name }}</h4>
+            <small class="text-muted">{{ route.description }}</small>
+          </div>
+          <div>
+            <a href="{% url 'route_edit' route.pk %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-pencil"></i> Edit Route
+            </a>
+          </div>
+        </div>
+
+        <!-- Scrollable container on md+ screens -->
+        <div class="d-none d-md-block" style="max-height: 350px; overflow-y: auto;">
+          {% if route.active_jobs %}
+            <ul class="list-group list-group-flush">
+              {% for job in route.active_jobs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
+                    <small class="text-muted ms-2">Scheduled: {{ job.scheduled_date }}</small>
+                  </div>
+                  <span class="badge bg-info text-dark">{{ job.get_status_display }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-muted fst-italic">
+                No active jobs assigned to this route.
+              </li>
+            </ul>
+          {% endif %}
+        </div>
+
+        <!-- Card style list on small/mobile screens -->
+        <div class="d-block d-md-none">
+          {% if route.active_jobs %}
+            {% for job in route.active_jobs %}
+              <div class="card mb-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                  <div>
+                    <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
+                    <small class="text-muted ms-2">Scheduled: {{ job.scheduled_date }}</small>
+                  </div>
+                  <span class="badge bg-info text-dark">{{ job.get_status_display }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="card">
+              <div class="card-body text-muted fst-italic">
+                No active jobs assigned to this route.
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted fst-italic">No routes found.</p>
+  {% endif %}
+</div>
 {% endblock %}

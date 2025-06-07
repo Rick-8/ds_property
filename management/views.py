@@ -34,6 +34,7 @@ def user_admin_panel(request):
     users = User.objects.all().order_by('-is_superuser', '-is_staff', 'email')
     return render(request, "management/user_admin_panel.html", {"users": users})
 
+
 @superuser_required
 def toggle_active(request, user_id):
     """
@@ -55,6 +56,7 @@ def toggle_active(request, user_id):
     messages.success(request, f"Active status updated for {user.email}")
     return redirect("user_admin_panel")
 
+
 @superuser_required
 def toggle_superuser(request, user_id):
     """
@@ -75,6 +77,7 @@ def toggle_superuser(request, user_id):
     user.save()
     messages.success(request, f"Superuser status updated for {user.email}")
     return redirect("user_admin_panel")
+
 
 @superuser_required
 def toggle_staff(request, user_id):

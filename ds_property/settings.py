@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from django.contrib.messages import constants as messages
+import stripe
 
 
 if os.path.isfile('env.py'):
@@ -31,7 +32,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
 DEBUG = 'DEVELOPMENT' in os.environ

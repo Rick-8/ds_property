@@ -1,68 +1,125 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Utility: Get CSRF token from cookie
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(name + "=")) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
       }
     }
-    return cookieValue;
   }
+  return cookieValue;
+}
 
-  // Elements
-  const form = document.getElementById("scheduleForm");
-  const msg = document.getElementById("scheduleSuccessMsg");
+async function assignJobToRoute(jobId, routeId) {
+  try {
+    const response = await fetch(`/staff/assign_job_route/${jobId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ route_id: routeId }),
+    });
 
-  if (!form) {
-    console.error('Schedule form with id "scheduleForm" not found.');
-    return; // stop if no form
+    if (!response.ok) throw new Error(`Failed with status ${response.status}`);
+
+    const data = await response.json();
+    if (data.success) {
+      console.log(`Job ${jobId} assigned to route ${routeId}`);
+    } else {
+      alert('Error assigning route: ' + (data.error || 'Unknown error'));
+    }
+  } catch (error) {
+    console.error('assignJobToRoute error:', error);
   }
-  if (!msg) {
-    console.warn('Success message element with id "scheduleSuccessMsg" not found.');
+}
+
+async function assignStaffToJobs(assignments) {
+  try {
+    const response = await fetch('/staff/assign_job_staff/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify(assignments),
+    });
+
+    if (!response.ok) throw new Error(`Failed with status ${response.status}`);
+
+    const data = await response.json();
+    if (data.success) {
+      console.log('Staff assigned successfully');
+    } else {
+      alert('Error assigning staff: ' + (data.error || 'Unknown error'));
+    }
+  } catch (error) {
+    console.error('assignStaffToJobs error:', error);
   }
+}
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+async function saveSchedule(formElement) {
+  try {
+    const formData = new FormData(formElement);
+    const response = await fetch('/staff/save_schedule/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: formData,
+    });
 
-    // No validation for empty fields — allow empty selects to submit
+    if (!response.ok) throw new Error(`Failed with status ${response.status}`);
 
-    try {
-      const formData = new FormData(form);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Schedule saved successfully');
+      alert('Schedule saved!');
+    } else {
+      alert('Error saving schedule: ' + (data.error || 'Unknown error'));
+    }
+  } catch (error) {
+    console.error('saveSchedule error:', error);
+  }
+}
 
-      const response = await fetch(saveScheduleUrl, {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: formData,
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.assign-route-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const jobId = button.dataset.jobId;
+      const routeId = button.dataset.routeId;
+      if (jobId && routeId) {
+        assignJobToRoute(jobId, routeId);
+      } else {
+        console.error('Missing jobId or routeId on button dataset');
+      }
+    });
+  });
+
+  const assignStaffForm = document.getElementById('assign-staff-form');
+  if (assignStaffForm) {
+    assignStaffForm.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const assignments = {};
+      assignStaffForm.querySelectorAll('select[name^="job_"]').forEach(select => {
+        const jobKey = select.name;
+        const staffId = select.value ? Number(select.value) : null;
+        assignments[jobKey] = staffId;
       });
 
-      if (!response.ok) {
-        throw new Error(`Network response was not OK (status: ${response.status})`);
-      }
+      assignStaffToJobs(assignments);
+    });
+  }
 
-      const data = await response.json();
-
-      if (data.success) {
-        if (msg) {
-          msg.classList.remove("d-none");
-          setTimeout(() => msg.classList.add("d-none"), 3000);
-        } else {
-          alert("Schedule saved successfully.");
-        }
-      } else {
-        alert("Error saving schedule: " + (data.error || "Unknown error"));
-        console.error("Server error response:", data);
-      }
-    } catch (error) {
-      console.error("Fetch or JSON parsing error:", error);
-      alert("An unexpected error occurred. Please try again later.");
-    }
-  });
+  const scheduleForm = document.getElementById('schedule-form');
+  if (scheduleForm) {
+    scheduleForm.addEventListener('submit', event => {
+      event.preventDefault();
+      saveSchedule(scheduleForm);
+    });
+  }
 });

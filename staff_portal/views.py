@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.contrib import messages
 from django.db.models import Q
 from datetime import date, timedelta, datetime
@@ -8,8 +8,14 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
-from .models import Job, JobFeedback
+from .models import JobFeedback
 from .forms import JobFeedbackForm
+from django.utils.timezone import now
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
+from django.db.models import Prefetch
+from django.utils.timezone import localdate
+from django.contrib.auth import authenticate
 
 import json
 import logging
@@ -29,20 +35,27 @@ def superuser_required(view_func):
 def staff_dashboard(request):
     context = {}
     if request.user.is_superuser:
-        unassigned_jobs = Job.objects.filter(route__isnull=True).order_by('scheduled_date')
-        context['unassigned_jobs'] = unassigned_jobs
-        context['routes'] = Route.objects.all()
+        unassigned_jobs = Job.objects.select_related('property').filter(route__isnull=True).order_by('scheduled_date')
+        routes = Route.objects.all()
+
+        context['unassigned_jobs'] = unassigned_jobs  # Pass full objects, not dicts
+        context['routes'] = routes
     else:
         assigned_jobs = Job.objects.filter(
             Q(route__in=request.user.routes.all()) | Q(assigned_staff=request.user)
         ).order_by('scheduled_date')
         context['assigned_jobs'] = assigned_jobs
+
     return render(request, 'staff_portal/dashboard.html', context)
+
 
 
 @login_required
 def job_detail(request, pk):
-    job = get_object_or_404(Job, pk=pk)
+    job = get_object_or_404(Job.objects.select_related('property').prefetch_related('assigned_staff'), pk=pk)
+
+    if not (request.user.is_superuser or request.user in job.assigned_staff.all()):
+        return HttpResponseForbidden("You cannot leave feedback on this job.")
 
     feedback_instance = JobFeedback.objects.filter(job=job, user=request.user).first()
 
@@ -57,10 +70,14 @@ def job_detail(request, pk):
     else:
         form = JobFeedbackForm(instance=feedback_instance)
 
+    # ✅ These must be indented properly under the view
     context = {
         'job': job,
         'form': form,
+        'job_display_id': f"J{job.id}",
+        'property_display_id': f"P{job.property.id}",
     }
+
     return render(request, 'staff_portal/job_detail.html', context)
 
 
@@ -93,7 +110,7 @@ def mark_job_complete(request, job_id):
 
             )
 
-    return redirect("dashboard")
+    return redirect("/staff/jobs/staff/")
 
 
 @login_required
@@ -105,8 +122,14 @@ def assign_job_route(request, job_id):
             route_id = data.get('route_id')
             job = Job.objects.get(id=job_id)
             route = Route.objects.get(id=route_id)
+
+            # Optional: schedule job for next available weekday (example: tomorrow)
+            next_date = timezone.now().date() + timedelta(days=1)
+
             job.route = route
+            job.scheduled_date = next_date  # <- update date appropriately
             job.save()
+
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
@@ -134,8 +157,18 @@ def job_status_overview(request):
 
 @login_required
 def completed_jobs_view(request):
-    completed_jobs = Job.objects.filter(status='COMPLETED').order_by('-completed_date')
-    return render(request, 'staff_portal/completed_jobs.html', {'completed_jobs': completed_jobs})
+    raw_jobs = Job.objects.filter(status='COMPLETED').select_related('property').order_by('-completed_date')
+
+    jobs = []
+    for job in raw_jobs:
+        if job and job.property:
+            jobs.append({
+                "job": job,
+                "display_id": f"J{job.id}",
+                "property_display_id": f"P{job.property.id}",
+            })
+
+    return render(request, 'staff_portal/completed_jobs.html', {'jobs': jobs})
 
 
 @login_required
@@ -169,22 +202,29 @@ def staff_schedule_planner(request):
     return render(request, 'staff_portal/Staff-Schedule-Planner.html', context)
 
 
+
 @csrf_exempt
 @login_required
 @superuser_required
 def save_schedule(request):
     if request.method == 'POST':
         try:
+            # Extract all keys starting with 'assignment_' from POST
             current_keys = set(k for k in request.POST if k.startswith('assignment_'))
+            # Extract all unique dates from keys
             dates = {k.split('_')[1] for k in current_keys}
+            # Find the earliest and latest dates for the range
             start_date = min(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
             end_date = max(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
             assignments_to_keep = []
+
+            # Loop through POST items and update/create/delete assignments
             for key, staff_id_str in request.POST.items():
                 if key.startswith('assignment_'):
                     _, day, route_id = key.split('_')
                     day_date = datetime.strptime(day, '%Y-%m-%d').date()
                     route_id_int = int(route_id)
+
                     if staff_id_str:
                         staff_id = int(staff_id_str)
                         assignment, created = StaffRouteAssignment.objects.update_or_create(
@@ -200,43 +240,132 @@ def save_schedule(request):
                             start_date=day_date,
                             end_date=day_date
                         ).delete()
+
+            # Delete assignments outside the current range that are not kept
             StaffRouteAssignment.objects.filter(
                 start_date__gte=start_date,
                 end_date__lte=end_date
             ).exclude(id__in=assignments_to_keep).delete()
+
+            # New: Assign staff to jobs based on route and date assignments
+            assignments = StaffRouteAssignment.objects.filter(
+                start_date__gte=start_date,
+                end_date__lte=end_date
+            )
+            for assignment in assignments:
+                # Find jobs matching route and scheduled date
+                jobs = Job.objects.filter(
+                    route=assignment.route,
+                    scheduled_date=assignment.start_date  # Assuming one-day assignments
+                )
+                for job in jobs:
+                    job.assigned_staff.set([assignment.staff])
+                    job.save()
+
             return JsonResponse({'success': True})
+
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 
 @login_required
 def staff_job_list(request):
     user = request.user
-    today = date.today()
+    today = localdate()
+    end_date = today + timedelta(days=2)  # show jobs for today + 2 days
 
-    active_assignments = StaffRouteAssignment.objects.filter(
+    active_routes = StaffRouteAssignment.objects.filter(
         staff=user,
-        start_date__lte=today,
+        start_date__lte=end_date,
         end_date__gte=today
-    )
-    active_routes = [assignment.route for assignment in active_assignments if assignment.route]
+    ).values_list('route', flat=True)
 
     jobs = Job.objects.filter(
-        (
-            Q(assigned_staff=user) |
-            Q(assigned_staff__isnull=True, route__in=active_routes)
-        ),
-        status__in=["NEW", "PENDING"]
+        Q(assigned_staff=user) |
+        Q(assigned_staff__isnull=True, route__in=active_routes),
+        status__in=["NEW", "PENDING"],
+        scheduled_date__range=(today, end_date)
     ).distinct().order_by('scheduled_date')
 
-    return render(request, 'staff_portal/staff_jobs.html', {'jobs': jobs})
+    return render(request, 'staff_portal/staff_jobs.html', {'jobs': jobs, 'today': today})
 
 
-@superuser_required
 @login_required
+@superuser_required
+@csrf_exempt
+def save_schedule(request):
+    if request.method == 'POST':
+        try:
+            current_keys = set(k for k in request.POST if k.startswith('assignment_'))
+            dates = {k.split('_')[1] for k in current_keys}
+            start_date = min(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
+            end_date = max(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
+            assignments_to_keep = []
+
+            for key, staff_id_str in request.POST.items():
+                if key.startswith('assignment_'):
+                    _, day, route_id = key.split('_')
+                    day_date = datetime.strptime(day, '%Y-%m-%d').date()
+                    route_id_int = int(route_id)
+                    if staff_id_str:
+                        staff_id = int(staff_id_str)
+
+                        # Optional: Validate if staff_id and route_id exist in DB
+                        from django.contrib.auth import get_user_model
+                        User = get_user_model()
+                        try:
+                            staff_obj = User.objects.get(pk=staff_id)
+                        except User.DoesNotExist:
+                            logger.error(f"Staff with id {staff_id} does not exist.")
+                            return JsonResponse({'success': False, 'error': f'Staff id {staff_id} invalid'}, status=400)
+
+                        # Same for route - assuming Route model
+                        from staff_portal.models import Route, StaffRouteAssignment
+
+                        try:
+                            route_obj = Route.objects.get(pk=route_id_int)
+                        except Route.DoesNotExist:
+                            logger.error(f"Route with id {route_id_int} does not exist.")
+                            return JsonResponse({'success': False, 'error': f'Route id {route_id_int} invalid'}, status=400)
+
+                        assignment, created = StaffRouteAssignment.objects.update_or_create(
+                            route=route_obj,
+                            start_date=day_date,
+                            end_date=day_date,
+                            defaults={'staff': staff_obj}
+                        )
+                        assignments_to_keep.append(assignment.id)
+                    else:
+                        StaffRouteAssignment.objects.filter(
+                            route_id=route_id_int,
+                            start_date=day_date,
+                            end_date=day_date
+                        ).delete()
+
+            StaffRouteAssignment.objects.filter(
+                start_date__gte=start_date,
+                end_date__lte=end_date
+            ).exclude(id__in=assignments_to_keep).delete()
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            logger.exception("Error while saving schedule")
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+
 def routes_overview(request):
-    routes = Route.objects.prefetch_related('job_set').all()
+    routes = Route.objects.prefetch_related(
+        Prefetch(
+            'job_set',
+            queryset=Job.objects.exclude(status='COMPLETED').order_by('scheduled_date'),
+            to_attr='active_jobs'
+        )
+    )
     return render(request, 'staff_portal/routes_overview.html', {'routes': routes})
 
 
@@ -290,3 +419,112 @@ def submit_feedback(request, job_id):
             messages.error(request, "Feedback cannot be empty.")
 
     return redirect('job_detail', job_id)
+
+
+@login_required
+def missed_jobs_view(request):
+    today = now().date()
+
+    missed_jobs = Job.objects.filter(
+        scheduled_date=today,
+        assigned_staff__isnull=False
+    ).exclude(status='COMPLETED').distinct()
+
+    context = {
+        'missed_jobs': missed_jobs,
+        'today': today,
+    }
+
+    return render(request, 'staff_portal/missed_jobs.html', context)
+
+
+@login_required
+def future_jobs(request):
+    today = date.today()
+    future_jobs = Job.objects.filter(scheduled_date__gt=today).order_by('scheduled_date')
+    return render(request, 'staff_portal/future_jobs.html', {'future_jobs': future_jobs})
+
+
+@csrf_exempt
+@login_required
+@superuser_required
+def assign_job_staff(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            # Example data: {"job_15": 3, "job_18": 2}
+            for job_key, staff_id in data.items():
+                if job_key.startswith("job_"):
+                    job_id = int(job_key.split("_")[1])
+                    job = Job.objects.get(id=job_id)
+                    if staff_id:
+                        staff_user = User.objects.get(id=staff_id)
+                        job.assigned_staff.set([staff_user])  # Assign single user
+                    else:
+                        job.assigned_staff.clear()  # Remove all assignments
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+    return JsonResponse({"success": False, "error": "Invalid request method"}, status=400)
+
+
+def mark_job_missed(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == 'POST':
+        job.status = 'missed'  # Update with your actual status value
+        job.save()
+        messages.success(request, "Job marked as not completed.")
+        return redirect('job_detail', job_id=job.id)
+
+    messages.error(request, "Invalid request method.")
+    return redirect('job_detail', job_id=job.id)
+
+
+class RouteCreateView(CreateView):
+    model = Route
+    fields = ['name', 'description']  # Adjust fields to your model
+    template_name = 'staff_portal/route_form.html'
+    success_url = reverse_lazy('routes_overview')  # Adjust to your routes overview url name
+
+
+class RouteUpdateView(UpdateView):
+    model = Route
+    fields = ['name', 'description']  # Same fields as create
+    template_name = 'staff_portal/route_form.html'
+    success_url = reverse_lazy('routes_overview')
+
+
+@login_required
+def all_jobs_view(request):
+    jobs = Job.objects.all().order_by('-created_at')
+    return render(request, 'staff_portal/all_jobs.html', {'jobs': jobs})
+
+
+@login_required
+def delete_job(request, job_id):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user:
+            job = get_object_or_404(Job, id=job_id)
+            job.delete()
+            messages.success(request, "Job deleted successfully.")
+        else:
+            messages.error(request, "Invalid password. Job not deleted.")
+        return redirect('all_jobs')
+    return redirect('all_jobs')
+
+
+@login_required
+def delete_all_jobs(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user:
+            Job.objects.all().delete()
+            messages.success(request, "All jobs deleted successfully.")
+        else:
+            messages.error(request, "Invalid password. No jobs were deleted.")
+        return redirect('all_jobs')
+    return redirect('all_jobs')

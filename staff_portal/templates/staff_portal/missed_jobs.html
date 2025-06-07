@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center dark-opaque large-gold-text">
+        Missed Jobs for <strong class="text-white">{{ today }}</strong>
+    </h2>
+
+    <div class="text-center mt-4">
+        <button onclick="history.back()" class="btn btn-outline-silver mb-4">
+            ← Return to Previous Page
+        </button>
+    </div>
+
+    {% if missed_jobs %}
+    <!-- Scrollable container -->
+    <div class="scrollable-container p-2 rounded">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for job in missed_jobs %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <p class="mb-1"><strong>Property:</strong> {{ job.property.label }}</p>
+                        <p class="mb-1"><strong>Status:</strong> {{ job.status }}</p>
+                        <p class="mb-1"><strong>Assigned Staff:</strong>
+                            {% for user in job.assigned_staff.all %}
+                                {{ user.get_full_name|default:user.username }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        {% if job.feedback_set.exists %}
+                        <hr>
+                        <p class="mb-1"><strong>Feedback:</strong></p>
+                        <ul class="list-unstyled">
+                            {% for fb in job.feedback_set.all %}
+                            <li class="mb-2">
+                                <span class="text-muted small">{{ fb.created_at|date:"M d, Y H:i" }}</span><br>
+                                {{ fb.message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted mt-2"><em>No feedback provided.</em></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center dark-opaque large-gold-text">Good Job... there are no missed jobs today. 🎉</p>
+    {% endif %}
+</div>
+
+{% endblock %}

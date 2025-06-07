@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Future Jobs{% endblock %}
+
+{% block content %}
+<div class="container mt-5 dark-opaque py-4 px-3">
+  <h2 class="large-gold-text mb-4">Future Jobs</h2>
+
+  {% if future_jobs %}
+  <ul class="list-group">
+    {% for job in future_jobs %}
+    <li class="list-group-item d-flex justify-content-between align-items-center border-gold">
+      <div>
+        <strong>{{ job.scheduled_date|date:"M d, Y" }}</strong> - {{ job.property.label }}
+      </div>
+      <div>
+        Route: 
+        {% if job.route %}
+          {{ job.route.name }}
+        {% else %}
+          Not assigned
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No future jobs scheduled.</p>
+  {% endif %}
+
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+</div>
+{% endblock content %}

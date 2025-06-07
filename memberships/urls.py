@@ -20,7 +20,6 @@ urlpatterns = [
     # Core Stripe Subscription Flow Views
     path('payment/<int:package_id>/', views.payment, name='payment'),
     path('subscription-success/', views.subscription_success, name='subscription_success'),
-    path('subscription-cancel/', views.subscription_cancel, name='subscription_cancel'),
     path('all-subscriptions/', views.all_subscriptions, name='all_subscriptions'),
     path('cancel-agreement/<int:agreement_id>/', views.cancel_agreement, name='cancel_agreement'),
 

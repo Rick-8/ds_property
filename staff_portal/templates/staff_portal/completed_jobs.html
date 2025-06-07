@@ -1,23 +1,78 @@
 {% extends "base.html" %}
 {% block title %}Completed Jobs{% endblock %}
+{% load static %}
 
 {% block content %}
-<h2 class="large-gold-text dark-opaque">Completed Jobs</h2>
+<h2 class="large-gold-text dark-opaque mb-4">Completed Jobs</h2>
 
 {% if jobs %}
-  <ul class="list-group">
-    {% for job in jobs %}
-      <li class="list-group-item">
-        <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a> - 
-        Route: {% if job.route %}{{ job.route.name }}{% else %}Unassigned{% endif %} - 
-        Completed: {{ job.completed_date }}
-      </li>
+<!-- Search Input -->
+<div class="mb-3">
+  <input type="text" id="jobSearchInput" class="form-control" placeholder="Search by Job ID or Property ID">
+</div>
+
+<!-- Desktop & Tablet: Scrollable List Group -->
+<div class="d-none d-md-block">
+  <div class="border rounded overflow-auto" style="max-height: 400px;">
+    <ul class="list-group" id="jobList">
+      {% for item in jobs %}
+        {% if item.job and item.job.pk %}
+        <li class="list-group-item job-entry">
+          <a href="{% url 'job_detail' item.job.pk %}">{{ item.job.title|default:"Untitled Job" }}</a><br>
+          <small>Job ID: {{ item.display_id|default:"N/A" }} | Property ID: {{ item.property_display_id|default:"N/A" }}</small><br>
+          <small>Completed: {{ item.job.completed_date|date:"Y-m-d" }}</small>
+        </li>
+        {% else %}
+        <li class="list-group-item text-muted">
+          <em>Incomplete or missing job record</em>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<!-- Mobile: Cards -->
+<div class="d-md-none" id="jobCardList">
+  <div class="row row-cols-1 g-3">
+    {% for item in jobs %}
+      {% if item.job and item.job.pk %}
+      <div class="col job-entry">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-2">
+              <a href="{% url 'job_detail' item.job.pk %}" class="text-decoration-none">
+                {{ item.job.title|default:"Untitled Job" }}
+              </a>
+            </h5>
+            <p class="card-text mb-1"><strong>Job ID:</strong> {{ item.display_id|default:"N/A" }}</p>
+            <p class="card-text mb-1"><strong>Property ID:</strong> {{ item.property_display_id|default:"N/A" }}</p>
+            <p class="card-text mb-0"><strong>Completed:</strong> {{ item.job.completed_date|date:"Y-m-d" }}</p>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col">
+        <div class="card bg-light">
+          <div class="card-body">
+            <p class="card-text text-muted">Incomplete job record</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
     {% endfor %}
-  </ul>
+  </div>
+</div>
 {% else %}
-  <p>No completed jobs yet.</p>
+<p>No completed jobs yet.</p>
 {% endif %}
-      <div class="text-center mt-4">
-      <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
-    </div>
-{% endblock %}
+
+<div class="text-center mt-4">
+  <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="{% static 'staff_portal/js/all_complete_jobs_search.js' %}"></script>
+<script src="{% static 'js/whatsapp.js' %}"></script>
+{% endblock extra_scripts %}

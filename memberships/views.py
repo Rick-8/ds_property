@@ -377,11 +377,6 @@ def confirm_contract(request, package_id):
 @csrf_protect
 @require_POST
 def payment(request, package_id):
-    """
-    Handles processing subscription creation using Stripe's Subscription API directly.
-    This view expects a POST request with 'payment_method_id' and 'property_id' in JSON body.
-    Includes a final critical check for active agreements and creates/updates Django models.
-    """
     package = get_object_or_404(ServicePackage, pk=package_id)
 
     if not package.stripe_price_id:
@@ -392,24 +387,17 @@ def payment(request, package_id):
         data = json.loads(request.body)
         payment_method_id = data.get('payment_method_id')
         property_id = data.get('property_id')
-
     except json.JSONDecodeError:
         logger.error("Invalid JSON in payment request body.", exc_info=True)
         return JsonResponse({"error": "Invalid request format."}, status=400)
 
-    logger.debug(f"payment view - Received property_id from JSON: {property_id}")
-    logger.debug(f"payment view - Received payment_method_id from JSON: {payment_method_id}")
-
-    property_obj = None
-    if property_id:
-        try:
-            property_obj = Property.objects.get(pk=property_id, profile__user=request.user, is_active=True)
-        except Property.DoesNotExist:
-            logger.warning(f"Property {property_id} not found or not active for user {request.user.id}")
-            return JsonResponse({"error": "Invalid property selected."}, status=400)
-    else:
-        logger.warning(f"No property_id received in payment request for user {request.user.id}")
+    if not property_id:
         return JsonResponse({"error": "No property selected for this service package."}, status=400)
+
+    try:
+        property_obj = Property.objects.get(pk=property_id, profile__user=request.user, is_active=True)
+    except Property.DoesNotExist:
+        return JsonResponse({"error": "Invalid property selected."}, status=400)
 
     existing_agreement = ServiceAgreement.objects.filter(
         property=property_obj,
@@ -418,14 +406,12 @@ def payment(request, package_id):
 
     if existing_agreement:
         if existing_agreement.service_package == package:
-            messages.info(request, f"This property already has an active '{package.name}' service agreement. No new subscription created.")
+            messages.info(request, f"This property already has an active '{package.name}' service agreement.")
             return JsonResponse({'success_url': reverse("subscription_success")})
         else:
-            messages.error(request, f"This property already has an active '{existing_agreement.service_package.name}' service agreement. Please cancel it first or choose another property.")
             return JsonResponse({"error": "This property already has an active service agreement with a different package."}, status=400)
 
     if not payment_method_id:
-        logger.warning(f"Missing payment_method_id for user {request.user.id}")
         return JsonResponse({"error": "Missing payment_method_id"}, status=400)
 
     try:
@@ -440,23 +426,20 @@ def payment(request, package_id):
             )
             request.user.profile.stripe_customer_id = customer.id
             request.user.profile.save()
-            logger.info(f"Stripe Customer created for user {request.user.id}: {customer.id}")
         else:
             customer = stripe.Customer.retrieve(request.user.profile.stripe_customer_id)
-            logger.info(f"Stripe Customer retrieved for user {request.user.id}: {customer.id}")
 
         stripe.PaymentMethod.attach(payment_method_id, customer=customer.id)
         stripe.Customer.modify(
             customer.id,
             invoice_settings={"default_payment_method": payment_method_id},
         )
-        logger.info(f"PaymentMethod {payment_method_id} attached and set as default for customer {customer.id}")
 
         subscription = stripe.Subscription.create(
             customer=customer.id,
             items=[{'price': package.stripe_price_id}],
             default_payment_method=payment_method_id,
-            expand=['latest_invoice'],
+            expand=['latest_invoice.payment_intent'],
             metadata={
                 'user_id': str(request.user.id),
                 'property_id': str(property_obj.id),
@@ -464,7 +447,13 @@ def payment(request, package_id):
                 'package_id': str(package.id),
             }
         )
-        logger.info(f"Stripe Subscription created: {subscription.id}")
+
+        payment_intent = None
+        latest_invoice = subscription.latest_invoice
+        if latest_invoice and hasattr(latest_invoice, 'payment_intent'):
+            payment_intent = latest_invoice.payment_intent
+            if isinstance(payment_intent, str):
+                payment_intent = stripe.PaymentIntent.retrieve(payment_intent)
 
         with transaction.atomic():
             service_agreement_obj = ServiceAgreement.objects.create(
@@ -479,7 +468,6 @@ def payment(request, package_id):
                 amount_paid=package.price_usd,
                 active=True
             )
-            logger.info(f"Django ServiceAgreement created for Stripe subscription {subscription.id}")
 
             request.session['last_subscribed_agreement_id'] = service_agreement_obj.id
             request.session['last_subscribed_package_id'] = package.id
@@ -487,46 +475,31 @@ def payment(request, package_id):
             property_obj.is_subscribed = True
             property_obj.has_active_service = True
             property_obj.save()
-            logger.info(f"Property {property_obj.id} status updated to is_subscribed=True and has_active_service=True.")
 
-        if subscription.latest_invoice:
-            payment_intent = subscription.latest_invoice.get('payment_intent')
-
-            if payment_intent:
-                if (payment_intent.status == 'requires_action' or
-                        payment_intent.status == 'requires_confirmation'):
-                    return JsonResponse({
-                        'requires_action': True,
-                        'payment_intent_client_secret': payment_intent.client_secret,
-                        'success_url': reverse("subscription_success")
-                    })
-                elif payment_intent.status == 'succeeded':
-                    messages.success(request, "Subscription successful! Your service is active.")
-                    if 'selected_packages' in request.session:
-                        del request.session['selected_packages']
-                    return JsonResponse({'success_url': reverse("subscription_success")})
-                else:
-                    logger.warning(f"Payment Intent status unexpected: {payment_intent.status} for subscription {subscription.id}")
-                    return JsonResponse({"error": f"Payment status: {payment_intent.status}. Please check Stripe dashboard or contact support."}, status=400)
-            else:
-                messages.success(request, "Subscription started! We'll notify you when the first payment is due.")
-                if 'selected_packages' in request.session:
-                    del request.session['selected_packages']
+        if payment_intent:
+            if payment_intent.status in ['requires_action', 'requires_confirmation']:
+                return JsonResponse({
+                    'requires_action': True,
+                    'payment_intent_client_secret': payment_intent.client_secret,
+                    'success_url': reverse("subscription_success")
+                })
+            elif payment_intent.status == 'succeeded':
+                messages.success(request, "Subscription successful! Your service is active.")
+                request.session.pop('selected_packages', None)
                 return JsonResponse({'success_url': reverse("subscription_success")})
+            else:
+                return JsonResponse({"error": f"Payment status: {payment_intent.status}. Please contact support."}, status=400)
         else:
             messages.success(request, "Subscription started! We'll notify you when the first payment is due.")
-            if 'selected_packages' in request.session:
-                del request.session['selected_packages']
+            request.session.pop('selected_packages', None)
             return JsonResponse({'success_url': reverse("subscription_success")})
 
     except stripe.error.CardError as e:
-        logger.error(f"Stripe Card Error in payment view: {e.user_message}", exc_info=True)
         return JsonResponse({"error": e.user_message}, status=400)
     except stripe.error.StripeError as e:
-        logger.error(f"Stripe API Error in payment view: {e}", exc_info=True)
         return JsonResponse({"error": str(e)}, status=400)
     except Exception as e:
-        logger.error(f"Unexpected error in payment view: {e}", exc_info=True)
+        logger.error(f"Unexpected error in payment view: {str(e)}", exc_info=True)
         return JsonResponse({"error": "An unexpected error occurred during payment processing."}, status=500)
 
 
@@ -733,114 +706,130 @@ def resend_confirmation_email(request, agreement_id):
 
 
 @login_required
-def subscription_cancel(request):
-    """
-    Page displayed if subscription process is cancelled (e.g., user navigates away).
-    """
-    messages.info(request, "Your subscription setup was cancelled.")
-    return render(request, 'memberships/subscription_cancel.html')
-
-
-@login_required
 @require_POST
 def cancel_agreement(request, agreement_id):
     """
-    Cancels an active service agreement:
-    - Cancels Stripe subscription if exists and active
-    - Marks agreement as cancelled
-    - Updates related property status if needed
-    - Sends confirmation emails
-    Returns JSON response indicating success or failure.
+    Handles the cancellation of a service agreement and its Stripe subscription.
     """
     user = request.user
-    agreement = get_object_or_404(ServiceAgreement, id=agreement_id, user=user, active=True)
+    agreement = get_object_or_404(ServiceAgreement, id=agreement_id) # Removed user=user, active=True for broader checks
+
+    # Security check: Ensure the current user owns the agreement or has staff permissions
+    if not request.user.is_staff and agreement.user != request.user:
+        messages.error(request, "You do not have permission to cancel this agreement.")
+        return redirect('all_subscriptions')
+
+    # If the agreement is already inactive, just inform and redirect
+    if not agreement.active:
+        messages.info(request, f"Agreement {agreement.id} is already inactive. No action taken.")
+        return redirect('all_subscriptions')
+
+    email_context = {} # Initialize for use in success message
 
     try:
         with transaction.atomic():
-            # Attempt Stripe subscription cancellation if ID present and exists
+            stripe_cancellation_successful_or_already_cancelled = False
+
             if agreement.stripe_subscription_id:
                 try:
-                    # Retrieve subscription first to check existence & status
                     subscription = stripe.Subscription.retrieve(agreement.stripe_subscription_id)
-                    if subscription and subscription.status != 'canceled':
-                        stripe.Subscription.delete(agreement.stripe_subscription_id)
-                        logger.info(f"Stripe subscription {agreement.stripe_subscription_id} cancelled for agreement {agreement.id}.")
+
+                    if subscription.status not in ['canceled', 'ended']:
+                        # Cancels at the end of the current billing period
+                        stripe.Subscription.modify(
+                            agreement.stripe_subscription_id,
+                            cancel_at_period_end=True
+                        )
+                        logger.info(f"Stripe subscription {agreement.stripe_subscription_id} scheduled for cancellation at period end for agreement {agreement.id}.")
+                        messages.success(request, f"Your service with ID {agreement.stripe_subscription_id} is scheduled to be cancelled at the end of its current billing period.")
+                        stripe_cancellation_successful_or_already_cancelled = True
                     else:
-                        logger.warning(f"Subscription {agreement.stripe_subscription_id} already canceled or invalid.")
+                        logger.warning(f"Stripe subscription {agreement.stripe_subscription_id} was already cancelled or ended in Stripe. Local DB will be updated.")
+                        messages.info(request, f"Your service with ID {agreement.stripe_subscription_id} was already cancelled or ended in our payment system. Updating your account details.")
+                        stripe_cancellation_successful_or_already_cancelled = True
+
                 except stripe.error.InvalidRequestError as e:
-                    # This error occurs if subscription doesn't exist on Stripe
-                    logger.warning(f"Stripe subscription {agreement.stripe_subscription_id} not found or already canceled: {e}")
+                    logger.warning(f"Stripe subscription {agreement.stripe_subscription_id} not found or already cancelled in Stripe: {e}. Local DB will be updated.")
+                    messages.info(request, f"Your service with ID {agreement.stripe_subscription_id} could not be found or was already cancelled in our payment system. Your account details will be updated.")
+                    stripe_cancellation_successful_or_already_cancelled = True
                 except Exception as e:
-                    # Other Stripe errors should be logged and raised
-                    logger.error(f"Error cancelling Stripe subscription {agreement.stripe_subscription_id}: {e}", exc_info=True)
-                    raise
+                    logger.error(f"Error communicating with Stripe for agreement {agreement.id}: {e}", exc_info=True)
+                    messages.error(request, f"Failed to communicate with our payment system regarding your subscription: {e}. Please try again or contact support.")
+                    raise # Re-raise to trigger the outer general exception handler
 
             else:
-                logger.warning(f"Agreement {agreement.id} has no Stripe subscription ID.")
+                logger.warning(f"Agreement {agreement.id} has no Stripe subscription ID. Proceeding with local cancellation.")
+                messages.info(request, "This service did not have an active subscription in our payment system. Updating your account details.")
+                stripe_cancellation_successful_or_already_cancelled = True # No Stripe ID, so consider Stripe part "successful"
 
-            # Update agreement fields
-            agreement.active = False
-            agreement.end_date = timezone.now().date()
-            agreement.status = 'cancelled'
-            agreement.save()
-            logger.info(f"ServiceAgreement {agreement.id} marked as cancelled.")
+            # Proceed with local database updates ONLY if Stripe interaction was successful or not needed
+            if stripe_cancellation_successful_or_already_cancelled:
+                agreement.active = False
+                agreement.end_date = timezone.now().date()
+                agreement.status = 'cancelled'
+                agreement.save()
+                logger.info(f"ServiceAgreement {agreement.id} marked as cancelled in local database.")
 
-            # Update related property if no other active agreements
-            prop = getattr(agreement, 'property', None)
-            if prop:
-                other_active = ServiceAgreement.objects.filter(property=prop, active=True).exclude(id=agreement.id).exists()
-                if not other_active:
-                    prop.has_active_service = False
-                    prop.stripe_subscription_id = None
-                    prop.save()
-                    logger.info(f"Property {prop.id} updated: has_active_service=False, subscription cleared.")
+                # Update related property if no other active agreements
+                prop = getattr(agreement, 'property', None)
+                if prop:
+                    other_active = ServiceAgreement.objects.filter(property=prop, active=True).exclude(id=agreement.id).exists()
+                    if not other_active:
+                        prop.has_active_service = False
+                        prop.stripe_subscription_id = None  # Clear property's subscription ID if no other active services
+                        prop.save()
+                        logger.info(f"Property {prop.id} updated: has_active_service=False, subscription cleared.")
+                    else:
+                        logger.info(f"Property {prop.id} still has other active agreements.")
+
+                # Prepare email context and send user confirmation email
+                email_context = {
+                    'user': user,
+                    'agreement': agreement,
+                    'service_package_name': getattr(agreement.service_package, 'name', 'your service'),
+                    'property_address': getattr(prop, 'address_summary', 'your property'),
+                    'cancellation_date_display': timezone.now().strftime("%B %d, %Y"),
+                    'site_name': 'DS Property Management',
+                    'dashboard_url': request.build_absolute_uri(reverse('account_dashboard')),
+                    'contact_email': settings.DEFAULT_FROM_EMAIL,
+                }
+                if user.email:
+                    try:
+                        html_message = render_to_string('emails/subscription_cancellation_confirmation.html', email_context)
+                        plain_message = strip_tags(html_message)
+
+                        email = EmailMultiAlternatives(
+                            subject=f"Confirmation: Your {email_context['service_package_name']} Service Has Been Cancelled",
+                            body=plain_message,
+                            from_email=settings.DEFAULT_FROM_EMAIL,
+                            to=[user.email],
+                        )
+                        email.attach_alternative(html_message, "text/html")
+                        email.send()
+                        logger.info(f"Sent cancellation confirmation email to {user.email} for agreement {agreement.id}.")
+                    except Exception as e:
+                        logger.error(f"Failed to send cancellation confirmation email for agreement {agreement.id}: {e}", exc_info=True)
+                        messages.warning(request, "Cancellation succeeded, but confirmation email failed to send. Please contact support.")
                 else:
-                    logger.info(f"Property {prop.id} still has other active agreements.")
+                    logger.warning(f"Agreement {agreement.id} cancelled but user has no email address.")
+                    messages.warning(request, "Your service was cancelled, but no email confirmation could be sent (no email on file).")
 
-            # Send user confirmation email
-            if user.email:
-                try:
-                    email_context = {
-                        'user': user,
-                        'agreement': agreement,
-                        'service_package_name': getattr(agreement.service_package, 'name', 'your service'),
-                        'property_address': getattr(prop, 'address_summary', 'your property'),
-                        'cancellation_date_display': timezone.now().strftime("%B %d, %Y"),
-                        'site_name': 'DS Property Management',
-                        'dashboard_url': request.build_absolute_uri(reverse('account_dashboard')),
-                        'contact_email': settings.DEFAULT_FROM_EMAIL,
-                    }
-                    html_message = render_to_string('emails/subscription_cancellation_confirmation.html', email_context)
-                    plain_message = strip_tags(html_message)
-
-                    email = EmailMultiAlternatives(
-                        subject=f"Confirmation: Your {email_context['service_package_name']} Service Has Been Cancelled",
-                        body=plain_message,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=[user.email],
-                    )
-                    email.attach_alternative(html_message, "text/html")
-                    email.send()
-                    logger.info(f"Sent cancellation confirmation email to {user.email} for agreement {agreement.id}.")
-                except Exception as e:
-                    logger.error(f"Failed to send cancellation confirmation email: {e}", exc_info=True)
-                    messages.warning(request, "Cancellation succeeded, but confirmation email failed to send. Please contact support.")
-            else:
-                logger.warning(f"Agreement {agreement.id} cancelled but user has no email address.")
-                messages.warning(request, "Your service was cancelled, but no email confirmation could be sent (no email on file).")
-
-            messages.success(request, f"Your '{email_context['service_package_name']}' service has been successfully cancelled.")
-
-            return JsonResponse({'success': True, 'redirect_url': reverse('account_dashboard')})
+            # This message is added if local update was successful,
+            # even if Stripe had issues that were not critical.
+            # A more specific success message was already added within the Stripe block.
+            # So, only add a general one if specific wasn't.
+            if not messages.get_messages(request):  # Check if no messages were added yet
+                messages.success(request, f"Your '{email_context.get('service_package_name', 'service')}' has been successfully cancelled.")
 
     except stripe.error.StripeError as e:
-        logger.error(f"Stripe error during cancellation for agreement {agreement.id}: {e}", exc_info=True)
-        messages.error(request, f"Failed to cancel subscription with Stripe: {e}. Please try again or contact support.")
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+        logger.error(f"A critical Stripe API error occurred during cancellation for agreement {agreement.id}: {e}", exc_info=True)
+        messages.error(request, f"A critical error occurred with our payment system: {e}. Please contact support.")
     except Exception as e:
-        logger.error(f"Unexpected error during cancellation for agreement {agreement.id}: {e}", exc_info=True)
+        logger.error(f"An unexpected error occurred during cancellation for agreement {agreement.id}: {e}", exc_info=True)
         messages.error(request, "An unexpected error occurred during cancellation. Please contact support.")
-        return JsonResponse({'success': False, 'error': "An unexpected error occurred."}, status=500)
+
+    # Always redirect to the subscriptions page after processing
+    return redirect('all_subscriptions')
 
 
 @csrf_exempt
@@ -1121,8 +1110,8 @@ def all_subscriptions(request):
     Displays a list of all active service agreements (subscriptions) for staff/superusers.
     """
     agreements = ServiceAgreement.objects.select_related('user', 'service_package', 'property')\
-                .filter(active=True)\
-                .order_by('-date_created')
+        .filter(active=True)\
+        .order_by('-date_created')
     return render(request, 'memberships/all_subscriptions.html', {
         'agreements': agreements,
     })
