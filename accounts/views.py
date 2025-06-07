@@ -89,6 +89,7 @@ def list_properties(request):
 
 
 @staff_member_required
+@user_passes_test(lambda u: u.is_superuser)
 def list_all_properties(request):
     """
     Superuser-only view to see and edit all properties with search and filter.
@@ -157,6 +158,7 @@ def edit_property(request, property_id):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser)
 def delete_property(request, property_id):
     property = get_object_or_404(Property, id=property_id)
 

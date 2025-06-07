@@ -15,6 +15,8 @@ urlpatterns = [
     path('assign_job_staff/', views.assign_job_staff, name='assign_job_staff'),
     path('routes/add/', views.RouteCreateView.as_view(), name='route_add'),
     path('routes/<int:pk>/edit/', views.RouteUpdateView.as_view(), name='route_edit'),
+    path('jobs/<int:job_id>/edit/', views.edit_job, name='edit_job'),
+
 
     # Job status views
     path('jobs/status/', views.job_status_overview, name='job_status_overview'),
@@ -28,13 +30,15 @@ urlpatterns = [
     path('jobs/staff/', views.staff_job_list, name='staff_job_list'),
     path('jobs/<int:job_id>/feedback/', views.submit_feedback, name='submit_feedback'),
     path('future-jobs/', views.future_jobs, name='future_jobs'),
+    path('jobs/<int:job_id>/reassign/', views.reassign_job, name='reassign_job'),
+
 
 
     # Route management (superuser only)
     path('routes/', views.routes_overview, name='routes_overview'),
     path('routes/jobs/', views.route_job_list, name='route_job_list'),
     path('missed-jobs/', views.missed_jobs_view, name='missed_jobs'),
-    path('jobs/<int:job_id>/mark-missed/', views.mark_job_missed, name='mark_job_missed'),
+    path('jobs/<int:pk>/mark-missed/', views.mark_job_missed, name='mark_job_missed'),
 
 
     # Staff schedule planner (superuser only)

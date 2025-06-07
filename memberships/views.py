@@ -51,7 +51,7 @@ def staff_or_superuser_required(user):
 
 def servicepackage_list(request):
     """
-    Lists all service packages. This might be a public or admin view.
+    Lists all service packages.
     """
     packages = ServicePackage.objects.all()
     category = "Silver"
@@ -637,6 +637,7 @@ def subscription_success(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.is_superuser)
 def resend_confirmation_email(request, agreement_id):
     """
     Allows a user to resend their subscription confirmation email for a specific agreement.
@@ -707,6 +708,7 @@ def resend_confirmation_email(request, agreement_id):
 
 @login_required
 @require_POST
+@user_passes_test(lambda u: u.is_superuser)
 def cancel_agreement(request, agreement_id):
     """
     Handles the cancellation of a service agreement and its Stripe subscription.
@@ -1104,7 +1106,7 @@ def stripe_webhook(request):
 
 
 @login_required
-@user_passes_test(staff_or_superuser_required)
+@user_passes_test(lambda u: u.is_superuser)
 def all_subscriptions(request):
     """
     Displays a list of all active service agreements (subscriptions) for staff/superusers.

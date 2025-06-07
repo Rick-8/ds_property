@@ -15,12 +15,12 @@
 <div class="d-none d-md-block">
   <div class="border rounded overflow-auto" style="max-height: 400px;">
     <ul class="list-group" id="jobList">
-      {% for item in jobs %}
-        {% if item.job and item.job.pk %}
+      {% for job in jobs %}
+        {% if job and job.property %}
         <li class="list-group-item job-entry">
-          <a href="{% url 'job_detail' item.job.pk %}">{{ item.job.title|default:"Untitled Job" }}</a><br>
-          <small>Job ID: {{ item.display_id|default:"N/A" }} | Property ID: {{ item.property_display_id|default:"N/A" }}</small><br>
-          <small>Completed: {{ item.job.completed_date|date:"Y-m-d" }}</small>
+          <a href="{% url 'job_detail' job.pk %}">{{ job.title|default:"Untitled Job" }}</a><br>
+          <small>Job ID: J{{ job.id }} | Property ID: P{{ job.property.id }}</small><br>
+          <small>Completed: {{ job.completed_date|date:"Y-m-d" }}</small>
         </li>
         {% else %}
         <li class="list-group-item text-muted">
@@ -35,19 +35,19 @@
 <!-- Mobile: Cards -->
 <div class="d-md-none" id="jobCardList">
   <div class="row row-cols-1 g-3">
-    {% for item in jobs %}
-      {% if item.job and item.job.pk %}
+    {% for job in jobs %}
+      {% if job and job.property %}
       <div class="col job-entry">
         <div class="card shadow-sm">
           <div class="card-body">
             <h5 class="card-title mb-2">
-              <a href="{% url 'job_detail' item.job.pk %}" class="text-decoration-none">
-                {{ item.job.title|default:"Untitled Job" }}
+              <a href="{% url 'job_detail' job.pk %}" class="text-decoration-none">
+                {{ job.title|default:"Untitled Job" }}
               </a>
             </h5>
-            <p class="card-text mb-1"><strong>Job ID:</strong> {{ item.display_id|default:"N/A" }}</p>
-            <p class="card-text mb-1"><strong>Property ID:</strong> {{ item.property_display_id|default:"N/A" }}</p>
-            <p class="card-text mb-0"><strong>Completed:</strong> {{ item.job.completed_date|date:"Y-m-d" }}</p>
+            <p class="card-text mb-1"><strong>Job ID:</strong> J{{ job.id }}</p>
+            <p class="card-text mb-1"><strong>Property ID:</strong> P{{ job.property.id }}</p>
+            <p class="card-text mb-0"><strong>Completed:</strong> {{ job.completed_date|date:"Y-m-d" }}</p>
           </div>
         </div>
       </div>

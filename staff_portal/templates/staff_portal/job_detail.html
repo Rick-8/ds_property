@@ -8,76 +8,61 @@
   <h2 class="large-gold-text mb-4">{{ job.title }}</h2>
 
   <div class="row g-4">
-    <!-- Top Left: Job Details -->
+    <!-- Job Details -->
     <section class="col-12 col-lg-6 border rounded p-4 border-gold">
-      <h4 class="mb-3">Job Details</h4>
-      <p><strong>Property:</strong> {{ job.property.label }}</p>
-      <p><strong>Scheduled Date:</strong> {{ job.scheduled_date }}</p>
-      <p><strong>Status:</strong> {{ job.get_status_display }}</p>
-      <p><strong>Description:</strong> {{ job.description|default:"No description provided." }}</p>
-      <p><strong>Route:</strong>
-        {% if job.route %}
-        {{ job.route.name }}
-        {% else %}
-        Not assigned
-        {% endif %}
-      </p>
-      <p><strong>Assigned Staff:</strong>
-        {% if job.assigned_staff.exists %}
-        {{ job.assigned_staff.all|join:", " }}
-        {% else %}
-        None
-        {% endif %}
+      <h4 class="mb-3 text-gold text-decoration-underline">Job Details</h4>
+      <p><strong><span class="text-gold">Property:</span></strong> {{ job.property.label }}</p>
+      <p><strong><span class="text-gold">Scheduled Date:</span></strong> {{ job.scheduled_date }}</p>
+      <p><strong><span class="text-gold">Status:</span></strong> {{ job.get_status_display }}</p>
+      <p><strong><span class="text-gold">Description:</span></strong> {{ job.description|default:"No description provided." }}</p>
+      <p><strong><span class="text-gold">Route:</span></strong> {{ job.route.name|default:"Not assigned" }}</p>
+      <p><strong><span class="text-gold">Assigned Staff:</span></strong>
+        {% if job.assigned_staff.exists %}{{ job.assigned_staff.all|join:", " }}{% else %}None{% endif %}
       </p>
     </section>
 
-    <!-- Top Right: Property Notes -->
-    <section class="col-12 col-lg-6 border rounded p-4 border-gold"
-      style="background: transparent; min-height: 300px; overflow:auto;">
-      <h4 class="mb-3">Property Notes</h4>
+    <!-- Property Notes -->
+    <section class="col-12 col-lg-6 border rounded p-4 border-gold" style="min-height: 300px; overflow:auto;">
+      <h4 class="mb-3 text-gold text-decoration-underline">Property Notes</h4>
       {% if job.property.notes %}
-      <div class="property-notes">
-        {{ job.property.notes|safe }}
-      </div>
+      <div class="property-notes">{{ job.property.notes|safe }}</div>
       {% else %}
       <p>No notes available.</p>
       {% endif %}
     </section>
 
-    <!-- Bottom Left: Staff Feedback -->
-    <section class="col-12 col-lg-6 border rounded p-4 border-gold" style="min-height: 300px; overflow:auto;">
+    <!-- Staff Feedback + Actions (Combined in one form) -->
+    <form method="POST" action="{% url 'mark_job_missed' job.id %}" id="notCompletedForm"
+      class="col-12 col-lg-6 border rounded p-4 border-gold">
+      {% csrf_token %}
       <h4 class="mb-3">Job Notes / Staff Feedback</h4>
+
       {% if user.is_authenticated %}
       {% if user.is_superuser or user in job.assigned_staff.all %}
-      <form method="POST" action="">
-        {% csrf_token %}
-        {{ form.feedback }}
+      {{ form.feedback }}
+      {% if job.status != 'COMPLETED' %}
+      <button type="submit" class="btn btn-primary mt-3 mb-3">Save Feedback</button>
+      {% else %}
+      <p class="text-muted mt-3">Feedback is locked because the job is completed.</p>
+      {% endif %}
+      {% elif job.jobfeedback_set.exists %}
+      {% for fb in job.jobfeedback_set.all %}
+      <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
+      {% endfor %}
+      {% else %}
+      <p>No feedback available.</p>
+      {% endif %}
+      {% endif %}
 
-        {% if job.status != 'COMPLETED' %}
-        <button type="submit" class="btn btn-primary mt-3">Save Feedback</button>
-        {% else %}
-        <p class="text-muted mt-3">Feedback is locked because the job is completed.</p>
-        {% endif %}
-      </form>
-      {% else %}
-      {% if job.jobfeedback_set.exists %}
-      {% for fb in job.jobfeedback_set.all %}
-      <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
-      {% endfor %}
-      {% else %}
-      <p>No feedback available.</p>
-      {% endif %}
-      {% endif %}
-      {% else %}
-      {% if job.jobfeedback_set.exists %}
-      {% for fb in job.jobfeedback_set.all %}
-      <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
-      {% endfor %}
-      {% else %}
-      <p>No feedback available.</p>
-      {% endif %}
-      {% endif %}
-    </section>
+      <!-- Missed Button and Prompt -->
+      <button type="button" class="btn btn-danger w-100 mb-3" id="notCompletedBtn" disabled data-bs-toggle="modal"
+        data-bs-target="#confirmMissedModal">
+        <i class="fa-solid fa-circle-xmark pe-1"></i> Not Completed
+      </button>
+      <p id="feedbackPrompt" class="text-warning small mt-2 dark-opaque" style="display: none;">
+        Please enter a reason in the feedback box above before marking as not completed.
+      </p>
+    </form>
 
     <!-- Bottom Right: Buttons -->
     <section class="col-12 col-lg-6 d-flex flex-column justify-content-start border rounded p-4 border-gold"
@@ -89,32 +74,32 @@
       </form>
       {% endif %}
 
-      <form method="POST" action="{% url 'mark_job_missed' job.id %}" id="notCompletedForm"
-        onsubmit="return confirm('Are you sure you want to mark this job as not completed?');">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger w-100 mb-3" id="notCompletedBtn" disabled>
-          <i class="fa-solid fa-circle-xmark"></i> Not Completed
-        </button>
-      </form>
-
       <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100">Back to Dashboard</a>
-        <strong>
-          <p id="feedbackPrompt" class="mt-2 modal-background" style="display: none;">
-            Please enter a reason in the feedback box above before marking as not completed.
-          </p>
-        </strong>
     </section>
-
-
   </div>
-</div>
 
 
-</section>
-</div>
-</div>
-{% endblock content %}
+  <!-- Modal -->
+  <div class="modal fade" id="confirmMissedModal" tabindex="-1" aria-labelledby="confirmMissedModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content dark-opaque">
+        <div class="modal-header">
+          <h5 class="modal-title text-gold" id="confirmMissedModalLabel">Confirm Not Completed</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-white">
+          Are you sure you want to mark this job as not completed?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="confirmMissedBtn" class="btn btn-danger">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content %}
 
-{% block extra_scripts %}
-<script src="{% static 'staff_portal/js/job_detail.js' %}"></script>
-{% endblock %}
+  {% block extra_scripts %}
+  <script src="{% static 'staff_portal/js/job_detail.js' %}"></script>
+  {% endblock %}

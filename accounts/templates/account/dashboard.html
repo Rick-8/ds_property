@@ -23,9 +23,15 @@
         </li>
 
         <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-          <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-            Staff Portal
-          </a>
+          {% if user.is_superuser %}
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+              Staff Portal
+            </a>
+          {% else %}
+            <a href="{% url 'staff_job_list' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+              Staff Portal
+            </a>
+          {% endif %}
           <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
         </li>
 

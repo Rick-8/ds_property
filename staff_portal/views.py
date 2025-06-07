@@ -16,9 +16,12 @@ from django.views.generic import CreateView, UpdateView
 from django.db.models import Prefetch
 from django.utils.timezone import localdate
 from django.contrib.auth import authenticate
+from django.views.decorators.http import require_POST
+from memberships.models import ServiceAgreement
 
 import json
 import logging
+from django import forms
 
 from staff_portal.models import Job, Route, StaffRouteAssignment
 from accounts.models import Property
@@ -49,7 +52,6 @@ def staff_dashboard(request):
     return render(request, 'staff_portal/dashboard.html', context)
 
 
-
 @login_required
 def job_detail(request, pk):
     job = get_object_or_404(Job.objects.select_related('property').prefetch_related('assigned_staff'), pk=pk)
@@ -70,7 +72,6 @@ def job_detail(request, pk):
     else:
         form = JobFeedbackForm(instance=feedback_instance)
 
-    # ✅ These must be indented properly under the view
     context = {
         'job': job,
         'form': form,
@@ -86,7 +87,6 @@ def mark_job_complete(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
     if request.method == "POST":
-
         feedback = request.POST.get("feedback", "").strip()
         if feedback:
             JobFeedback.objects.create(
@@ -99,16 +99,22 @@ def mark_job_complete(request, job_id):
         job.completed_date = timezone.now().date()
         job.save()
 
-        if job.property.has_active_service:
-            Job.objects.create(
-                title=job.title,
-                description=job.description,
-                property=job.property,
-                service_agreement=job.service_agreement,
-                scheduled_date=job.scheduled_date + timedelta(weeks=1),
-                status="PENDING",
+        # Re-fetch the service agreement to check its current active status
+        if job.service_agreement:
+            fresh_agreement = ServiceAgreement.objects.filter(
+                id=job.service_agreement.id,
+                active=True
+            ).first()
 
-            )
+            if fresh_agreement:
+                Job.objects.create(
+                    title=job.title,
+                    description=job.description,
+                    property=job.property,
+                    service_agreement=fresh_agreement,
+                    scheduled_date=job.scheduled_date + timedelta(weeks=1),
+                    status="PENDING",
+                )
 
     return redirect("/staff/jobs/staff/")
 
@@ -116,23 +122,56 @@ def mark_job_complete(request, job_id):
 @login_required
 @superuser_required
 def assign_job_route(request, job_id):
+    """
+    Assign a route to a job and link the appropriate staff member based on the route and job's scheduled date.
+
+    This view:
+    - Accepts a POST request with a JSON payload containing 'route_id'.
+    - Sets the route for the specified job.
+    - Uses the job's existing scheduled_date.
+    - Finds a matching StaffRouteAssignment for the same route and scheduled date.
+    - If found, assigns the staff to the job.
+
+    Returns:
+        JsonResponse indicating success or failure.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             route_id = data.get('route_id')
+            scheduled_date_str = data.get('scheduled_date')
+
             job = Job.objects.get(id=job_id)
             route = Route.objects.get(id=route_id)
 
-            # Optional: schedule job for next available weekday (example: tomorrow)
-            next_date = timezone.now().date() + timedelta(days=1)
-
+            # Update route
             job.route = route
-            job.scheduled_date = next_date  # <- update date appropriately
+
+            # Update scheduled date if provided
+            if scheduled_date_str:
+                try:
+                    scheduled_date = datetime.strptime(scheduled_date_str, '%Y-%m-%d').date()
+                    job.scheduled_date = scheduled_date
+                except ValueError:
+                    return JsonResponse({'success': False, 'error': 'Invalid date format. Use YYYY-MM-DD'})
+
+            # Auto-assign staff based on the new route/date
+            staff_assignment = StaffRouteAssignment.objects.filter(
+                route=route,
+                start_date=job.scheduled_date,
+                end_date=job.scheduled_date
+            ).first()
+
+            if staff_assignment:
+                job.assigned_staff.set([staff_assignment.staff])
+
             job.save()
 
             return JsonResponse({'success': True})
+
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
+
     return HttpResponseBadRequest('Invalid request method')
 
 
@@ -157,16 +196,20 @@ def job_status_overview(request):
 
 @login_required
 def completed_jobs_view(request):
-    raw_jobs = Job.objects.filter(status='COMPLETED').select_related('property').order_by('-completed_date')
+    valid_jobs = Job.objects.filter(
+        status="COMPLETED",
+        property__isnull=False,
+        title__isnull=False
+    ).select_related('property').order_by('-completed_date')
 
-    jobs = []
-    for job in raw_jobs:
-        if job and job.property:
-            jobs.append({
-                "job": job,
-                "display_id": f"J{job.id}",
-                "property_display_id": f"P{job.property.id}",
-            })
+    jobs = [
+        {
+            "job": job,
+            "display_id": f"J{job.id}",
+            "property_display_id": f"P{job.property.id}"
+        }
+        for job in valid_jobs
+    ]
 
     return render(request, 'staff_portal/completed_jobs.html', {'jobs': jobs})
 
@@ -274,11 +317,10 @@ def save_schedule(request):
 def staff_job_list(request):
     user = request.user
     today = localdate()
-    end_date = today + timedelta(days=2)  # show jobs for today + 2 days
 
     active_routes = StaffRouteAssignment.objects.filter(
         staff=user,
-        start_date__lte=end_date,
+        start_date__lte=today,
         end_date__gte=today
     ).values_list('route', flat=True)
 
@@ -286,7 +328,7 @@ def staff_job_list(request):
         Q(assigned_staff=user) |
         Q(assigned_staff__isnull=True, route__in=active_routes),
         status__in=["NEW", "PENDING"],
-        scheduled_date__range=(today, end_date)
+        scheduled_date=today
     ).distinct().order_by('scheduled_date')
 
     return render(request, 'staff_portal/staff_jobs.html', {'jobs': jobs, 'today': today})
@@ -468,17 +510,33 @@ def assign_job_staff(request):
     return JsonResponse({"success": False, "error": "Invalid request method"}, status=400)
 
 
-def mark_job_missed(request, job_id):
-    job = get_object_or_404(Job, id=job_id)
+@login_required
+def mark_job_missed(request, pk):
+    job = get_object_or_404(Job, pk=pk)
 
-    if request.method == 'POST':
-        job.status = 'missed'  # Update with your actual status value
+    if request.method == "POST":
+        feedback_text = request.POST.get("feedback", "").strip()
+
+        if not feedback_text:
+            messages.error(request, "Please enter feedback before marking as missed.")
+            return redirect("job_detail", pk=job.pk)
+
+        # Append missed job comment with date
+        missed_note = f"\n\nMissed job - {timezone.localdate().strftime('%B %d, %Y')}"
+        full_feedback = feedback_text + missed_note
+
+        JobFeedback.objects.create(job=job, user=request.user, feedback=full_feedback)
+
+        # Reset job assignment
+        job.assigned_staff.clear()
+        job.route = None
+        job.status = "PENDING"
         job.save()
-        messages.success(request, "Job marked as not completed.")
-        return redirect('job_detail', job_id=job.id)
 
-    messages.error(request, "Invalid request method.")
-    return redirect('job_detail', job_id=job.id)
+        messages.success(request, "Job marked as missed and reassigned.")
+        return redirect("dashboard")
+
+    return redirect("dashboard")
 
 
 class RouteCreateView(CreateView):
@@ -498,7 +556,8 @@ class RouteUpdateView(UpdateView):
 @login_required
 def all_jobs_view(request):
     jobs = Job.objects.all().order_by('-created_at')
-    return render(request, 'staff_portal/all_jobs.html', {'jobs': jobs})
+    routes = Route.objects.all()
+    return render(request, 'staff_portal/all_jobs.html', {'jobs': jobs, 'routes': routes})
 
 
 @login_required
@@ -528,3 +587,43 @@ def delete_all_jobs(request):
             messages.error(request, "Invalid password. No jobs were deleted.")
         return redirect('all_jobs')
     return redirect('all_jobs')
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+@require_POST
+def reassign_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    job.assigned_staff.clear()
+    job.route = None
+    job.status = "PENDING"
+    job.save()
+
+    messages.success(request, f"Job '{job.title}' has been cleared for reassignment.")
+    return redirect('missed_jobs')
+
+
+class EditJobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ['route', 'scheduled_date']
+        widgets = {
+            'scheduled_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def edit_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == 'POST':
+        form = EditJobForm(request.POST, instance=job)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Job updated successfully.")
+            return redirect('all_jobs')
+    else:
+        form = EditJobForm(instance=job)
+
+    return render(request, 'staff_portal/edit_job_modal.html', {'form': form, 'job': job})

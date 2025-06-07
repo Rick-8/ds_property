@@ -1,6 +1,7 @@
 from django import forms
 from .models import JobFeedback
 
+
 class JobFeedbackForm(forms.ModelForm):
     class Meta:
         model = JobFeedback
@@ -8,7 +9,7 @@ class JobFeedbackForm(forms.ModelForm):
         widgets = {
             'feedback': forms.Textarea(attrs={
                 'id': 'feedbackInput',
-                'name': 'feedback',  # ensure it's named properly
+                'name': 'feedback',
                 'class': 'form-control',
                 'placeholder': 'Enter feedback here...',
             }),
