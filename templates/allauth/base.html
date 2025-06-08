@@ -52,16 +52,17 @@
     <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
 
     <!-- PWA Manifest and Service Worker -->
+    {% if user.is_authenticated and user.is_staff %}
+    <!-- Staff-Only PWA Install -->
     <link rel="manifest" href="{% url 'manifest' %}">
     <meta name="theme-color" content="#1a1a1a">
-
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register("{% url 'serviceworker' %}")
-                .then(function (registration) {
-                    console.log("PWA service worker registered!", registration);
-                }).catch(function (error) {
-                    console.log("Service worker registration failed:", error);
+                .then(function (reg) {
+                    console.log("PWA service worker registered.", reg);
+                }).catch(function (err) {
+                    console.log("Service worker registration failed:", err);
                 });
         }
     </script>
