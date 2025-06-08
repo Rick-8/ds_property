@@ -1,5 +1,5 @@
 from home.views import trigger_404, trigger_500
-from django.urls import path
+from django.urls import path, include
 from django.contrib import admin
 from . import views
 
@@ -15,4 +15,5 @@ urlpatterns = [
     path('create/', views.ServicePackageCreateView.as_view(), name='servicepackage_create'),
     path('<int:pk>/edit/', views.ServicePackageUpdateView.as_view(), name='servicepackage_update'),
     path('<int:pk>/delete/', views.ServicePackageDeleteView.as_view(), name='servicepackage_delete'),
+    path('webpush/', include('webpush.urls')),
 ]

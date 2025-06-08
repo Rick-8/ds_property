@@ -34,7 +34,7 @@ STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
-DEBUG = 'DEVELOPMENT' in os.environ
+DEBUG = DEBUG = os.environ.get('DEVELOPMENT', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'ds-property-group-04ec2ca20d25.herokuapp.com',
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'staff_portal',
     'management',
     'pwa',
+    'webpush',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -122,6 +123,7 @@ SITE_NAME = "DS Property Management"
 handler404 = 'yourapp.views.custom_404_view'
 handler500 = 'yourapp.views.custom_500_view'
 
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -132,7 +134,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 OFFICE_NOTIFICATION_EMAIL = os.environ.get('OFFICE_EMAIL', EMAIL_HOST_USER)
 
-
+# Account settings
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'email2*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -142,6 +144,13 @@ ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 WSGI_APPLICATION = 'ds_property.wsgi.application'
+
+# Push notifications settings
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": os.environ.get("VAPID_PUBLIC_KEY"),
+    "VAPID_PRIVATE_KEY": os.environ.get("VAPID_PRIVATE_KEY"),
+    "VAPID_ADMIN_EMAIL": os.environ.get('OFFICE_EMAIL', EMAIL_HOST_USER),
+}
 
 # Custom Allauth adapter
 ACCOUNT_ADAPTER = 'accounts.adapter.MyAccountAdapter'

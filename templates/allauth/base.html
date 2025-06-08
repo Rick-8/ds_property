@@ -8,15 +8,14 @@
 
 <head>
     {% block meta %}
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description"
         content="DS Property Maintenance offers expert home improvement services and products via Border 2 Border and Splash Zone Pools. Trusted, reliable, and professional." />
     <meta name="keywords"
         content="DS Property Maintenance, Border 2 Border, Splash Zone Pools, home improvement, property services, garden landscaping, swimming pools, ecommerce" />
     <meta name="author" content="DS Property Group" />
-    <!-- facebook Meta -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="DS Property Maintenance" />
     <meta property="og:description"
@@ -26,24 +25,15 @@
     {% endblock %}
 
     {% block corecss %}
-    <!-- Favicon -->
     <link rel="icon" href="{% static 'media/favicon.ico' %}" type="image/x-icon" />
     <link rel="icon" type="image/png" href="{% static 'media/favicon-32x32.png' %}" sizes="32x32" />
     <link rel="icon" type="image/png" href="{% static 'media/favicon-16x16.png' %}" sizes="16x16" />
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     {% endblock %}
 
-    <!-- Google Fonts CDN links -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap"
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:wght@400;700;900&display=swap"
         rel="stylesheet" />
 
     <!-- Custom CSS -->
@@ -51,23 +41,17 @@
 
     <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
 
-    <!-- PWA Manifest and Service Worker -->
     {% if user.is_authenticated and user.is_staff %}
-    <!-- Staff-Only PWA Install -->
     <link rel="manifest" href="{% url 'manifest' %}">
     <meta name="theme-color" content="#1a1a1a">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register("{% url 'serviceworker' %}")
-                .then(function (reg) {
-                    console.log("PWA service worker registered.", reg);
-                }).catch(function (err) {
-                    console.log("Service worker registration failed:", err);
-                });
+                .then(reg => console.log("Service worker registered:", reg))
+                .catch(err => console.error("Service worker registration failed:", err));
         }
     </script>
     {% endif %}
-
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -75,41 +59,21 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg dark-opaque-nav fixed-top">
         <div class="container-fluid">
-            <!-- Brand/Logo -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <img src="{% static 'media/dsproperty-logo.png' %}" alt="DS Property Maintenance Logo"
                     class="navbar-logo img-fluid rounded-circle me-2" />
             </a>
-            <!-- Toggle button for mobile view -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Collapsible part of navbar -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     {% if request.path != '/accounts/login/' and request.path != '/accounts/logout/' and request.path != '/accounts/signup/' %}
-
-                    <li class="nav-item">
-                        <a href="{% url 'servicepackage_list' %}" class="nav-link gold">
-                            Service Packages
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link green" href="{% url 'border-2-border' %}">
-                            Border 2 Border
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link blue" href="{% url 'splashzone_pools' %}">
-                            Splash Zone Pools
-                        </a>
-                    </li>
-
+                    <li class="nav-item"><a href="{% url 'servicepackage_list' %}" class="nav-link gold">Service Packages</a></li>
+                    <li class="nav-item"><a class="nav-link green" href="{% url 'border-2-border' %}">Border 2 Border</a></li>
+                    <li class="nav-item"><a class="nav-link blue" href="{% url 'splashzone_pools' %}">Splash Zone Pools</a></li>
                     {% endif %}
-
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -118,126 +82,93 @@
                             <i class="fa-solid fa-ellipsis-vertical d-none d-lg-inline"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a href="{% url 'servicepackage_list' %}" class="dropdown-item">Service Packages</a>
-                            </li>
+                            <li><a class="dropdown-item" href="{% url 'servicepackage_list' %}">Service Packages</a></li>
                             <li><a class="dropdown-item" href="{% url 'account_dashboard' %}">Dashboard</a></li>
                             <li><a class="dropdown-item" href="{% url 'view_profile' %}">My Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'list_properties' %}">My Properties</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item " href="{% url 'account_logout' %}">Logout</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
                         </ul>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login' %}?next={{ request.path }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}?next={{ request.path }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Register</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Toast container -->
+    <!-- Toast Messages -->
     {% if messages %}
-    <div aria-live="polite" aria-atomic="true" class="toast-container position-fixed top-0 end-0 p-3"
-        style="z-index: 1100; margin-top: 70px;">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100; margin-top: 70px;">
         {% for message in messages %}
         {% if 'success' in message.tags %}
-        <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
-            style="background-color: rgba(25, 135, 84, 0.8); border: 2px solid gold; color: black; font-weight: bold;">
-            {% elif 'danger' in message.tags or 'error' in message.tags %}
-            <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
-                style="background-color: rgba(220, 53, 69, 0.5); border: 2px solid gold; color: black; font-weight: bold;">
-                {% elif 'warning' in message.tags %}
-                <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
-                    style="background-color: rgba(255, 193, 7, 0.4); border: 2px solid gold; color: black; font-weight: bold;">
-                    {% elif 'info' in message.tags %}
-                    <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
-                        style="background-color: rgba(13, 110, 253, 0.5); border: 2px solid gold; color: black; font-weight: bold;">
-                        {% else %}
-                        <div class="toast show shadow mb-2" role="alert" data-bs-delay="3000" data-bs-autohide="true"
-                            style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold; color: black; font-weight: bold;">
-                            {% endif %}
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    {{ message }}
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                    data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(25, 135, 84, 0.8); border: 2px solid gold;">
+        {% elif 'danger' in message.tags or 'error' in message.tags %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(220, 53, 69, 0.5); border: 2px solid gold;">
+        {% elif 'warning' in message.tags %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(255, 193, 7, 0.4); border: 2px solid gold;">
+        {% elif 'info' in message.tags %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(13, 110, 253, 0.5); border: 2px solid gold;">
+        {% else %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold;">
+        {% endif %}
+            <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-                    <!-- Main Content -->
-                    <main class="container mt-4 flex-fill">
-                        {% block content %}
-                        {% endblock %}
-                    </main>
+    <!-- Main Content -->
+    <main class="container mt-4 flex-fill">
+        {% block content %}{% endblock %}
+    </main>
 
-                    <!-- WhatsApp Floating Button -->
-                    <div class="whatsapp-popup" id="whatsapp-popup">
-                        <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button"
-                            aria-label="Chat on WhatsApp">
-                            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon"
-                                class="whatsapp-icon" />
-                        </a>
-                        <div class="whatsapp-text">Chat or Call</div>
-                        <button class="whatsapp-close" id="close-whatsapp"
-                            aria-label="Close WhatsApp chat popup">&times;</button>
-                    </div>
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-popup" id="whatsapp-popup">
+        <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button" aria-label="Chat on WhatsApp">
+            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon" class="whatsapp-icon" />
+        </a>
+        <div class="whatsapp-text">Chat or Call</div>
+        <button class="whatsapp-close" id="close-whatsapp" aria-label="Close WhatsApp chat popup">&times;</button>
+    </div>
 
-                    <!-- Footer -->
-                    <footer class="dark-opaque text-white py-1 mt-1">
-                        <div class="container">
-                            <div
-                                class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
-                                <!-- Social Media Icons (Left) -->
-                                <div>
-                                    <a href="https://www.facebook.com/border2borderlandscapes"
-                                        class="mx-2 text-decoration-none" target="_blank" title="Facebook"
-                                        style="font-family: 'Exo', sans-serif;">
-                                        <span class="text-white d-flex align-items-center">
-                                            Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
-                                        </span>
-                                    </a>
-                                </div>
+    <!-- Footer -->
+    <footer class="dark-opaque text-white py-1 mt-1">
+        <div class="container">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
+                <div>
+                    <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 text-decoration-none" target="_blank" title="Facebook">
+                        <span class="text-white d-flex align-items-center">
+                            Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
+                        </span>
+                    </a>
+                </div>
+                <p class="mb-0 small">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
+                <div>
+                    <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold" title="{% trans 'Contact Us' %}">{% trans "Contact Us" %}</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-                                <!-- Centered Text -->
-                                <p class="mb-0 small">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
+    <!-- Scripts -->
+    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-                                <!-- Contact Us Link (Right) -->
-                                <div>
-                                    <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
-                                        title="{% trans 'Contact Us' %}">{% trans "Contact Us" %}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-
-                    <!-- FontAwesome for icons -->
-                    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
-
-                    <!-- Bootstrap JS Bundle (includes Popper) -->
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-                    <!-- Stripe.js payment library -->
-                    <script src="https://js.stripe.com/v3/"></script>
-
-                    <!-- Lottie Player for animations -->
-                    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-
-                    {% block extra_scripts %}
-                    <script src="{% static 'js/whatsapp.js' %}"></script>
-                    <script src="{% static 'script.js' %}"></script>
-                    {% endblock %}
+    {% block extra_scripts %}
+    <script src="{% static 'js/whatsapp.js' %}"></script>
+    <script src="{% static 'script.js' %}"></script>
+    <script src="{% static 'js/pwa-install.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/push-notifications.js' %}"></script>
+    {% endblock %}
 
 </body>
-
 </html>

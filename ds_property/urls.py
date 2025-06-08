@@ -29,6 +29,8 @@ urlpatterns = [
     path('staff/', include('staff_portal.urls')),
     path("management/", include("management.urls")),
     path('', include('pwa.urls')),
+    path('webpush/', include('webpush.urls')),
+
 ]
 
 
