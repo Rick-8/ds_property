@@ -9,6 +9,7 @@ urlpatterns = [
     path('jobs/<int:job_id>/complete/', views.mark_job_complete, name='mark_job_complete'),
     path('jobs/delete/<int:job_id>/', views.delete_job, name='delete_job'),
     path('jobs/delete_all/', views.delete_all_jobs, name='delete_all_jobs'),
+    path('my-jobs/', views.staff_job_list, name='my_jobs'),
 
     # Assign job to route (superuser only, AJAX)
     path('jobs/<int:job_id>/assign_route/', views.assign_job_route, name='assign_job_route'),
@@ -32,14 +33,11 @@ urlpatterns = [
     path('future-jobs/', views.future_jobs, name='future_jobs'),
     path('jobs/<int:job_id>/reassign/', views.reassign_job, name='reassign_job'),
 
-
-
     # Route management (superuser only)
     path('routes/', views.routes_overview, name='routes_overview'),
     path('routes/jobs/', views.route_job_list, name='route_job_list'),
     path('missed-jobs/', views.missed_jobs_view, name='missed_jobs'),
     path('jobs/<int:pk>/mark-missed/', views.mark_job_missed, name='mark_job_missed'),
-
 
     # Staff schedule planner (superuser only)
     path('schedule/planner/', views.staff_schedule_planner, name='staff_schedule_planner'),
