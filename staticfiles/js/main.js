@@ -1,3 +1,16 @@
+// Check if staff for midnight logout
+window.isStaff = window.isStaff || false;
+
+// Splash screen handler
+window.addEventListener('load', () => {
+    const splash = document.getElementById('animated-splash');
+    if (splash) {
+        console.log("Splash screen displayed to user.");
+        setTimeout(() => splash.remove(), 3000);
+    }
+});
+
+// Modal + cancellation handling
 document.addEventListener('DOMContentLoaded', function () {
     const cancelConfirmationModal = document.getElementById('cancelConfirmationModal');
     const confirmCancelButton = document.getElementById('confirmCancelButton');
@@ -7,9 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
         cancelConfirmationModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             if (!button) return;
+
             currentAgreementId = button.getAttribute('data-agreement-id');
             const packageName = button.getAttribute('data-agreement-name');
             const propertyAddress = button.getAttribute('data-property-address');
+
             cancelConfirmationModal.querySelector('#modalPackageName').textContent = packageName || '';
             cancelConfirmationModal.querySelector('#modalPropertyAddress').textContent = propertyAddress || '';
         });
@@ -53,22 +68,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+    // Set daily forced logout for staff
+    if (window.location.pathname !== "/accounts/login/" && window.isStaff) {
+        const sessionMarker = localStorage.getItem('staffSessionActive');
+        if (!sessionMarker) {
+            localStorage.setItem('staffSessionActive', new Date().toISOString());
         }
-        return cookieValue;
+        forceLogoutAtMidnight();
     }
 });
 
+// Midnight forced logout
 function forceLogoutAtMidnight() {
     const now = new Date();
     const nextMidnight = new Date();
@@ -81,10 +91,18 @@ function forceLogoutAtMidnight() {
     }, msUntilMidnight);
 }
 
-if (window.location.pathname !== "/accounts/login/" && window.isStaff) {
-    const sessionMarker = localStorage.getItem('staffSessionActive');
-    if (!sessionMarker) {
-        localStorage.setItem('staffSessionActive', new Date().toISOString());
+// CSRF helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
     }
-    forceLogoutAtMidnight();
+    return cookieValue;
 }
