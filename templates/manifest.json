@@ -1,21 +1,26 @@
 {
   "name": "DS Property Maintenance",
-  "short_name": "DS Property",
-  "start_url": "/",
+  "short_name": "DS Staff App",
+  "start_url": "/splash/",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#121212",
   "theme_color": "#1a1a1a",
   "orientation": "portrait",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/static/media/dsproperty-logo-pwa-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/static/media/dsproperty-logo-pwa-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
