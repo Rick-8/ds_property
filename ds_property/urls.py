@@ -31,7 +31,7 @@ urlpatterns = [
     path("management/", include("management.urls")),
     path('', include('pwa.urls')),
     path('webpush/', include('webpush.urls')),
-    path('manifest.json', TemplateView.as_view(template_name="manifest.json", content_type='application/json'), name='manifest'),
+    path('splash/', TemplateView.as_view(template_name='pwa_splash.html'), name='pwa_splash'),
 ]
 
 

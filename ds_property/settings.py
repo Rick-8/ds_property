@@ -229,9 +229,9 @@ PWA_APP_DESCRIPTION = "Staff dashboard and job manager"
 PWA_APP_THEME_COLOR = '#1a1a1a'
 PWA_APP_BACKGROUND_COLOR = '#121212'
 PWA_APP_DISPLAY = 'standalone'
+PWA_APP_START_URL = '/splash/'
 PWA_APP_SCOPE = '/'
 PWA_APP_ORIENTATION = 'portrait'
-PWA_APP_START_URL = '/staff/my-jobs/'
 PWA_APP_ICONS = [
     {
         'src': '/static/media/dsproperty-logo-pwa.png',

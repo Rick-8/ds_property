@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+    <style>
+        html, body {
+            background: #121212;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-family: 'Exo', sans-serif;
+        }
+
+        .spinner {
+            border: 6px solid rgba(255, 255, 255, 0.2);
+            border-top: 6px solid gold;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-glass-gold {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid gold;
+            border-radius: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            color: gold;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-glass-gold:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body>
+
+    <div class="spinner" id="spinner"></div>
+
+    <lottie-player
+        id="lottie"
+        src="{% static 'animations/tree-cutting.json' %}"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px;"
+        loop
+        autoplay>
+    </lottie-player>
+
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <a href="/staff/dashboard/" class="btn-glass-gold">Continue to Dashboard</a>
+            <script>var nextUrl = "/staff/dashboard/";</script>
+        {% else %}
+            <a href="/staff/my-jobs/" class="btn-glass-gold">Continue to My Jobs</a>
+            <script>var nextUrl = "/staff/my-jobs/";</script>
+        {% endif %}
+    {% else %}
+        <script>var nextUrl = "/";</script>
+    {% endif %}
+
+    <script>
+        setTimeout(() => {
+            window.location.href = nextUrl;
+        }, 3000);
+
+        document.getElementById("lottie").addEventListener("load", () => {
+            document.getElementById("spinner").style.display = "none";
+        });
+    </script>
+</body>
+</html>
