@@ -1,11 +1,13 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Loading...</title>
     <style>
-        html, body {
+        html,
+        body {
             background: #121212;
             margin: 0;
             padding: 0;
@@ -30,8 +32,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .btn-glass-gold {
@@ -52,30 +59,25 @@
     </style>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
+
 <body>
 
     <div class="spinner" id="spinner"></div>
 
-    <lottie-player
-        id="lottie"
-        src="{% static 'animations/tree-cutting.json' %}"
-        background="transparent"
-        speed="1"
-        style="width: 300px; height: 300px;"
-        loop
-        autoplay>
+    <lottie-player id="lottie" src="{% static 'animations/tree-cutting.json' %}" background="transparent" speed="1"
+        style="width: 300px; height: 300px;" loop autoplay>
     </lottie-player>
 
     {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-            <a href="/staff/dashboard/" class="btn-glass-gold">Continue to Dashboard</a>
-            <script>var nextUrl = "/staff/dashboard/";</script>
-        {% else %}
-            <a href="/staff/my-jobs/" class="btn-glass-gold">Continue to My Jobs</a>
-            <script>var nextUrl = "/staff/my-jobs/";</script>
-        {% endif %}
+    {% if user.is_superuser %}
+    <a href="/staff/" class="btn-glass-gold">Continue to Dashboard</a>
+    <script>var nextUrl = "/staff/";</script>
     {% else %}
-        <script>var nextUrl = "/";</script>
+    <a href="/staff/my-jobs/" class="btn-glass-gold">Continue to My Jobs</a>
+    <script>var nextUrl = "/staff/my-jobs/";</script>
+    {% endif %}
+    {% else %}
+    <script>var nextUrl = "/";</script>
     {% endif %}
 
     <script>
@@ -88,4 +90,5 @@
         });
     </script>
 </body>
+
 </html>
