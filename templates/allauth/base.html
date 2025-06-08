@@ -50,6 +50,22 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
     <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
+
+    <!-- PWA Manifest and Service Worker -->
+    <link rel="manifest" href="{% url 'manifest' %}">
+    <meta name="theme-color" content="#1a1a1a">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("{% url 'serviceworker' %}")
+                .then(function (registration) {
+                    console.log("PWA service worker registered!", registration);
+                }).catch(function (error) {
+                    console.log("Service worker registration failed:", error);
+                });
+        }
+    </script>
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">

@@ -211,3 +211,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# PWA settings
+
+PWA_APP_NAME = 'DS Staff Portal'
+PWA_APP_DESCRIPTION = "Staff dashboard and job manager"
+PWA_APP_THEME_COLOR = '#1a1a1a'
+PWA_APP_BACKGROUND_COLOR = '#121212'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/staff/my-jobs/'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/media/dsproperty-logo-pwa.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'

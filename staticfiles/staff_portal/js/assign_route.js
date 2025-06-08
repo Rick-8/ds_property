@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
   console.log('assign_route.js loaded');
-  // rest of your code...
+
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Initialize Bootstrap popovers on all assign-route-btn buttons
   var popoverTriggerList = [].slice.call(document.querySelectorAll('.assign-route-btn'));
   popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl);
   });
 
-  // Listen for form submission inside any popover form
   document.body.addEventListener('submit', function (e) {
     if (e.target.classList.contains('assign-route-form')) {
       e.preventDefault();
@@ -29,11 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          // Hide the popover
           const btn = document.querySelector(`button[data-job-id="${jobId}"]`);
           bootstrap.Popover.getInstance(btn).hide();
 
-          // Remove the job item from the list to reflect assignment
           form.closest('li').remove();
         } else {
           alert('Failed to assign route: ' + (data.error || 'Unknown error'));
@@ -43,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // CSRF helper from Django docs
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

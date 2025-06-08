@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let offsetX = 0;
   let offsetY = 0;
 
-  // Drag start
   popup.addEventListener("mousedown", function (e) {
     if (e.target === closeBtn) return;
     if (e.button !== 0) return;
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("mouseup", onMouseUp);
   });
 
-  // Drag move
   function onMouseMove(e) {
     if (!isDragging) return;
 
@@ -49,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
     popup.style.top = `${Math.min(Math.max(0, y), maxY)}px`;
   }
 
-  // Drag end
   function onMouseUp() {
     if (isDragging) {
       setTimeout(() => {
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.removeEventListener("mouseup", onMouseUp);
   }
 
-  // Prevent link click if dragged
   popupLink.addEventListener("click", function (e) {
     if (hasMoved) {
       e.preventDefault();
@@ -68,12 +64,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Close popup button
   closeBtn.addEventListener("click", function () {
     popup.style.display = "none";
   });
 
-  // Bootstrap Toast Logic (if needed)
   const toastElList = [].slice.call(document.querySelectorAll(".toast"));
   toastElList.forEach((toastEl) => {
     const toast = new bootstrap.Toast(toastEl);

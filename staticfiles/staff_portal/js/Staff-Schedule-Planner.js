@@ -15,7 +15,7 @@ function getCookie(name) {
 
 async function assignJobToRoute(jobId, routeId) {
   try {
-    const response = await fetch(`/staff/assign_job_route/${jobId}/`, {  // Confirm this URL matches your Django URL pattern
+    const response = await fetch(`/staff/assign_job_route/${jobId}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ async function assignJobToRoute(jobId, routeId) {
 
 async function assignStaffToJobs(assignments) {
   try {
-    const response = await fetch('/staff/assign_job_staff/', {  // Confirm this URL matches your Django URL pattern
+    const response = await fetch('/staff/assign_job_staff/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ async function assignStaffToJobs(assignments) {
 async function saveSchedule(formElement) {
   try {
     const formData = new FormData(formElement);
-    const response = await fetch('/staff/save_schedule/', {  // Confirm this URL matches your Django URL pattern
+    const response = await fetch('/staff/save_schedule/', {
       method: 'POST',
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
