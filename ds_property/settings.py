@@ -63,7 +63,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'staff_portal',
     'management',
-    'pwa',
     'webpush',
 ]
 

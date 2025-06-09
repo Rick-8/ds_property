@@ -32,8 +32,7 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('webpush/', include('webpush.urls')),
     path('splash/', TemplateView.as_view(template_name='pwa_splash.html'), name='pwa_splash'),
-    path('pwa/', include('pwa_app.urls')),
-
+    path('pwa/', include('staff_pwa.urls')),
 ]
 
 
