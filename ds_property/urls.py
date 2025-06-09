@@ -22,14 +22,7 @@ urlpatterns = [
 
     # Staff PWA app
     path('splash/', TemplateView.as_view(template_name='pwa_splash.html'), name='pwa_splash'),
-    path('pwa/', include('staff_pwa.urls')),
-
-    # Serve serviceworker.js from static
-    path('serviceworker.js', static_serve, {
-        'path': 'staff_pwa/js/serviceworker.js',
-        'document_root': settings.STATIC_ROOT,
-        'content_type': 'application/javascript',
-    }, name='serviceworker'),
+    path('pwa/', include('staff_pwa.urls')),    
 ]
 
 if settings.DEBUG:
