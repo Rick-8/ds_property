@@ -26,3 +26,13 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# Serve serviceworker.js from root
+urlpatterns += [
+    path('serviceworker.js', TemplateView.as_view(
+        template_name="staff_pwa/serviceworker.js",
+        content_type='application/javascript'),
+        name='serviceworker'
+    ),
+]
