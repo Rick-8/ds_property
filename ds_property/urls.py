@@ -7,6 +7,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
+from django.views.static import serve as static_serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,23 +17,20 @@ urlpatterns = [
     path('memberships/', include('memberships.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('staff/', include('staff_portal.urls')),
-    path("management/", include("management.urls")),
+    path('management/', include('management.urls')),
     path('webpush/', include('webpush.urls')),
 
-    # ✅ Staff PWA app
+    # Staff PWA app
     path('splash/', TemplateView.as_view(template_name='pwa_splash.html'), name='pwa_splash'),
     path('pwa/', include('staff_pwa.urls')),
+
+    # Serve serviceworker.js from static
+    path('serviceworker.js', static_serve, {
+        'path': 'staff_pwa/js/serviceworker.js',
+        'document_root': settings.STATIC_ROOT,
+        'content_type': 'application/javascript',
+    }, name='serviceworker'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-# Serve serviceworker.js from root
-urlpatterns += [
-    path('serviceworker.js', TemplateView.as_view(
-        template_name="staff_pwa/serviceworker.js",
-        content_type='application/javascript'),
-        name='serviceworker'
-    ),
-]
