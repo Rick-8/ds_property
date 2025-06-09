@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DS Staff App - Loading</title>
+    <style>
+        html, body {
+            background: #121212;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-family: 'Exo', sans-serif;
+        }
+
+        .logo-zoom {
+            width: 150px;
+            height: 150px;
+            background: url("{% static 'media/dsproperty-logo-pwa-192.png' %}") no-repeat center center;
+            background-size: contain;
+            animation: zoomInOut 2s ease-in-out forwards;
+        }
+
+        @keyframes zoomInOut {
+            0% { transform: scale(1); opacity: 0; }
+            30% { opacity: 1; }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .continue-button {
+            display: none;
+            margin-top: 30px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid gold;
+            border-radius: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            color: gold;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .continue-button:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #ccc;
+            display: none;
+        }
+
+        lottie-player {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body>
+
+    <div class="logo-zoom" id="logo"></div>
+    <button class="continue-button" id="continueBtn">Continue</button>
+
+    <div class="loading-text" id="loadingText">Loading your settings...</div>
+
+    <lottie-player
+        id="lottie"
+        src="{% static 'animations/tree-cutting.json' %}"
+        background="transparent"
+        speed="1"
+        style="width: 300px; height: 300px;"
+        loop
+        autoplay>
+    </lottie-player>
+
+    <script>
+        // Show continue button after animation
+        setTimeout(() => {
+            document.getElementById("continueBtn").style.display = "block";
+        }, 2000);
+
+        document.getElementById("continueBtn").addEventListener("click", () => {
+            document.getElementById("continueBtn").style.display = "none";
+            document.getElementById("loadingText").style.display = "block";
+            document.getElementById("lottie").style.display = "block";
+
+            setTimeout(() => {
+                window.location.href = "{% url 'account_login' %}"; // Django Allauth login
+            }, 2500);
+        });
+    </script>
+
+</body>
+</html>

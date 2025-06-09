@@ -45,6 +45,7 @@
     <link rel="manifest" href="{% url 'manifest' %}">
     <meta name="theme-color" content="#1a1a1a">
     <script>
+        window.vapidPublicKey = "{{ VAPID_PUBLIC_KEY }}";
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register("{% url 'serviceworker' %}")
                 .then(reg => console.log("Service worker registered:", reg))
@@ -55,6 +56,9 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+
+    <!-- Hidden CSRF token for JS -->
+    <form style="display: none;">{% csrf_token %}</form>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg dark-opaque-nav fixed-top">

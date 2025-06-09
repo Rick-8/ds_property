@@ -1,8 +1,9 @@
 {
   "name": "DS Property Maintenance",
   "short_name": "DS Staff App",
-  "start_url": "/splash/",
+  "start_url": "/staff/my-jobs/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#121212",
   "theme_color": "#1a1a1a",
   "orientation": "portrait",
@@ -11,13 +12,13 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "/static/media/dsproperty-logo-pwa-192.png",
+      "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/static/media/dsproperty-logo-pwa-512.png",
+      "src": "/static/staff_pwa/media/dsproperty-logo-pwa-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

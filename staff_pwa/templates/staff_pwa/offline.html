@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Offline</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Exo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-glass-gold {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid gold;
+            border-radius: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            color: gold;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-glass-gold:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>Please check your internet connection.</p>
+    <a href="/" class="btn-glass-gold">Back to Home</a>
+</body>
+</html>
