@@ -23,6 +23,16 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/static/media/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/media/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
     }
   ],
   "shortcuts": [
@@ -31,14 +41,24 @@
       "short_name": "Jobs",
       "description": "View your current job assignments",
       "url": "/staff/my-jobs/",
-      "icons": [{ "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Logout",
       "short_name": "Logout",
       "description": "Log out of the staff portal",
       "url": "/account/logout/",
-      "icons": [{ "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ],
   "categories": ["productivity", "utilities", "business"]
