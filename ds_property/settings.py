@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'staff_portal',
     'management',
     'webpush',
+    'staff_pwa',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
