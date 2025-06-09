@@ -8,5 +8,5 @@ def pwa_splash(request):
     return render(request, 'staff_pwa/pwa_splash.html')
 
 
-class OfflineView(TemplateView):
-    template_name = 'staff_pwa/offline.html'
+class OfflinePageView(TemplateView):
+    template_name = "staff_pwa/offline.html"

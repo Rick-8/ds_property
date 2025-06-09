@@ -4,12 +4,12 @@ const STATIC_ASSETS = [
   '/offline/',
   '/static/css/style.css',
   '/static/js/main.js',
-  '/static/js/pwa-install.js',
-  '/static/js/push-notifications.js',
-  '/static/media/dsproperty-logo.png',
-  '/static/media/dsproperty-logo-pwa-512.png',
-  '/static/media/favicon-32x32.png',
-  '/static/media/favicon-16x16.png',
+  '/static/staff_pwa/js/pwa-install.js',
+  '/static/staff_pwa/js/push-notifications.js',
+  '/static/staff_pwa/media/dsproperty-logo.png',
+  '/static/staff_pwa/media/dsproperty-logo-pwa-512.png',
+  '/static/staff_pwa/media/favicon-32x32.png',
+  '/static/staff_pwa/media/favicon-16x16.png',
 ];
 
 // Install event: cache essential static assets

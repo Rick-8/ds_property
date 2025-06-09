@@ -1,6 +1,7 @@
 {
   "name": "DS Property Maintenance",
   "short_name": "DS Staff App",
+  "description": "Manage routes, jobs, and schedules for DS Property Maintenance staff.",
   "start_url": "/staff/my-jobs/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
@@ -23,5 +24,22 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "My Jobs",
+      "short_name": "Jobs",
+      "description": "View your current job assignments",
+      "url": "/staff/my-jobs/",
+      "icons": [{ "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Logout",
+      "short_name": "Logout",
+      "description": "Log out of the staff portal",
+      "url": "/account/logout/",
+      "icons": [{ "src": "/static/staff_pwa/media/dsproperty-logo-pwa-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["productivity", "utilities", "business"]
 }

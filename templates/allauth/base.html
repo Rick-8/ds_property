@@ -47,7 +47,7 @@
     <script>
         window.vapidPublicKey = "{{ VAPID_PUBLIC_KEY }}";
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register("{% url 'serviceworker' %}")
+            navigator.serviceWorker.register("{% static 'js/serviceworker.js' %}")
                 .then(reg => console.log("Service worker registered:", reg))
                 .catch(err => console.error("Service worker registration failed:", err));
         }
@@ -168,9 +168,9 @@
     {% block extra_scripts %}
     <script src="{% static 'js/whatsapp.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/pwa-install.js' %}"></script>
+    <script src="{% static 'staff_pwa/js/pwa-install.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="{% static 'js/push-notifications.js' %}"></script>
+    <script src="{% static 'staff_pwa/js/push-notifications.js' %}"></script>
     {% endblock %}
 
 </body>
