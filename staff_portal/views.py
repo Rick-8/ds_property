@@ -245,74 +245,6 @@ def staff_schedule_planner(request):
     return render(request, 'staff_portal/Staff-Schedule-Planner.html', context)
 
 
-
-@csrf_exempt
-@login_required
-@superuser_required
-def save_schedule(request):
-    if request.method == 'POST':
-        try:
-            # Extract all keys starting with 'assignment_' from POST
-            current_keys = set(k for k in request.POST if k.startswith('assignment_'))
-            # Extract all unique dates from keys
-            dates = {k.split('_')[1] for k in current_keys}
-            # Find the earliest and latest dates for the range
-            start_date = min(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
-            end_date = max(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
-            assignments_to_keep = []
-
-            # Loop through POST items and update/create/delete assignments
-            for key, staff_id_str in request.POST.items():
-                if key.startswith('assignment_'):
-                    _, day, route_id = key.split('_')
-                    day_date = datetime.strptime(day, '%Y-%m-%d').date()
-                    route_id_int = int(route_id)
-
-                    if staff_id_str:
-                        staff_id = int(staff_id_str)
-                        assignment, created = StaffRouteAssignment.objects.update_or_create(
-                            route_id=route_id_int,
-                            start_date=day_date,
-                            end_date=day_date,
-                            defaults={'staff_id': staff_id}
-                        )
-                        assignments_to_keep.append(assignment.id)
-                    else:
-                        StaffRouteAssignment.objects.filter(
-                            route_id=route_id_int,
-                            start_date=day_date,
-                            end_date=day_date
-                        ).delete()
-
-            # Delete assignments outside the current range that are not kept
-            StaffRouteAssignment.objects.filter(
-                start_date__gte=start_date,
-                end_date__lte=end_date
-            ).exclude(id__in=assignments_to_keep).delete()
-
-            # New: Assign staff to jobs based on route and date assignments
-            assignments = StaffRouteAssignment.objects.filter(
-                start_date__gte=start_date,
-                end_date__lte=end_date
-            )
-            for assignment in assignments:
-                # Find jobs matching route and scheduled date
-                jobs = Job.objects.filter(
-                    route=assignment.route,
-                    scheduled_date=assignment.start_date  # Assuming one-day assignments
-                )
-                for job in jobs:
-                    job.assigned_staff.set([assignment.staff])
-                    job.save()
-
-            return JsonResponse({'success': True})
-
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=400)
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
-
-
 @login_required
 def staff_job_list(request):
     user = request.user
@@ -362,9 +294,6 @@ def save_schedule(request):
                         except User.DoesNotExist:
                             logger.error(f"Staff with id {staff_id} does not exist.")
                             return JsonResponse({'success': False, 'error': f'Staff id {staff_id} invalid'}, status=400)
-
-                        # Same for route - assuming Route model
-                        from staff_portal.models import Route, StaffRouteAssignment
 
                         try:
                             route_obj = Route.objects.get(pk=route_id_int)
