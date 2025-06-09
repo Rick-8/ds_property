@@ -5,7 +5,6 @@ from webpush import send_user_notification
 from .models import ServiceAgreement
 
 
-
 @receiver(post_save, sender=ServiceAgreement)
 def notify_superusers_on_subscription(sender, instance, created, **kwargs):
     if created:
@@ -13,7 +12,7 @@ def notify_superusers_on_subscription(sender, instance, created, **kwargs):
         UserModel = get_user_model()
         payload = {
             "head": "New Subscription Created",
-            "body": f"A new subscription for {instance.package.name} was created.",
+            "body": f"A new subscription for {instance.service_package.name} was created.",
             "url": "/admin/memberships/subscription/"
         }
 
