@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     'management',
     'webpush',
     'staff_pwa',
+    'quote_requests',
+    'storages',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -79,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 MEDIA_URL = '/media/'
@@ -163,6 +166,16 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# AWS Credentials and config
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+
+# Use S3 for media storage (uploads)
+DEFAULT_FILE_STORAGE = 'quote_requests.storage_backends.MediaStorage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

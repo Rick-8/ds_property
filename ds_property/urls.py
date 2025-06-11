@@ -20,6 +20,7 @@ urlpatterns = [
     # Auth and apps
     path('accounts/', include('allauth.urls')),
     path('pwa/', include('staff_pwa.urls')),
+    path('quotes/', include('quote_requests.urls')),
     path('admin/', admin.site.urls),
     path('account/', include('allauth.urls')),
     path('', include('home.urls')),
