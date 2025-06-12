@@ -950,3 +950,50 @@ body.error-page {
     padding: 1.5rem;
   }
 }
+
+/* index styling */
+.hero-heading {
+  font-size: 1rem !important;
+}
+
+@media (min-width: 768px) {
+  .hero-heading {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hero-heading {
+    font-size: 3rem !important;
+  }
+}
+
+/* pwa install banner styles */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+#pwa-install-banner {
+    border-top: 2px solid gold;
+    font-size: 0.95rem;
+}
+@media (max-width: 576px) {
+    #pwa-install-banner span {
+        font-size: 0.9rem;
+    }
+    #pwa-install-banner button {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+}

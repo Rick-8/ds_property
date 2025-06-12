@@ -88,6 +88,20 @@
         <div class="offcanvas-gold-line"></div>
         <div class="offcanvas-header justify-content-between align-items-start">
             <h5 class="offcanvas-title large-gold-text" id="sidebarLabel">Menu</h5>
+                 {% if user.is_authenticated and user.is_staff %}
+                <!-- PWA Tools for Staff -->
+                <li class="nav-item mt-3">
+                    <button id="pwa-install-btn" class="btn btn-outline-warning w-100" style="display: none;">
+                        Install Staff App <i class="fa-solid fa-download"></i>
+                    </button>
+                </li>
+                <li class="nav-item mt-2">
+                    <a href="#" onclick="localStorage.removeItem('dsPwaBannerDismissed'); location.reload();"
+                        class="nav-link text-warning text-center">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </li>
+                {% endif %}
             <button type="button" class="btn gold-close border-0 bg-transparent fs-3 ms-auto"
                 data-bs-dismiss="offcanvas" aria-label="Close">
                 <i class="fa-solid fa-x"></i>
@@ -104,12 +118,16 @@
                 <li class="nav-item"><a href="{% url 'list_properties' %}" class="nav-link text-light">My Properties</a>
                 </li>
                 {% endif %}
-                <a href="{% url 'servicepackage_list' %}" class="nav-link text-light">Memberships</a>
-                <a href="{% url 'request_quote' %}" class="nav-link text-light">Job Quote</a>
+                <li class="nav-item"><a href="{% url 'servicepackage_list' %}"
+                        class="nav-link text-light">Memberships</a></li>
+                <li class="nav-item"><a href="{% url 'request_quote' %}" class="nav-link text-light">Job Quote</a></li>
                 <li class="nav-item"><a href="{% url 'border-2-border' %}" class="nav-link green">Border 2 Border</a>
                 </li>
                 <li class="nav-item"><a href="{% url 'splashzone_pools' %}" class="nav-link blue">Splash Zone Pools</a>
                 </li>
+
+           
+
                 <li class="nav-item mt-2">
                     {% if user.is_authenticated %}
                     <form method="POST" action="{% url 'account_logout' %}">
@@ -124,6 +142,7 @@
             </ul>
         </div>
     </div>
+
 
     <!-- Main Content -->
     <div class="container-fluid mt-5 pt-3 flex-fill">
@@ -158,7 +177,19 @@
 
     {% block extra_content %}
     {% endblock %}
-
+    {% if user.is_authenticated and user.is_staff %}
+    <div id="pwa-install-banner"
+        class="d-none position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 shadow-lg zindex-sticky"
+        style="z-index:1050;">
+        <div class="d-flex justify-content-between align-items-center">
+            <span><strong>Install the Staff App</strong> for quicker access.</span>
+            <div>
+                <button onclick="installPWA()" class="btn btn-sm btn-warning me-2">Install</button>
+                <button onclick="dismissBanner()" class="btn btn-sm btn-outline-light">Dismiss</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <!-- Footer -->
     <footer class="dark-opaque text-white py-1 mt-auto">
         <div class="container">
