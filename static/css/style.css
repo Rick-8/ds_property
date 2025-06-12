@@ -843,4 +843,9 @@ body.error-page {
   .menu-toggle-btn i {
     font-size: 2rem;
   }
+
+  .navbar-logo {
+    width: 90px;
+    height: 90px;
+  }
 }
