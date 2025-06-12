@@ -5,63 +5,117 @@
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-5 px-3 px-md-5">
-  <div class="row g-4 align-items-center justify-content-center text-center">
-
-    <!-- Left Image -->
-    <div
-      class="d-none d-md-block shadow rounded-circle overflow-hidden d-flex align-items-center justify-content-center bg-white border-gold"
-      style="width: 300px; height: 300px;">
-      <a class="nav-link green" href="{% url 'border-2-border' %}">
-        <img src="{% static 'media/border-2-border-sm-clear.png' %}" alt="Border 2 Border Logo" class="img-fluid"
-          style="width: 96%; height: 96%; object-fit: contain;">
-      </a>
+<!-- Hero Section -->
+<section class="hero mb-5">
+  <div class="container dark-opaque p-5 rounded text-center">
+    <h1 class="fs-4 fs-md-2 fs-lg-1 large-gold-text">
+      Welcome to DS Property Management</h1>
+    <p class="lead">Everything your property needs — landscaping, grounds care, pools, rentals — all under one roof.</p>
+    <div class="d-grid gap-3 d-md-flex justify-content-center mt-4">
+      <a href="{% url 'request_quote' %}" class="btn btn-lg btn-glass-gold">Get a Quote</a>
+      <a href="{% url 'servicepackage_list' %}" class="btn btn-lg btn-glass-gold">View Memberships</a>
     </div>
+  </div>
+</section>
 
+<!-- Company Overview -->
+<div class="container py-5 text-center dark-opaque mb-5 rounded">
+  <h2 class="text-gold mb-4">A Complete Property Solution</h2>
+  <p class="lead">
+    DS Property Group brings together the quality craftsmanship of <strong>Border 2 Border</strong> and the vibrant
+    energy of <strong>Splash Zone Pools</strong>. We provide high-end property services across Florida — from design
+    and build, to upkeep and rental management.
+  </p>
+</div>
 
-    <!-- Content Block -->
-    <div class="col-12 col-md-6">
-      <div class="content dark-opaque p-4 p-md-5">
-        <h1 class="d-none d-md-block text-gold">Welcome to</h1>
-        <h1 class="text-gold pb-4">DS Property Management</h1>
-        <p>
-          DS Property Group proudly brings together the trusted expertise of <strong>Border 2 Border</strong> and the
-          vibrant creativity of <strong>Splash Zone Pools</strong>. Whether you're looking to renovate, landscape, or
-          build your dream pool, we've got you covered from start to finish.
-        </p>
-        <p>
-          From border to border, we offer high-quality property maintenance, garden transformations, pool design and
-          installation, and year-round upkeep tailored to your space and style.
-        </p>
-        <p>
-          In addition, DS Property now offers full <strong>house and holiday home rentals</strong> for both short and
-          long-term lets — making us your all-in-one property solution. Whether you're a landlord, a guest, or a
-          future homeowner, we're here to help.
-        </p>
+<!-- Services -->
+<section class="services-section mb-5">
+  <div class="container">
+    <h2 class="text-center mb-5 dark-opaque large-gold-text p-3 rounded">Our Core Services</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="service-card text-center dark-opaque p-4 rounded h-100">
+          <img src="{% static 'media/dsp-path.jpg' %}" alt="Landscaping" class="mb-3 img-fluid" style="height:60px;">
+          <h5 class="mt-2 text-gold">Landscaping</h5>
+          <p>Transform your garden with custom designs, lighting, and seasonal flair.</p>
+          <a href="{% url 'request_quote' %}" class="btn btn-outline-gold">Book Landscaping</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-card text-center dark-opaque p-4 rounded h-100">
+          <img src="{% static 'media/dsp-hedge-cut-2.png' %}" alt="Grounds Maintenance" class="mb-3 img-fluid"
+            style="height:60px;">
+          <h5 class="mt-2 text-gold">Grounds Maintenance</h5>
+          <p>Weekly mowing, seasonal cleanup, hedge shaping, and reliable upkeep.</p>
+          <a href="{% url 'servicepackage_list' %}" class="btn btn-outline-gold">Explore Maintenance</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="service-card text-center dark-opaque p-4 rounded h-100">
+          <img src="{% static 'media/pool-test.jpeg' %}" alt="Pools" class="mb-3 img-fluid" style="height:60px;">
+          <h5 class="mt-2 text-gold">Pool Maintenance</h5>
+          <p>Luxury care from deep cleans to balanced chemicals — keeping your pool crystal clear.</p>
+          <a href="{% url 'servicepackage_list' %}" class="btn btn-outline-gold">View Pool Options</a>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Right Image -->
-    <div
-      class="d-none d-md-block shadow rounded-circle overflow-hidden d-flex align-items-center justify-content-center bg-white border-gold"
-      style="width: 300px; height: 300px;">
-      <a href="{% url 'splashzone_pools' %}">
-        <img src="{% static 'media/splash-zone-pools-logo-clear-back.png' %}" alt="Company Logo" class="img-fluid"
-          style="width: 94%; height: 100%; object-fit: contain;">
-      </a>
+<!-- Brand Feature Logos -->
+<div class="container py-5 mb-5">
+  <div class="p-4 rounded text-center">
+    <h3 class="mb-4 large-gold-text dark-opaque">Powered by Our Expert Brands</h3>
+    <div class="row justify-content-center align-items-center g-4">
+
+      <!-- Border 2 Border -->
+      <div class="col-6 col-sm-4 col-md-3 d-flex justify-content-center">
+        <a href="{% url 'border-2-border' %}" class="d-block w-100" style="max-width: 200px;">
+          <div
+            class="rounded-circle bg-white shadow border border-dark mx-auto d-flex align-items-center justify-content-center p-2 p-lg-4"
+            style="aspect-ratio: 1 / 1; max-width: 200px;">
+            <img src="{% static 'media/border-2-border-sm-clear.png' %}" alt="Border 2 Border" class="img-fluid p-2"
+              style="max-width: 100%; height: auto;">
+          </div>
+        </a>
+      </div>
+
+      <!-- Splash Zone Pools -->
+      <!-- Splash Zone Pools -->
+      <div class="col-6 col-sm-4 col-md-3 d-flex justify-content-center">
+        <a href="{% url 'splashzone_pools' %}" class="d-block w-100" style="max-width: 200px;">
+          <div
+            class="rounded-circle bg-white shadow border border-dark mx-auto d-flex align-items-center justify-content-center p-2 p-lg-4"
+            style="aspect-ratio: 1 / 1; max-width: 200px;">
+
+            <img src="{% static 'media/splash-zone-pools-logo-clear-back.png' %}" alt="Splash Zone Pools"
+              class="img-fluid p-2" style="max-width: 100%; height: auto;">
+          </div>
+        </a>
+      </div>
+
     </div>
   </div>
 </div>
-<a href="{% url 'servicepackage_list' %}" class="btn-glass-gold">Service Packages</a>
+
+
+<!-- Contact CTA -->
+<section class="text-center py-5 dark-opaque large-gold-text rounded mb-5">
+  <div class="container">
+    <h4 class="mb-3">Let’s Talk About Your Property</h4>
+    <div class="d-grid gap-3 d-md-flex justify-content-center">
+      <a href="{% url 'contact' %}" class="btn btn-lg btn-outline-light me-md-2">Chat or Call</a>
+      <a href="{% url 'request_quote' %}" class="btn btn-lg btn-warning">Get a Quote</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
 {% block extra_scripts %}
 <script src="{% static 'js/whatsapp.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
-{% endblock %}
-
-
 {% endblock %}

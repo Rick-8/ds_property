@@ -7,8 +7,10 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 
 
+# ---------- STATIC PAGES ----------
+
 def index(request):
-    """A view to return the index page with VAPID key for push notifications."""
+    """Return the home page with VAPID key for web push notifications."""
     context = {
         'vapid_public_key': settings.WEBPUSH_SETTINGS['VAPID_PUBLIC_KEY']
     }
@@ -16,33 +18,46 @@ def index(request):
 
 
 def contact(request):
-    """A view to return the contact page."""
+    """Return the contact page."""
     return render(request, 'home/contact.html')
 
 
 def border_2_border(request):
-    """A view to return the Border 2 Border page."""
-    return render(request, 'border-2-border.html')
+    """Return the Border 2 Border page."""
+    return render(request, 'home/border-2-border.html')
 
 
 def splashzone_pools(request):
-    """A view to return the Splash Zone Pools page."""
-    return render(request, 'splash-zone-pools.html')
+    """Return the Splash Zone Pools page."""
+    return render(request, 'home/splash-zone-pools.html')
 
+
+# ---------- ERROR HANDLING ----------
 
 def custom_404_view(request, exception=None):
-    """A view to handle 404 errors."""
-    return render(request, "404.html", status=404)
+    """Handle 404 errors with a custom page."""
+    return render(request, 'home/404.html', status=404)
 
 
 def custom_500_view(request):
-    """A view to handle 500 errors."""
-    return render(request, "500.html", status=500)
+    """Handle 500 errors with a custom page."""
+    return render(request, 'home/500.html', status=500)
 
+
+def trigger_404(request):
+    """Manually trigger a 404 page (for testing)."""
+    return HttpResponseNotFound(render(request, 'home/404.html', status=404))
+
+
+def trigger_500(request):
+    """Manually trigger a 500 error (for testing)."""
+    raise Exception("Simulated server error for testing 500 page")
+
+
+# ---------- SERVICE PACKAGE MANAGEMENT ----------
 
 class SuperuserRequiredMixin(UserPassesTestMixin):
-    """Mixin to restrict access to superusers only."""
-
+    """Mixin to restrict views to superusers only."""
     def test_func(self):
         return self.request.user.is_superuser
 
@@ -55,7 +70,7 @@ class ServicePackageListView(ListView):
 
 
 class ServicePackageCreateView(SuperuserRequiredMixin, CreateView):
-    """View to allow superusers to create service packages."""
+    """View to create a new service package."""
     model = ServicePackage
     fields = ['name', 'category', 'tier', 'price_usd', 'description', 'is_active', 'stripe_price_id']
     template_name = 'memberships/form.html'
@@ -63,7 +78,7 @@ class ServicePackageCreateView(SuperuserRequiredMixin, CreateView):
 
 
 class ServicePackageUpdateView(SuperuserRequiredMixin, UpdateView):
-    """View to allow superusers to update existing service packages."""
+    """View to update an existing service package."""
     model = ServicePackage
     fields = ['name', 'category', 'tier', 'price_usd', 'description', 'is_active', 'stripe_price_id']
     template_name = 'memberships/form.html'
@@ -71,17 +86,7 @@ class ServicePackageUpdateView(SuperuserRequiredMixin, UpdateView):
 
 
 class ServicePackageDeleteView(SuperuserRequiredMixin, DeleteView):
-    """View to allow superusers to delete a service package."""
+    """View to delete a service package."""
     model = ServicePackage
     template_name = 'memberships/servicepackage_confirm_delete.html'
     success_url = reverse_lazy('servicepackage_list')
-
-
-def trigger_404(request):
-    """Optional view to simulate a 404 error."""
-    return HttpResponseNotFound(render(request, "404.html", status=404))
-
-
-def trigger_500(request):
-    """Optional view to simulate a 500 error."""
-    raise Exception("Simulated server error for testing 500 page")

@@ -849,3 +849,104 @@ body.error-page {
     height: 90px;
   }
 }
+
+
+/* new index styles */
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-btn {
+  margin-top: 2rem;
+}
+
+/* Services Section */
+.services-section {
+  padding: 4rem 2rem;
+}
+
+.service-card {
+  border-radius: 1rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-card img {
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+/* Brand Logos Section */
+.brand-logos img {
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.brand-logos img:hover {
+  transform: scale(1.05);
+}
+
+/* Contact CTA */
+.bg-dark.text-white {
+  background-color: #212529 !important;
+  color: white !important;
+}
+
+/* Buttons */
+.btn-outline-light:hover,
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-info:hover {
+  color: white !important;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  color: white;
+}
+
+/* Responsive Tuning */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .service-card {
+    padding: 1.5rem;
+  }
+}
