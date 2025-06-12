@@ -29,15 +29,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'media/favicon-16x16.png' %}">
     <link rel="shortcut icon" href="{% static 'media/favicon.ico' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     {% endblock %}
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;800&display=swap" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:wght@400;700;900&display=swap"
         rel="stylesheet" />
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
     <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
@@ -62,147 +60,136 @@
         });
     </script>
 
-    <!-- Hidden CSRF token for JS -->
     <form style="display: none;">{% csrf_token %}</form>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg dark-opaque-nav fixed-top">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <img src="{% static 'media/dsproperty-logo.png' %}" alt="DS Property Maintenance Logo"
                     class="navbar-logo img-fluid rounded-circle me-2" />
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    {% if request.path != '/accounts/login/' and request.path != '/accounts/logout/' and request.path != '/accounts/signup/' %}
-                    <li class="nav-item"><a href="{% url 'servicepackage_list' %}" class="nav-link gold">Service
-                            Packages</a></li>
-                    <li class="nav-item"><a class="nav-link green" href="{% url 'border-2-border' %}">Border 2
-                            Border</a></li>
-                    <li class="nav-item"><a class="nav-link blue" href="{% url 'splashzone_pools' %}">Splash Zone
-                            Pools</a></li>
-                    {% endif %}
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-block d-lg-none">Menu</span>
-                            <i class="fa-solid fa-ellipsis-vertical d-none d-lg-inline"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'servicepackage_list' %}">Service Packages</a>
-                            </li>
-                            <li><a class="dropdown-item" href="{% url 'account_dashboard' %}">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{% url 'view_profile' %}">My Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'list_properties' %}">My Properties</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form method="POST" action="{% url 'account_logout' %}">
-                                    {% csrf_token %}
-                                    <button type="submit"
-                                        class="dropdown-item w-100 text-start bg-transparent border-0">
-                                        Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item"><a class="nav-link"
-                            href="{% url 'account_login' %}?next={{ request.path }}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Register</a></li>
-                    {% endif %}
-                </ul>
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-none d-lg-flex nav-large-links">
+                    <a href="{% url 'servicepackage_list' %}" class="nav-link text-warning">Memberships</a>
+                    <a href="{% url 'request_quote' %}" class="nav-link text-info">Job Quote</a>
+                </div>
+                <button class="btn btn-outline-light border-0 menu-toggle-btn" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" title="Open Menu">
+                    <i class="bi bi-list"></i>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- Toast Messages -->
+    <!-- Sidebar Offcanvas -->
+    <div class="offcanvas offcanvas-end offcanvas-custom backdrop-blur position-fixed top-0 end-0" tabindex="-1"
+        id="sidebarOffcanvas" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-gold-line"></div>
+        <div class="offcanvas-header justify-content-between align-items-start">
+            <h5 class="offcanvas-title large-gold-text" id="sidebarLabel">Menu</h5>
+            <button type="button" class="btn gold-close border-0 bg-transparent fs-3 ms-auto"
+                data-bs-dismiss="offcanvas" aria-label="Close">
+                <i class="fa-solid fa-x"></i>
+            </button>
+        </div>
+        <div class="offcanvas-body position-relative" style="z-index: 2;">
+            <ul class="nav flex-column">
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a href="{% url 'servicepackage_list' %}" class="nav-link text-warning">Service
+                        Packages</a></li>
+                <li class="nav-item"><a href="{% url 'account_dashboard' %}" class="nav-link text-light">Dashboard</a>
+                </li>
+                <li class="nav-item"><a href="{% url 'view_profile' %}" class="nav-link text-light">My Profile</a></li>
+                <li class="nav-item"><a href="{% url 'list_properties' %}" class="nav-link text-light">My Properties</a>
+                </li>
+                {% endif %}
+                <a href="{% url 'servicepackage_list' %}" class="nav-link text-light">Memberships</a>
+                <a href="{% url 'request_quote' %}" class="nav-link text-light">Job Quote</a>
+                <li class="nav-item"><a href="{% url 'border-2-border' %}" class="nav-link green">Border 2 Border</a>
+                </li>
+                <li class="nav-item"><a href="{% url 'splashzone_pools' %}" class="nav-link blue">Splash Zone Pools</a>
+                </li>
+                <li class="nav-item mt-2">
+                    {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-warning w-100">Logout</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="btn btn-outline-gold w-100 mb-2">Login</a>
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-gold w-100">Register</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-3 flex-fill">
+        <main class="mt-3">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
     {% if messages %}
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100; margin-top: 70px;">
         {% for message in messages %}
-        {% if 'success' in message.tags %}
-        <div class="toast show shadow mb-2" style="background-color: rgba(25, 135, 84, 0.8); border: 2px solid gold;">
-            {% elif 'danger' in message.tags or 'error' in message.tags %}
-            <div class="toast show shadow mb-2"
-                style="background-color: rgba(220, 53, 69, 0.5); border: 2px solid gold;">
-                {% elif 'warning' in message.tags %}
-                <div class="toast show shadow mb-2"
-                    style="background-color: rgba(255, 193, 7, 0.4); border: 2px solid gold;">
-                    {% elif 'info' in message.tags %}
-                    <div class="toast show shadow mb-2"
-                        style="background-color: rgba(13, 110, 253, 0.5); border: 2px solid gold;">
-                        {% else %}
-                        <div class="toast show shadow mb-2"
-                            style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold;">
-                            {% endif %}
-                            <div class="d-flex">
-                                <div class="toast-body">{{ message }}</div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                    data-bs-dismiss="toast" aria-label="Close"></button>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+        <div class="toast show shadow mb-2" style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold;">
+            <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-                    <!-- Main Content -->
-                    <main class="container mt-4 flex-fill">
-                        {% block content %}{% endblock %}
-                    </main>
+    <!-- WhatsApp Button -->
+    <div class="whatsapp-popup" id="whatsapp-popup">
+        <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button"
+            aria-label="Chat on WhatsApp">
+            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon" class="whatsapp-icon" />
+        </a>
+        <div class="whatsapp-text">Chat or Call</div>
+        <button class="whatsapp-close" id="close-whatsapp" aria-label="Close WhatsApp chat popup">&times;</button>
+    </div>
 
-                    <!-- WhatsApp Floating Button -->
-                    <div class="whatsapp-popup" id="whatsapp-popup">
-                        <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button"
-                            aria-label="Chat on WhatsApp">
-                            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon"
-                                class="whatsapp-icon" />
-                        </a>
-                        <div class="whatsapp-text">Chat or Call</div>
-                        <button class="whatsapp-close" id="close-whatsapp"
-                            aria-label="Close WhatsApp chat popup">&times;</button>
-                    </div>
+    <!-- Footer -->
+    <footer class="dark-opaque text-white py-1 mt-auto">
+        <div class="container">
+            <div
+                class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
+                <div>
+                    <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 text-decoration-none"
+                        target="_blank" title="Facebook">
+                        <span class="text-white d-flex align-items-center">
+                            Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
+                        </span>
+                    </a>
+                </div>
+                <p class="mb-0 small">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
+                <div>
+                    <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
+                        title="{% trans 'Contact Us' %}">{% trans "Contact Us" %}</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-                    <!-- Footer -->
-                    <footer class="dark-opaque text-white py-1 mt-1">
-                        <div class="container">
-                            <div
-                                class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
-                                <div>
-                                    <a href="https://www.facebook.com/border2borderlandscapes"
-                                        class="mx-2 text-decoration-none" target="_blank" title="Facebook">
-                                        <span class="text-white d-flex align-items-center">
-                                            Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                                <p class="mb-0 small">&copy; 2025 DS Property Maintenance. All rights reserved.</p>
-                                <div>
-                                    <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
-                                        title="{% trans 'Contact Us' %}">{% trans "Contact Us" %}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-
-                    <!-- Scripts -->
-                    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="https://js.stripe.com/v3/"></script>
-                    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-                    {% block extra_scripts %}
-                    <script src="{% static 'js/whatsapp.js' %}"></script>
-                    <script src="{% static 'js/script.js' %}"></script>
-                    <script src="{% static 'staff_pwa/js/pwa-install.js' %}"></script>
-                    <script src="{% static 'js/main.js' %}"></script>
-                    <script src="{% static 'staff_pwa/js/push-notifications.js' %}"></script>
-                    {% endblock %}
+    <!-- Scripts -->
+    <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    {% block extra_scripts %}
+    <script src="{% static 'js/whatsapp.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'staff_pwa/js/pwa-install.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'staff_pwa/js/push-notifications.js' %}"></script>
+    {% endblock %}
 </body>
 
 </html>

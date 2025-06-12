@@ -752,9 +752,95 @@ body.error-page {
   /* Toggler menu (collapsed menu) background with gold border */
   .navbar-collapse {
     background-color: rgba(0, 0, 0, 0.7);
-    border: 2px solid #d4af37; /* Gold border */
+    border: 2px solid #d4af37;
     border-radius: 0 0 0.5rem 0.5rem;
     z-index: 9999;
   }
 }
 
+.offcanvas {
+  z-index: 1055;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  width: 400px;
+}
+
+@media (max-width: 991.98px) {
+  .offcanvas {
+    width: 75vw;
+  }
+}
+
+.offcanvas.show {
+  transform: translateX(0%) !important;
+}
+
+/* Gold glowing vertical line on the left */
+.offcanvas-gold-line {
+  width: 4px;
+  background: linear-gradient(180deg, gold, #ffd700);
+  box-shadow: 0 0 10px gold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  animation: pulse-gold 2s infinite;
+  z-index: 3;
+}
+
+@keyframes pulse-gold {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.gold-close {
+  background: none;
+  border: none;
+  color: gold;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  text-shadow: 0 0 5px gold;
+  cursor: pointer;
+}
+
+.gold-close:hover {
+  color: white;
+  text-shadow: 0 0 8px gold, 0 0 12px gold;
+}
+
+.menu-toggle-btn i {
+  font-size: 2rem;
+}
+
+
+@media (min-width: 1200px) {
+  .nav-large-links a {
+    padding-inline: 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .nav-large-links a {
+    padding-inline: 2rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .menu-toggle-btn i {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .menu-toggle-btn i {
+    font-size: 2rem;
+  }
+}
