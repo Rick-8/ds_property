@@ -12,6 +12,7 @@
       {% if user.is_superuser %}
       <a href="{% url 'staff_schedule_planner' %}" class="btn btn-outline-gold me-2 mb-2">Schedule Planner</a>
       <a href="{% url 'routes_overview' %}" class="btn btn-outline-gold me-2 mb-2">Routes Overview</a>
+      <a href="{% url 'admin_quote_list' %}" class="btn btn-outline-gold me-2 mb-2">Custom jobs</a>
       <a href="{% url 'completed_jobs' %}" class="btn btn-outline-gold me-2 mb-2">Completed Jobs</a>
       <a href="{% url 'all_jobs' %}" class="btn btn-outline-gold me-2 mb-2">All Jobs</a>
       {% endif %}

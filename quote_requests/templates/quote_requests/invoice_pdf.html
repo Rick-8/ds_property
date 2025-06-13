@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice #{{ quote.pk }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 14px;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #c9a93f;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #aaa;
+        }
+        .text-end {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice</h1>
+
+    <div class="info">
+        <p><strong>Quote #:</strong> {{ quote.pk }}</p>
+        <p><strong>Name:</strong> {{ quote.name }}</p>
+        <p><strong>Email:</strong> {{ quote.email }}</p>
+        <p><strong>Phone:</strong> {{ quote.phone }}</p>
+        <p><strong>Description:</strong> {{ quote.description }}</p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in quote.items.all %}
+            <tr>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.unit_price }}</td>
+                <td>${{ item.quantity|floatformat:2|add:item.unit_price|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="text-end"><strong>Subtotal:</strong> ${{ quote.subtotal }}</p>
+    <p class="text-end"><strong>Tax ({{ quote.tax_percent }}%):</strong> ${{ quote.tax_amount }}</p>
+    <p class="text-end"><strong>Total:</strong> ${{ quote.total }}</p>
+
+    <p style="text-align:center; margin-top: 40px;">Thank you for choosing DS Property Group.</p>
+</body>
+</html>

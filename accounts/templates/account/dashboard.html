@@ -12,14 +12,12 @@
           <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
             View All Subscriptions
           </a>
-          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
         </li>
 
         <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
           <a href="{% url 'list_all_properties' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
             All Properties
           </a>
-          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
         </li>
 
         <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
@@ -32,7 +30,6 @@
               Staff Portal
             </a>
           {% endif %}
-          <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
         </li>
 
         {% if user.is_superuser %}
@@ -40,7 +37,6 @@
           <a href="{% url 'user_admin_panel' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
             User Admin Panel
           </a>
-          <i class="bi bi-shield-lock text-gold fs-5 ms-3"></i>
         </li>
         {% endif %}
         {% endif %}
@@ -50,28 +46,24 @@
         <a href="{% url 'account_reset_password' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Forgot / Reset Password
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Change Password
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_email' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Manage Email Address
         </a>
-        <i class="bi bi-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         <a href="{% url 'account_logout' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
           Log Out
         </a>
-        <i class="bi bi-box-arrow-right text-gold fs-5 ms-3"></i>
       </li>
 
     </ul>

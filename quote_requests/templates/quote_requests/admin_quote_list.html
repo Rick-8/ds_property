@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>All Quote Requests</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Property</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quote in quotes %}
+        <tr>
+            <td>{{ quote.pk }}</td>
+            <td>{{ quote.full_name }}</td>
+            <td>{{ quote.property }}</td>
+            <td>{{ quote.status }}</td>
+            <td>{{ quote.created_at|date:"Y-m-d H:i" }}</td>
+            <td><a href="{% url 'quote_detail' quote.pk %}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="text-center mt-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
+</div>
+
+{% endblock %}

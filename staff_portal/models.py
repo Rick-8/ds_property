@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from accounts.models import Property
 from memberships.models import ServiceAgreement
+from quote_requests.models import QuoteRequest
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db.models import Q
@@ -39,6 +40,7 @@ class Job(models.Model):
 
     staff_feedback = models.TextField(blank=True, help_text="Optional notes staff leave after completing the job")
     status = models.CharField(max_length=20, choices=JOB_STATUS_CHOICES, default='PENDING')
+    quote_request = models.ForeignKey(QuoteRequest, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
