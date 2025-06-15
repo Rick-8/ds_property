@@ -83,7 +83,7 @@
             </div>
             {% elif quote.status == 'REVIEWED' %}
             <div class="d-flex justify-content-center align-items-center">
-                <span class="badge btn-outline-gold">Reviewed ✅</span>
+                <span class="badge btn-outline-gold">Reviewed</span>
             </div>
             {% else %}
             <span class="badge bg-secondary">{{ quote.status }}</span>
@@ -108,15 +108,18 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body text-center">
-        {% if quote.photo %}
+        {% if quote.photo and quote.photo.url %}
         <div class="text-center my-3">
-            <img src="{{ quote.photo.url }}" alt="Uploaded image" class="img-fluid rounded shadow w-100"
-                style="max-height: 80vh; object-fit: contain; cursor: zoom-in;" data-bs-toggle="modal"
-                data-bs-target="#fullImageModal" onclick="document.getElementById('fullImageModalSrc').src=this.src;">
-        </div>
-        {% else %}
-        <p class="text-muted text-center">No image uploaded.</p>
-        {% endif %}
+        <img src="{{ quote.photo.url }}" alt="Uploaded image" class="img-fluid rounded shadow w-100"
+         style="max-height: 80vh; object-fit: contain; cursor: zoom-in;"
+         data-bs-toggle="modal"
+         data-bs-target="#fullImageModal"
+         onclick="document.getElementById('fullImageModalSrc').src=this.src;">
+  </div>
+{% else %}
+  <p class="text-muted text-center">No image uploaded.</p>
+{% endif %}
+
         <button type="button" class="btn btn-outline-light w-100 mt-3" data-bs-dismiss="offcanvas">Close</button>
     </div>
 </div>
