@@ -3,6 +3,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
+from staff_pwa import views
+
 from staff_pwa.views import OfflinePageView, ServiceWorkerView
 import os
 
@@ -15,7 +17,7 @@ urlpatterns = [
     ),
     path('serviceworker.js', ServiceWorkerView.as_view(), name='serviceworker'),
     path('offline/', OfflinePageView.as_view(), name='offline'),
-    path('splash/', TemplateView.as_view(template_name='pwa_splash.html'), name='pwa_splash'),
+    path('splash/', views.pwa_splash, name='pwa_splash'),
 
     # Auth and apps
     path('accounts/', include('allauth.urls')),

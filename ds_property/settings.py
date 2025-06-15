@@ -155,6 +155,9 @@ WEBPUSH_SETTINGS = {
     "VAPID_ADMIN_EMAIL": os.environ.get('OFFICE_EMAIL', EMAIL_HOST_USER),
 }
 
+VAPID_PUBLIC_KEY = os.environ.get("VAPID_PUBLIC_KEY")
+VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY")
+
 # Custom Allauth adapter
 ACCOUNT_ADAPTER = 'accounts.adapter.MyAccountAdapter'
 

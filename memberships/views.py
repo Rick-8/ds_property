@@ -15,7 +15,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.decorators.http import require_POST
 from django.db import transaction
-
+from accounts.models import Property, User
+from memberships.models import ServiceAgreement, ServicePackage
 from staff_portal.services import create_subscription_job
 from staff_portal.models import Job
 from .models import ServiceAgreement, ServicePackage
@@ -808,18 +809,18 @@ def cancel_agreement(request, agreement_id):
     # Always redirect to the subscriptions page after processing
     return redirect('all_subscriptions')
 
-
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
-    """
-    Handles Stripe webhook events to update ServiceAgreement and Property models.
-    """
+    from quote_requests.models import QuoteRequest
+    from staff_portal.models import Job
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
-
-    event = None
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
@@ -831,20 +832,69 @@ def stripe_webhook(request):
         logger.error(f"⚠️ Invalid signature: {e}", exc_info=True)
         return HttpResponse(status=400)
     except Exception as e:
-        logger.error(f"⚠️ Unexpected error constructing Stripe event: {e}", exc_info=True)
+        logger.error(f"⚠️ Unexpected error: {e}", exc_info=True)
         return HttpResponse(status=500)
 
+    # ✅ One-off quote payment
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        metadata = session.get('metadata', {})
+        quote_id = metadata.get('quote_id')
+        user_id = metadata.get('user_id')
+
+        if quote_id:
+            try:
+                quote = QuoteRequest.objects.get(pk=quote_id)
+
+                if quote.status != 'PAID':
+                    quote.status = 'PAID'
+                    quote.payment_status = 'PAID'
+                    quote.save()
+
+                    job = Job.objects.create(
+                        title=f"C - One-off job for {quote.name}",
+                        description=quote.description,
+                        property=quote.property if hasattr(quote, 'property') else None,
+                        quote_request=quote,
+                        status='PENDING'
+                    )
+                    job.title = f"C{job.id} - {job.title}"
+                    job.save()
+                    logger.info(f"✅ Job created for paid quote #{quote.id}.")
+
+                    # Email customer confirmation
+                    subject = f"✅ Payment Received for Quote #{quote.pk}"
+                    html = render_to_string("emails/quote_paid_confirmation.html", {
+                        'quote': quote,
+                        'job': job,
+                    })
+                    plain = strip_tags(html)
+
+                    email = EmailMessage(
+                        subject,
+                        plain,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [quote.email],
+                    )
+                    email.attach_alternative(html, "text/html")
+                    email.send(fail_silently=True)
+                    logger.info(f"✅ Confirmation email sent to {quote.email}.")
+
+            except Exception as e:
+                logger.error(f"❌ Error handling quote payment: {e}", exc_info=True)
+                return HttpResponse(status=500)
+
+        return HttpResponse(status=200)
+
+    # 🔄 Subscription events
     if event['type'] == 'customer.subscription.created':
         subscription = event['data']['object']
-        logger.info(f"✅ Webhook: Processing customer.subscription.created event for subscription {subscription['id']}")
-
         metadata = subscription.get('metadata', {})
         user_id = metadata.get('user_id')
         property_id = metadata.get('property_id')
         package_id = metadata.get('package_id')
 
-        if not all([user_id, property_id, package_id, subscription['id']]):
-            logger.warning(f"⚠️ Missing required metadata in customer.subscription.created: user_id({user_id}), property_id({property_id}), package_id({package_id}), subscription_id({subscription['id']}).")
+        if not all([user_id, property_id, package_id]):
             return HttpResponse(status=400)
 
         try:
@@ -853,7 +903,6 @@ def stripe_webhook(request):
             service_package = ServicePackage.objects.get(id=package_id)
 
             ServiceAgreement.objects.filter(property=prop, active=True).update(active=False, end_date=timezone.now().date())
-            logger.info(f"ℹ️ Deactivated previous active agreements for property {prop.id}.")
 
             agreement, created = ServiceAgreement.objects.get_or_create(
                 stripe_subscription_id=subscription['id'],
@@ -864,9 +913,7 @@ def stripe_webhook(request):
                     'active': True,
                     'start_date': timezone.now().date(),
                     'stripe_customer_id': subscription['customer'],
-                    'stripe_current_period_end': timezone.datetime.fromtimestamp(
-                        subscription['current_period_end'], tz=timezone.utc
-                    ).date() if 'current_period_end' in subscription else None,
+                    'stripe_current_period_end': timezone.datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc).date() if 'current_period_end' in subscription else None,
                 }
             )
 
@@ -877,36 +924,19 @@ def stripe_webhook(request):
                 agreement.active = True
                 agreement.start_date = timezone.now().date()
                 agreement.stripe_customer_id = subscription['customer']
-                agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(
-                    subscription['current_period_end'], tz=timezone.utc
-                ).date() if 'current_period_end' in subscription else None
+                agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc).date() if 'current_period_end' in subscription else None
                 agreement.save()
-                logger.info(f"ℹ️ Existing ServiceAgreement for subscription {subscription['id']} updated (was not created).")
-            else:
-                logger.info(f"✅ ServiceAgreement created successfully for subscription {subscription['id']}.")
 
             prop.stripe_subscription_id = subscription['id']
             prop.has_active_service = True
             prop.save()
-            logger.info(f"✅ Property {prop.id} marked active with subscription {subscription['id']}.")
 
-        except User.DoesNotExist:
-            logger.error(f"❌ Webhook Error: User {user_id} not found for subscription {subscription['id']}.")
-            return HttpResponse(status=400)
-        except Property.DoesNotExist:
-            logger.error(f"❌ Webhook Error: Property {property_id} not found for subscription {subscription['id']}.")
-            return HttpResponse(status=400)
-        except ServicePackage.DoesNotExist:
-            logger.error(f"❌ Webhook Error: ServicePackage {package_id} not found for subscription {subscription['id']}.")
-            return HttpResponse(status=400)
         except Exception as e:
-            logger.error(f"❌ Unexpected error in customer.subscription.created webhook: {e}", exc_info=True)
+            logger.error(f"Error handling customer.subscription.created: {e}", exc_info=True)
             return HttpResponse(status=400)
 
-    elif event['type'] == 'customer.subscription.deleted' or event['type'] == 'customer.subscription.updated':
+    elif event['type'] in ['customer.subscription.deleted', 'customer.subscription.updated']:
         subscription = event['data']['object']
-        logger.info(f"✅ Webhook: Processing {event['type']} event for subscription {subscription['id']}")
-
         try:
             agreement = ServiceAgreement.objects.get(stripe_subscription_id=subscription['id'])
 
@@ -914,16 +944,11 @@ def stripe_webhook(request):
                 agreement.active = False
                 agreement.end_date = timezone.now().date()
                 agreement.status = 'cancelled'
-                logger.info(f"ℹ️ ServiceAgreement {agreement.id} marked as inactive due to cancellation.")
             elif subscription['status'] == 'active':
                 agreement.active = True
                 agreement.status = 'active'
-                agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(
-                    subscription['current_period_end'], tz=timezone.utc
-                ).date() if 'current_period_end' in subscription else None
-                logger.info(f"ℹ️ ServiceAgreement {agreement.id} updatd to active.")
+                agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc).date()
             else:
-                logger.warning(f"⚠️ Unhandled subscription status '{subscription['status']}' for agreement {agreement.id}. Marking as inactive.")
                 agreement.active = False
                 agreement.status = subscription['status']
                 agreement.end_date = timezone.now().date()
@@ -931,28 +956,18 @@ def stripe_webhook(request):
             agreement.save()
 
             if agreement.property:
-                other_active_agreements = ServiceAgreement.objects.filter(
-                    property=agreement.property,
-                    active=True
-                ).exclude(id=agreement.id).exists()
-
-                if not other_active_agreements and not agreement.active:
+                others = ServiceAgreement.objects.filter(property=agreement.property, active=True).exclude(id=agreement.id).exists()
+                if not others and not agreement.active:
                     agreement.property.has_active_service = False
                     agreement.property.stripe_subscription_id = None
-                    agreement.property.save()
-                    logger.info(f"✅ Property {agreement.property.id} marked as inactive (no other active agreements).")
                 elif agreement.active:
                     agreement.property.has_active_service = True
                     agreement.property.stripe_subscription_id = subscription['id']
-                    agreement.property.save()
-                    logger.info(f"✅ Property {agreement.property.id} marked active with subscription {subscription['id']}.")
+                agreement.property.save()
 
         except ServiceAgreement.DoesNotExist:
-            logger.warning(f"⚠️ Webhook Warning: ServiceAgreement for subscription {subscription['id']} not found for {event['type']} event.")
+            logger.warning(f"ServiceAgreement not found for {event['type']} - {subscription['id']}")
             return HttpResponse(status=200)
-        except Exception as e:
-            logger.error(f"❌ Unexpected error in subscription {event['type']} webhook: {e}", exc_info=True)
-            return HttpResponse(status=400)
 
     elif event['type'] == 'invoice.payment_succeeded':
         invoice = event['data']['object']
@@ -963,62 +978,41 @@ def stripe_webhook(request):
                 agreement.active = True
                 agreement.status = 'active'
                 agreement.amount_paid_last_invoice = invoice.get('amount_paid') / 100.0
-                agreement.last_payment_date = timezone.datetime.fromtimestamp(
-                    invoice['created'], tz=timezone.utc
-                ).date()
-
+                agreement.last_payment_date = timezone.datetime.fromtimestamp(invoice['created'], tz=timezone.utc).date()
                 if invoice.get('period_end'):
-                    agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(
-                        invoice['period_end'], tz=timezone.utc
-                    ).date()
+                    agreement.stripe_current_period_end = timezone.datetime.fromtimestamp(invoice['period_end'], tz=timezone.utc).date()
                 agreement.save()
+
                 if agreement.property:
                     agreement.property.has_active_service = True
                     agreement.property.stripe_subscription_id = subscription_id
                     agreement.property.save()
-                logger.info(f"✅ Invoice payment succeeded for subscription {subscription_id}. Agreement {agreement.id} updated.")
 
-                try:
-                    subject = f"Your Service Subscription for {agreement.service_package.name} at {agreement.property.address_summary} is Active!"
-                    html_message = render_to_string(
-                        'emails/subscription_confirmation.html',
-                        {
-                            'user': agreement.user,
-                            'package': agreement.service_package,
-                            'property': agreement.property,
-                            'agreement_date': timezone.now().strftime("%Y-%m-%d"),
-                        }
-                    )
-                    plain_message = strip_tags(html_message)
-                    from_email = settings.DEFAULT_FROM_EMAIL
-                    to_email = agreement.user.email
-
-                    email = EmailMessage(
-                        subject,
-                        plain_message,
-                        from_email,
-                        [to_email],
-                    )
-                    email.attach_alternative(html_message, "text/html")
-
-                    pdf_file_name = 'dsp-terms-conditions.pdf'
-                    pdf_path = os.path.join(settings.BASE_DIR, 'static', 'pdfs', pdf_file_name)
-                    if os.path.exists(pdf_path):
-                        with open(pdf_path, 'rb') as pdf_file:
-                            pdf_data = pdf_file.read()
-                        email.attach(pdf_file_name, pdf_data, 'application/pdf')
-                    else:
-                        logger.error(f"PDF file not found at: {pdf_path}. Cannot attach terms and conditions to webhook email.")
-
-                    email.send(fail_silently=True)
-                    logger.info(f"Subscription confirmation email sent to {to_email} via webhook for subscription {subscription_id}.")
-                except Exception as email_err:
-                    logger.error(f"Error sending webhook-triggered subscription confirmation email to {agreement.user.email}: {email_err}", exc_info=True)
-
+                subject = f"Your Service Subscription is Active"
+                html_message = render_to_string('emails/subscription_confirmation.html', {
+                    'user': agreement.user,
+                    'package': agreement.service_package,
+                    'property': agreement.property,
+                    'agreement_date': timezone.now().strftime("%Y-%m-%d"),
+                })
+                plain_message = strip_tags(html_message)
+                email = EmailMessage(
+                    subject,
+                    plain_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [agreement.user.email],
+                )
+                email.attach_alternative(html_message, "text/html")
+                pdf_file_name = 'dsp-terms-conditions.pdf'
+                pdf_path = os.path.join(settings.BASE_DIR, 'static', 'pdfs', pdf_file_name)
+                if os.path.exists(pdf_path):
+                    with open(pdf_path, 'rb') as pdf_file:
+                        pdf_data = pdf_file.read()
+                    email.attach(pdf_file_name, pdf_data, 'application/pdf')
+                email.send(fail_silently=True)
 
             except ServiceAgreement.DoesNotExist:
-                logger.warning(f"⚠️ Invoice payment succeeded for unknown subscription {subscription_id}.")
-        return HttpResponse(status=200)
+                logger.warning(f"Invoice payment succeeded for unknown subscription {subscription_id}")
 
     elif event['type'] == 'invoice.payment_failed':
         invoice = event['data']['object']
@@ -1030,54 +1024,38 @@ def stripe_webhook(request):
                 agreement.status = 'past_due'
                 agreement.save()
                 if agreement.property:
-                    other_active_agreements = ServiceAgreement.objects.filter(
-                        property=agreement.property,
-                        active=True
-                    ).exclude(id=agreement.id).exists()
-                    if not other_active_agreements:
+                    others = ServiceAgreement.objects.filter(property=agreement.property, active=True).exclude(id=agreement.id).exists()
+                    if not others:
                         agreement.property.has_active_service = False
                         agreement.property.stripe_subscription_id = None
                         agreement.property.save()
-                logger.warning(f"⚠️ Invoice payment failed for subscription {subscription_id}. Agreement {agreement.id} marked inactive/past_due.")
 
-                user_to_notify = agreement.user
-                if user_to_notify and user_to_notify.email:
-                    try:
-                        subject = "Important: Your Subscription Payment Failed"
-                        html_message = render_to_string(
-                            'emails/payment_failed_notification.html',
-                            {
-                                'user': user_to_notify,
-                                'agreement': agreement,
-                                'site_name': 'DS Property Management',
-                                'dashboard_url': request.build_absolute_uri(reverse('account_dashboard')),
-                                'customer_portal_url': 'YOUR_STRIPE_CUSTOMER_PORTAL_URL_HERE',
-                            }
-                        )
-                        plain_message = strip_tags(html_message)
-                        from_email = settings.DEFAULT_FROM_EMAIL
-                        to_email = user_to_notify.email
-
-                        email = EmailMessage(
-                            subject,
-                            plain_message,
-                            from_email,
-                            [to_email],
-                        )
-                        email.attach_alternative(html_message, "text/html")
-                        email.send(fail_silently=True)
-                        logger.info(f"Payment failed notification email sent to {to_email}.")
-                    except Exception as email_err:
-                        logger.error(f"Error sending payment failure email to {user_to_notify.email}: {email_err}", exc_info=True)
+                subject = "Important: Your Subscription Payment Failed"
+                html_message = render_to_string('emails/payment_failed_notification.html', {
+                    'user': agreement.user,
+                    'agreement': agreement,
+                    'site_name': 'DS Property Management',
+                    'dashboard_url': request.build_absolute_uri(reverse('account_dashboard')),
+                    'customer_portal_url': 'YOUR_STRIPE_CUSTOMER_PORTAL_URL_HERE',
+                })
+                plain_message = strip_tags(html_message)
+                email = EmailMessage(
+                    subject,
+                    plain_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [agreement.user.email],
+                )
+                email.attach_alternative(html_message, "text/html")
+                email.send(fail_silently=True)
 
             except ServiceAgreement.DoesNotExist:
-                logger.warning(f"⚠️ Invoice payment failed for unknown subscription {subscription_id}.")
-        return HttpResponse(status=200)
+                logger.warning(f"Invoice payment failed for unknown subscription {subscription_id}")
 
     else:
-        logger.info(f"🤷‍♀️ Webhook: Unhandled event type {event['type']}")
+        logger.info(f"🤷‍♀️ Unhandled event type: {event['type']}")
 
     return HttpResponse(status=200)
+
 
 
 @login_required

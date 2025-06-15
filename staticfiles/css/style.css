@@ -33,6 +33,11 @@ body {
   padding-bottom: 3rem;
 }
 
+.placeholder-gold::placeholder {
+  color: #FFD700 !important;
+  opacity: 0.85;
+}
+
 /* Buttons */
 .btn-gold {
   background-color: #d4af37;
@@ -417,7 +422,7 @@ body.error-page {
 .btn-outline-green {
   color: #25d366;
   border: 2px solid #25d366;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   font-weight: bold;
 }
 
@@ -442,18 +447,18 @@ body.error-page {
 .btn-outline-blue {
   color: white;
   border: 2px solid black;
-  background-color: royalblue;
+  background-color: rgba(0, 0, 200, 0.8);
 }
 .btn-outline-blue:hover {
   color: black;
   border: 2px solid black;
-  background-color: royalblue;
+  background-color: rgba(0, 0, 200, 0.8);
 }
 
 .btn-outline-silver {
   color: silver;
   border: 2px solid silver;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .btn-outline-silver:hover {
@@ -843,4 +848,157 @@ body.error-page {
   .menu-toggle-btn i {
     font-size: 2rem;
   }
+
+  .navbar-logo {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+
+/* new index styles */
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 6rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-btn {
+  margin-top: 2rem;
+}
+
+/* Services Section */
+.services-section {
+  padding: 4rem 2rem;
+}
+
+.service-card {
+  border-radius: 1rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-card img {
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+/* Brand Logos Section */
+.brand-logos img {
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.brand-logos img:hover {
+  transform: scale(1.05);
+}
+
+/* Contact CTA */
+.bg-dark.text-white {
+  background-color: #212529 !important;
+  color: white !important;
+}
+
+/* Buttons */
+.btn-outline-light:hover,
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-info:hover {
+  color: white !important;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  color: white;
+}
+
+/* Responsive Tuning */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  .service-card {
+    padding: 1.5rem;
+  }
+}
+
+/* index styling */
+.hero-heading {
+  font-size: 1rem !important;
+}
+
+@media (min-width: 768px) {
+  .hero-heading {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hero-heading {
+    font-size: 3rem !important;
+  }
+}
+
+/* pwa install banner styles */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+#pwa-install-banner {
+    border-top: 2px solid gold;
+    font-size: 0.95rem;
+}
+@media (max-width: 576px) {
+    #pwa-install-banner span {
+        font-size: 0.9rem;
+    }
+    #pwa-install-banner button {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
 }

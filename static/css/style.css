@@ -33,6 +33,11 @@ body {
   padding-bottom: 3rem;
 }
 
+.placeholder-gold::placeholder {
+  color: #FFD700 !important;
+  opacity: 0.85;
+}
+
 /* Buttons */
 .btn-gold {
   background-color: #d4af37;
