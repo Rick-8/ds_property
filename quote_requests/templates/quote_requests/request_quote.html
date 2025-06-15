@@ -1,15 +1,17 @@
-{% extends "base.html" %}
-{% load static %}
-{% load widget_tweaks %}
-
+{% extends "base.html" %} {% load static %} {% load widget_tweaks %} 
 {% block content %}
 <div class="container mt-5 p-4 rounded shadow-lg dark-opaque text-white">
   <h2 class="text-center mb-4 large-gold-text">Request a Job Quote</h2>
-<p>VAPID key: {{ vapid_public_key }}</p>
-  <form method="post" enctype="multipart/form-data" action="" id="quote-form" class="needs-validation" novalidate>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action=""
+    id="quote-form"
+    class="needs-validation"
+    novalidate
+  >
     {% csrf_token %}
     <div class="row g-4">
-
       <div class="col-md-6">
         <label class="form-label">Name</label>
         {{ form.name|add_class:"form-control form-control-lg bg-transparent text-gold border-light shadow-sm" }}
@@ -27,24 +29,28 @@
 
       <div class="col-md-12">
         <label class="form-label">Description</label>
-       {{ form.description }}
+        {{ form.description }}
       </div>
 
-<div class="col-md-12">
-  <label class="form-label d-block mb-2">Upload Photo</label>
-  <div class="custom-file-upload d-flex flex-wrap align-items-center gap-3">
-    <label for="id_photo" class="btn btn-outline-light btn-lg fw-semibold px-4">
-      <i class="fa-regular fa-folder"></i> Choose File
-    </label>
-    {{ form.photo }}
-    <span id="file-name" class="text-gold fst-italic">No file selected</span>
-  </div>
-  <div id="image-preview" class="mt-4 text-center d-none">
-    <h6 class="text-muted">Preview:</h6>
-    <img id="preview-img" class="img-fluid rounded shadow border border-light" style="max-width: 320px" />
-  </div>
-</div>
-
+      <div class="col-md-12">
+        <label class="form-label d-block mb-2">Upload Photo</label>
+        <div
+          class="custom-file-upload d-flex flex-wrap align-items-center gap-3">
+          <label
+            for="id_photo"
+            class="btn btn-outline-light btn-lg fw-semibold px-4">
+            <i class="fa-regular fa-folder"></i> Choose File
+          </label>
+          {{ form.photo|add_class:"d-none" }}
+          <span id="file-name" class="text-gold fst-italic">No file selected</span>
+        </div>
+        <div id="image-preview" class="mt-4 text-center d-none">
+          <h6 class="text-muted">Preview:</h6>
+          <img
+            id="preview-img"
+            class="img-fluid rounded shadow border border-light" style="max-width: 320px"/>
+        </div>
+      </div>
 
       <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-lg btn-outline-gold px-5 shadow">
@@ -54,30 +60,37 @@
     </div>
   </form>
 </div>
-{% endblock %}
-
+{% endblock %} 
 {% block extra_js %}
 <script>
-  const photoInput = document.getElementById("id_photo");
-  const fileNameDisplay = document.getElementById("file-name");
-  const previewContainer = document.getElementById("image-preview");
-  const previewImage = document.getElementById("preview-img");
+  document.addEventListener("DOMContentLoaded", function () {
+    const photoInput = document.getElementById("id_photo");
+    const fileNameDisplay = document.getElementById("file-name");
+    const previewContainer = document.getElementById("image-preview");
+    const previewImage = document.getElementById("preview-img");
 
-  photoInput.addEventListener("change", function () {
-    const file = this.files[0];
-    if (file) {
-      fileNameDisplay.textContent = file.name;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        previewImage.src = e.target.result;
-        previewContainer.classList.remove("d-none");
-      };
-      reader.readAsDataURL(file);
-    } else {
-      fileNameDisplay.textContent = "No file selected";
-      previewContainer.classList.add("d-none");
+    if (!photoInput) {
+      console.error("File input not found");
+      return;
     }
+
+    console.log("File input found, binding change event");
+
+    photoInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        fileNameDisplay.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          previewImage.src = e.target.result;
+          previewContainer.classList.remove("d-none");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        fileNameDisplay.textContent = "No file selected";
+        previewContainer.classList.add("d-none");
+      }
+    });
   });
 </script>
 {% endblock %}

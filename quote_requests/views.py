@@ -43,7 +43,7 @@ def request_quote_view(request):
 
             mail_admins(
                 subject='New Quote Request Submitted',
-                message=f'Quote Request #{quote.pk} from {quote.full_name} has been submitted.'
+                message = f'Quote Request #{quote.pk} from {quote.name} has been submitted.'
             )
 
             messages.success(request, "Your quote request has been submitted successfully!")

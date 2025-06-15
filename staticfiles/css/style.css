@@ -34,7 +34,7 @@ body {
 }
 
 .placeholder-gold::placeholder {
-  color: #FFD700 !important;
+  color: silver !important;
   opacity: 0.85;
 }
 
