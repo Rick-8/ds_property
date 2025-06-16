@@ -22,6 +22,8 @@ import tempfile
 from django.contrib.auth.decorators import login_required
 from datetime import date
 from memberships.models import ServiceAgreement
+from xhtml2pdf import pisa
+from django.template.loader import get_template
 
 
 @login_required
@@ -33,7 +35,7 @@ def my_quotes(request):
 # Public view for customers to submit a quote request
 def request_quote_view(request):
     if request.method == 'POST':
-        form = QuoteRequestForm(request.POST, request.FILES)
+        form = QuoteRequestForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             quote = form.save(commit=False)
             quote.status = 'PENDING'
@@ -55,11 +57,12 @@ def request_quote_view(request):
                 'email': request.user.email,
                 'phone': getattr(request.user.profile, 'phone', ''),
             }
-            form = QuoteRequestForm(initial=initial_data)
+            form = QuoteRequestForm(initial=initial_data, user=request.user)
         else:
-            form = QuoteRequestForm()
+            form = QuoteRequestForm(user=request.user)
 
     return render(request, 'quote_requests/request_quote.html', {'form': form})
+
 
 
 
@@ -182,7 +185,7 @@ def update_quote_items(request, pk):
 
         # Save each new item
         for desc, qty, price in zip(descriptions, quantities, unit_prices):
-            if desc.strip():  # ignore blank lines
+            if desc.strip():
                 QuoteItem.objects.create(
                     quote=quote,
                     description=desc.strip(),
@@ -194,8 +197,11 @@ def update_quote_items(request, pk):
         quote.tax_percent = Decimal(tax_percent)
         quote.calculate_totals()
 
-    return redirect('quote_detail', pk=pk)
+        # If the user clicked "Save and View PDF", redirect to PDF
+        if request.POST.get('view_pdf_after'):
+            return redirect(reverse('view_quote_pdf', args=[quote.pk]))
 
+    return redirect('quote_detail', pk=pk)
 
 def mark_quote_reviewed(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)
@@ -259,3 +265,35 @@ def payment_thank_you(request):
 
 def payment_cancelled(request):
     return render(request, 'quote_requests/payment_cancelled.html')
+
+
+def view_quote_pdf(request, quote_id):
+    quote = get_object_or_404(QuoteRequest, pk=quote_id)
+    template_path = 'quote_requests/invoice_pdf.html'
+
+    context = {
+        'quote': quote,
+        'request': request,
+    }
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="Quote-{quote.id}.pdf"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('PDF generation failed', status=500)
+    return response
+
+
+@require_POST
+@user_passes_test(lambda u: u.is_superuser)
+def update_quote_description(request, quote_id):
+    quote = get_object_or_404(QuoteRequest, pk=quote_id)
+    quote.description = request.POST.get("description", "")
+    quote.save()
+    messages.success(request, "Description updated.")
+    return redirect('quote_detail', pk=quote.pk)

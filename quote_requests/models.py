@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 from .storage_backends import QuoteImageStorage
+from accounts.models import Property
+
 
 
 class QuoteRequest(models.Model):
@@ -32,6 +34,15 @@ class QuoteRequest(models.Model):
     total_tax = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    related_property = models.ForeignKey('accounts.Property', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Unregistered users address fields 
+    address_line1 = models.CharField(max_length=255, blank=True)
+    address_line2 = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    postcode = models.CharField(max_length=20, blank=True)
+
     def calculate_totals(self):
         subtotal = sum(item.subtotal for item in self.items.all())
         tax = subtotal * (self.tax_percent / Decimal(100))
@@ -41,6 +52,18 @@ class QuoteRequest(models.Model):
         self.total_tax = tax
         self.total_amount = total
         self.save()
+
+    @property
+    def subtotal(self):
+        return sum(item.subtotal for item in self.items.all())
+
+    @property
+    def tax_amount(self):
+        return round(self.subtotal * (self.tax_percent / 100), 2)
+
+    @property
+    def total(self):
+        return self.subtotal + self.tax_amount
 
     def __str__(self):
         return f"{self.name} - {self.email} ({self.status})"

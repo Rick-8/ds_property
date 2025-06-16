@@ -2,19 +2,39 @@
 {% load static %}
 {% block content %}
 <div class="container py-4">
-    <h2 class="large-gold-text dark-opaque mb-4 p-3 rounded text-center">Quote #{{ quote.pk }} - Build Job Quote</h2>
+    <h2 class="large-gold-text dark-opaque mb-4 p-3 rounded text-center">
+        Quote #{{ quote.pk }} - Build Job Quote
+    </h2>
 
     <!-- Quote Summary -->
     <div class="dark-opaque p-3 rounded text-white mb-4">
-        <div class="row">
-            <div class="col-md-6"><strong>Name:</strong> {{ quote.name }}</div>
-            <div class="col-md-6"><strong>Email:</strong> {{ quote.email }}</div>
-            <div class="col-md-6"><strong>Phone:</strong> {{ quote.phone }}</div>
-            <div class="col-md-6"><strong>Status:</strong> {{ quote.status }}</div>
+        <div class="row g-3">
+            <div class="col-12 col-sm-6"><strong>Name:</strong> {{ quote.name }}</div>
+            <div class="col-12 col-sm-6"><strong>Email:</strong> {{ quote.email }}</div>
+            <div class="col-12 col-sm-6"><strong>Phone:</strong> {{ quote.phone }}</div>
+            <div class="col-12 col-sm-6"><strong>Status:</strong> {{ quote.status }}</div>
             <div class="col-12"><strong>Submitted:</strong> {{ quote.submitted_at|date:"Y-m-d H:i" }}</div>
             <div class="col-12"><strong>Description:</strong> {{ quote.description }}</div>
+            <!-- Property Address Block -->
+            <div class="col-12 mt-2">
+                <strong>Property Address:</strong>
+                <div class="bg-black bg-opacity-25 rounded px-3 py-2 mt-1 small">
+                    {% if quote.related_property %}
+                        <span class="fw-bold">{{ quote.related_property.label }}</span><br>
+                        {{ quote.related_property.address_line_1 }}<br>
+                        {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>{% endif %}
+                        {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
+                        {{ quote.related_property.country }}
+                    {% elif quote.address_line1 or quote.city or quote.postcode %}
+                        {{ quote.address_line1 }}<br>
+                        {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
+                        {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+                    {% else %}
+                        <span class="text-muted fst-italic">No address provided</span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
         {% if quote.photo %}
         <div class="text-end mt-3">
             <button class="btn btn-outline-silver" data-bs-toggle="offcanvas" data-bs-target="#quotePhotoSidebar">
@@ -25,30 +45,35 @@
     </div>
 
     <!-- Quote Builder -->
-    <form method="post" action="{% url 'update_quote_items' quote.pk %}">
+    <form method="post" action="{% url 'update_quote_items' quote.pk %}" id="quoteForm">
         {% csrf_token %}
-        <div class="d-flex justify-content-between align-items-center mb-3 p-3 dark-opaque rounded">
-            <h4 class="mb-0 large-gold-text">Line Items</h4>
-            <button type="button" id="addItemBtn" class="btn btn-outline-silver">+ Add Item</button>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 p-3 dark-opaque rounded gap-2">
+            <h4 class="mb-0 large-gold-text flex-shrink-0">Line Items</h4>
+            <div class="d-flex gap-2 flex-wrap">
+                <button type="button" id="addItemBtn" class="btn btn-outline-silver flex-grow-1 flex-md-grow-0">+ Add Item</button>
+                <button type="button" id="viewQuoteBtn" class="btn btn-outline-gold flex-grow-1 flex-md-grow-0">
+                    <i class="fa fa-file-pdf-o"></i> View Quote
+                </button>
+            </div>
         </div>
 
         <div id="itemsContainer">
             {% for item in quote.items.all %}
-            <div class="row mb-2 quote-item dark-opaque p-2 rounded">
-                <div class="col-md-6 mb-2 mb-md-0">
+            <div class="row mb-2 quote-item dark-opaque p-2 rounded gx-1 gy-2 align-items-center">
+                <div class="col-12 col-md-6 mb-2 mb-md-0">
                     <input type="text" name="description" value="{{ item.description }}" class="form-control"
                         placeholder="Description" required>
                 </div>
-                <div class="col-md-2 mb-2 mb-md-0">
+                <div class="col-6 col-md-2 mb-2 mb-md-0">
                     <input type="number" name="quantity" value="{{ item.quantity }}" class="form-control" min="1"
                         required>
                 </div>
-                <div class="col-md-3 mb-2 mb-md-0">
+                <div class="col-6 col-md-3 mb-2 mb-md-0">
                     <input type="number" name="unit_price" value="{{ item.unit_price }}" step="0.01"
                         class="form-control unit-price" required>
                 </div>
-                <div class="col-md-1 d-flex align-items-center">
-                    <button type="button" class="btn btn-sm btn-danger remove-item">&times;</button>
+                <div class="col-12 col-md-1 d-flex align-items-center justify-content-end justify-content-md-center">
+                    <button type="button" class="btn btn-sm btn-danger remove-item" aria-label="Remove item">&times;</button>
                 </div>
             </div>
             {% endfor %}
@@ -57,48 +82,46 @@
         <!-- Totals & Tax -->
         <div class="card p-4 mt-4 bg-dark text-white rounded">
             <div class="row mb-2">
-                <div class="col-md-4 offset-md-4">
+                <div class="col-12 col-md-4 offset-md-4">
                     <label for="taxPercent" class="form-label fw-bold">Tax %</label>
                     <input type="number" id="taxPercent" name="tax_percent" value="{{ quote.tax_percent }}"
                         class="form-control" step="0.01">
                 </div>
             </div>
-            <div class="row text-end fw-bold">
-                <div class="col-md-4 offset-md-4">Subtotal: $<span id="subtotal">0.00</span></div>
-                <div class="col-md-4">Tax: $<span id="taxAmount">0.00</span></div>
+            <div class="row text-end fw-bold small">
+                <div class="col-12 col-md-4 offset-md-4">Subtotal: $<span id="subtotal">0.00</span></div>
+                <div class="col-12 col-md-4">Tax: $<span id="taxAmount">0.00</span></div>
             </div>
             <div class="row text-end fw-bold mt-2">
-                <div class="col-md-4 offset-md-8">Total: $<span id="finalTotal">0.00</span></div>
+                <div class="col-12 col-md-4 offset-md-8">Total: $<span id="finalTotal">0.00</span></div>
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-4 modal-background">
-            <button type="submit" class="btn btn-outline-gold">Save Quote</button>
+<!-- Action Buttons -->
+<div class="d-flex flex-column flex-md-row gap-2 mt-4 modal-background justify-content-between align-items-stretch">
+    <button type="submit" class="btn btn-outline-gold w-100 w-md-auto">Save Quote</button>
 
-            {% if quote.status == 'PENDING' %}
-            <div class="d-flex flex-column align-items-center">
-                <span class="badge bg-warning text-dark mb-1">Pending Review</span>
-                <a href="{% url 'mark_quote_reviewed' quote.pk %}" class="btn btn-outline-gold">Update</a>
-            </div>
-            {% elif quote.status == 'REVIEWED' %}
-            <div class="d-flex justify-content-center align-items-center">
-                <span class="badge btn-outline-gold">Reviewed</span>
-            </div>
-            {% else %}
-            <span class="badge bg-secondary">{{ quote.status }}</span>
-            {% endif %}
+    {% if quote.status == 'PENDING' %}
+        <a href="{% url 'mark_quote_reviewed' quote.pk %}" 
+           class="btn btn-outline-gold w-100 w-md-auto fw-bold d-flex align-items-center justify-content-center">
+            Pending Review
+        </a>
+    {% elif quote.status == 'REVIEWED' %}
+        <span class="badge btn-outline-gold align-self-center py-2 px-3 w-100 w-md-auto text-center">Reviewed</span>
+    {% else %}
+        <span class="badge bg-secondary align-self-center py-2 px-3 w-100 w-md-auto text-center">{{ quote.status }}</span>
+    {% endif %}
 
-            <button type="button" class="btn btn-outline-green" data-bs-toggle="modal"
-                data-bs-target="#confirmAcceptModal">
-                Accept
-            </button>
-
-            <a href="{% url 'decline_quote' quote.pk %}" class="btn btn-red-in"><strong>Decline</strong></a>
-            <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
-        </div>
-    </form>
+    <button type="button" class="btn btn-outline-green w-100 w-md-auto"
+        data-bs-toggle="modal" data-bs-target="#confirmAcceptModal">
+        Accept
+    </button>
+    <a href="{% url 'decline_quote' quote.pk %}" class="btn btn-red-in w-100 w-md-auto"><strong>Decline</strong></a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver w-100 w-md-auto">Back to Dashboard</a>
 </div>
+
+
+
 
 <!-- Sidebar: Uploaded Photo Viewer -->
 <div class="offcanvas offcanvas-end modal-background text-white" tabindex="-1" id="quotePhotoSidebar"
@@ -162,10 +185,9 @@
       </div>
     </div>
   </div>
-</div>
+</div> 
 
-
-<!-- JavaScript: Totals Calculation & Dynamic Items -->
+<!-- JavaScript: Totals Calculation & Dynamic Items & View PDF in New Tab -->
 <script>
     function updateTotals() {
         const rows = document.querySelectorAll('.quote-item');
@@ -188,19 +210,19 @@
     document.getElementById('addItemBtn').addEventListener('click', function () {
         const container = document.getElementById('itemsContainer');
         const div = document.createElement('div');
-        div.className = 'row mb-2 quote-item dark-opaque p-2 rounded';
+        div.className = 'row mb-2 quote-item dark-opaque p-2 rounded gx-1 gy-2 align-items-center';
         div.innerHTML = `
-            <div class="col-md-6 mb-2 mb-md-0">
+            <div class="col-12 col-md-6 mb-2 mb-md-0">
                 <input type="text" name="description" class="form-control" placeholder="Description" required>
             </div>
-            <div class="col-md-2 mb-2 mb-md-0">
+            <div class="col-6 col-md-2 mb-2 mb-md-0">
                 <input type="number" name="quantity" class="form-control" value="1" min="1" required>
             </div>
-            <div class="col-md-3 mb-2 mb-md-0">
+            <div class="col-6 col-md-3 mb-2 mb-md-0">
                 <input type="number" name="unit_price" class="form-control unit-price" step="0.01" placeholder="Unit Price" required>
             </div>
-            <div class="col-md-1 d-flex align-items-center">
-                <button type="button" class="btn btn-sm btn-danger remove-item">&times;</button>
+            <div class="col-12 col-md-1 d-flex align-items-center justify-content-end justify-content-md-center">
+                <button type="button" class="btn btn-sm btn-danger remove-item" aria-label="Remove item">&times;</button>
             </div>`;
         container.appendChild(div);
         updateTotals();
@@ -220,5 +242,44 @@
     });
 
     updateTotals();
+
+    // View Quote button handler: AJAX post and open PDF in new tab
+    document.getElementById('viewQuoteBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        const form = document.getElementById('quoteForm');
+        // Add or set the hidden input for view_pdf_after
+        let input = form.querySelector('input[name="view_pdf_after"]');
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'view_pdf_after';
+            form.appendChild(input);
+        }
+        input.value = '1';
+
+        // Gather form data
+        const formData = new FormData(form);
+
+        // AJAX POST
+        fetch(form.action, {
+            method: "POST",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: formData
+        }).then(response => {
+            if (response.redirected) {
+                // On redirect, open the PDF in a new tab
+                window.open(response.url, '_blank');
+            } else {
+                // Fallback: Open PDF anyway
+                window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
+            }
+        }).catch(() => {
+            // Fallback: Open PDF anyway if error
+            window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
+        });
+    });
 </script>
 {% endblock %}

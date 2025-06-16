@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from .views import view_quote_pdf
+from .views import update_quote_description
+
 
 urlpatterns = [
     path('admin/', views.admin_quote_list, name='admin_quote_list'),
@@ -15,5 +18,6 @@ urlpatterns = [
     path('quotes/cancel/', views.payment_cancelled, name='payment_cancelled'),
     path('quotes/thank-you/', views.payment_thank_you, name='payment_thank_you'),
     path('my-quotes/', views.my_quotes, name='my_quotes'),
-
+    path('pdf/<int:quote_id>/', view_quote_pdf, name='view_quote_pdf'),
+    path('admin/<int:quote_id>/update-description/', update_quote_description, name='update_quote_description'),
 ]

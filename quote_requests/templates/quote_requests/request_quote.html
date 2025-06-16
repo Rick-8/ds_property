@@ -1,66 +1,89 @@
-{% extends "base.html" %} {% load static %} {% load widget_tweaks %} 
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
 {% block content %}
-<div class="container mt-5 p-4 rounded shadow-lg dark-opaque text-white">
-  <h2 class="text-center mb-4 large-gold-text">Request a Job Quote</h2>
-  <form
-    method="post"
-    enctype="multipart/form-data"
-    action=""
-    id="quote-form"
-    class="needs-validation"
-    novalidate
-  >
-    {% csrf_token %}
-    <div class="row g-4">
-      <div class="col-md-6">
-        <label class="form-label">Name</label>
-        {{ form.name|add_class:"form-control form-control-lg bg-transparent text-gold border-light shadow-sm" }}
-      </div>
+<div class="container py-5">
+  <div class="mx-auto" style="max-width: 680px;">
+    <div class="dark-opaque shadow-lg px-4 py-4 py-md-5">
+      <h2 class="large-gold-text mb-4 fade-in-up">Request a Job Quote</h2>
+      <form method="post" enctype="multipart/form-data" action="" id="quote-form" class="needs-validation" novalidate autocomplete="off">
+        {% csrf_token %}
 
-      <div class="col-md-6">
-        <label class="form-label">Email</label>
-        {{ form.email|add_class:"form-control form-control-lg bg-transparent text-gold border-light shadow-sm" }}
-      </div>
+        <div class="row gy-4 fade-in-up">
 
-      <div class="col-md-6">
-        <label class="form-label">Phone</label>
-        {{ form.phone|add_class:"form-control form-control-lg bg-transparent text-gold border-light shadow-sm" }}
-      </div>
+          {% if user.is_authenticated %}
+            <div class="col-12 mb-2">
+              <label class="form-label">Select Your Property</label>
+              {{ form.related_property|add_class:"form-select form-select-lg border-gold placeholder-gold" }}
+            </div>
+          {% else %}
+            <div class="col-12 mb-2">
+              <label class="form-label">Address Line 1</label>
+              {{ form.address_line1|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Street address or building" }}
+            </div>
+            <div class="col-12 mb-2">
+              <label class="form-label">Address Line 2</label>
+              {{ form.address_line2|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Apartment, suite, unit, etc. (optional)" }}
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4 mb-2">
+                <label class="form-label">City</label>
+                {{ form.city|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:City" }}
+              </div>
+              <div class="col-md-4 mb-2">
+                <label class="form-label">State</label>
+                {{ form.state|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:State" }}
+              </div>
+              <div class="col-md-4 mb-2">
+                <label class="form-label">Postcode</label>
+                {{ form.postcode|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Postcode" }}
+              </div>
+            </div>
+          {% endif %}
 
-      <div class="col-md-12">
-        <label class="form-label">Description</label>
-        {{ form.description }}
-      </div>
-
-      <div class="col-md-12">
-        <label class="form-label d-block mb-2">Upload Photo</label>
-        <div
-          class="custom-file-upload d-flex flex-wrap align-items-center gap-3">
-          <label
-            for="id_photo"
-            class="btn btn-outline-light btn-lg fw-semibold px-4">
-            <i class="fa-regular fa-folder"></i> Choose File
-          </label>
-          {{ form.photo|add_class:"d-none" }}
-          <span id="file-name" class="text-gold fst-italic">No file selected</span>
+          <div class="col-md-6">
+            <label class="form-label">Name</label>
+            {{ form.name|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Your Name" }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            {{ form.email|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:you@email.com" }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            {{ form.phone|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Phone number" }}
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">Description</label>
+            {{ form.description|add_class:"form-control form-control-lg border-gold placeholder-gold"|attr:"placeholder:Describe the job you need a quote for..." }}
+          </div>
+          <div class="col-md-12">
+            <label class="form-label d-block mb-2">Upload Photo</label>
+            <div class="custom-file-upload d-flex flex-wrap align-items-center gap-3">
+              <label for="id_photo" class="btn btn-outline-gold btn-lg fw-semibold px-4 mb-2 mb-md-0">
+                <i class="fa-regular fa-folder"></i> Choose File
+              </label>
+              {{ form.photo|add_class:"d-none" }}
+              <span id="file-name" class="text-gold fst-italic">No file selected</span>
+            </div>
+            <div id="image-preview" class="mt-4 text-center d-none">
+              <h6 class="text-white">Preview:</h6>
+              <img id="preview-img" class="img-fluid rounded shadow border-gold" style="max-width: 320px"/>
+            </div>
+          </div>
+          <div class="col-12 text-center mt-4">
+            <button type="submit" class="btn btn-lg btn-outline-gold px-5 shadow">
+              Submit Quote
+            </button>
+          </div>
         </div>
-        <div id="image-preview" class="mt-4 text-center d-none">
-          <h6 class="text-muted">Preview:</h6>
-          <img
-            id="preview-img"
-            class="img-fluid rounded shadow border border-light" style="max-width: 320px"/>
-        </div>
-      </div>
-
-      <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-lg btn-outline-gold px-5 shadow">
-          Submit Quote
-        </button>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
-{% endblock %} 
+{% endblock %}
+
 {% block extra_js %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -73,8 +96,6 @@
       console.error("File input not found");
       return;
     }
-
-    console.log("File input found, binding change event");
 
     photoInput.addEventListener("change", function () {
       const file = this.files[0];
