@@ -20,17 +20,18 @@
                 <strong>Property Address:</strong>
                 <div class="bg-black bg-opacity-25 rounded px-3 py-2 mt-1 small">
                     {% if quote.related_property %}
-                        <span class="fw-bold">{{ quote.related_property.label }}</span><br>
-                        {{ quote.related_property.address_line_1 }}<br>
-                        {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>{% endif %}
-                        {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
-                        {{ quote.related_property.country }}
+                    <span class="fw-bold">{{ quote.related_property.label }}</span><br>
+                    {{ quote.related_property.address_line_1 }}<br>
+                    {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>
+                    {% endif %}
+                    {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
+                    {{ quote.related_property.country }}
                     {% elif quote.address_line1 or quote.city or quote.postcode %}
-                        {{ quote.address_line1 }}<br>
-                        {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
-                        {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+                    {{ quote.address_line1 }}<br>
+                    {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
+                    {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
                     {% else %}
-                        <span class="text-muted fst-italic">No address provided</span>
+                    <span class="text-muted fst-italic">No address provided</span>
                     {% endif %}
                 </div>
             </div>
@@ -47,10 +48,12 @@
     <!-- Quote Builder -->
     <form method="post" action="{% url 'update_quote_items' quote.pk %}" id="quoteForm">
         {% csrf_token %}
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 p-3 dark-opaque rounded gap-2">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 p-3 dark-opaque rounded gap-2">
             <h4 class="mb-0 large-gold-text flex-shrink-0">Line Items</h4>
             <div class="d-flex gap-2 flex-wrap">
-                <button type="button" id="addItemBtn" class="btn btn-outline-silver flex-grow-1 flex-md-grow-0">+ Add Item</button>
+                <button type="button" id="addItemBtn" class="btn btn-outline-silver flex-grow-1 flex-md-grow-0">+ Add
+                    Item</button>
                 <button type="button" id="viewQuoteBtn" class="btn btn-outline-gold flex-grow-1 flex-md-grow-0">
                     <i class="fa fa-file-pdf-o"></i> View Quote
                 </button>
@@ -73,7 +76,8 @@
                         class="form-control unit-price" required>
                 </div>
                 <div class="col-12 col-md-1 d-flex align-items-center justify-content-end justify-content-md-center">
-                    <button type="button" class="btn btn-sm btn-danger remove-item" aria-label="Remove item">&times;</button>
+                    <button type="button" class="btn btn-sm btn-danger remove-item"
+                        aria-label="Remove item">&times;</button>
                 </div>
             </div>
             {% endfor %}
@@ -98,120 +102,146 @@
         </div>
 
 <!-- Action Buttons -->
-<div class="d-flex flex-column flex-md-row gap-2 mt-4 modal-background justify-content-between align-items-stretch">
-    <button type="submit" class="btn btn-outline-gold w-100 w-md-auto">Save Quote</button>
+<div class="d-flex flex-wrap gap-2 mt-4 modal-background justify-content-between align-items-stretch">
+    <button type="submit" class="btn btn-outline-gold flex-grow-1">Save Quote</button>
 
     {% if quote.status == 'PENDING' %}
-        <a href="{% url 'mark_quote_reviewed' quote.pk %}" 
-           class="btn btn-outline-gold w-100 w-md-auto fw-bold d-flex align-items-center justify-content-center">
-            Pending Review
-        </a>
+    <a href="{% url 'mark_quote_reviewed' quote.pk %}"
+        class="btn btn-outline-gold flex-grow-1 fw-bold d-flex align-items-center justify-content-center">
+        Pending Review
+    </a>
     {% elif quote.status == 'REVIEWED' %}
-        <span class="badge btn-outline-gold align-self-center py-2 px-3 w-100 w-md-auto text-center">Reviewed</span>
+    <span class="badge btn-outline-gold align-self-center py-2 px-3 flex-grow-1 text-center w-100">Reviewed</span>
     {% else %}
-        <span class="badge bg-secondary align-self-center py-2 px-3 w-100 w-md-auto text-center">{{ quote.status }}</span>
+    <span class="badge bg-secondary align-self-center py-2 px-3 flex-grow-1 text-center w-100">{{ quote.status }}</span>
     {% endif %}
 
-    <button type="button" class="btn btn-outline-green w-100 w-md-auto"
-        data-bs-toggle="modal" data-bs-target="#confirmAcceptModal">
-        Accept
-    </button>
-    <a href="{% url 'decline_quote' quote.pk %}" class="btn btn-red-in w-100 w-md-auto"><strong>Decline</strong></a>
-    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver w-100 w-md-auto">Back to Dashboard</a>
+    <!-- Accept Button Tooltip Wrapper -->
+    <span id="acceptBtnWrapper"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Build job quote first please"
+        class="d-flex flex-grow-1">
+        <button type="button" id="acceptBtn" class="btn btn-outline-green flex-grow-1"
+            data-bs-toggle="modal" data-bs-target="#confirmAcceptModal" disabled>
+            Accept
+        </button>
+    </span>
+
+    <a href="{% url 'decline_quote' quote.pk %}" class="btn btn-red-in flex-grow-1"><strong>Decline</strong></a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver flex-grow-1">Back to Dashboard</a>
 </div>
 
 
 
-
-<!-- Sidebar: Uploaded Photo Viewer -->
-<div class="offcanvas offcanvas-end modal-background text-white" tabindex="-1" id="quotePhotoSidebar"
-    aria-labelledby="quotePhotoSidebarLabel" style="width: min(100%, 600px);">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title large-gold-text" id="quotePhotoSidebarLabel">Uploaded Image</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body text-center">
-        {% if quote.photo and quote.photo.url %}
-        <div class="text-center my-3">
-        <img src="{{ quote.photo.url }}" alt="Uploaded image" class="img-fluid rounded shadow w-100"
-         style="max-height: 80vh; object-fit: contain; cursor: zoom-in;"
-         data-bs-toggle="modal"
-         data-bs-target="#fullImageModal"
-         onclick="document.getElementById('fullImageModalSrc').src=this.src;">
-  </div>
-{% else %}
-  <p class="text-muted text-center">No image uploaded.</p>
-{% endif %}
-
-        <button type="button" class="btn btn-outline-light w-100 mt-3" data-bs-dismiss="offcanvas">Close</button>
-    </div>
-</div>
-
-<!-- Modal: Fullscreen Image Viewer -->
-<div class="modal fade" id="fullImageModal" tabindex="-1" aria-labelledby="fullImageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content bg-dark text-white">
-            <div class="modal-header border-0">
-                <h5 class="modal-title large-gold-text" id="fullImageModalLabel">Full Size Image</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+        <!-- Sidebar: Uploaded Photo Viewer -->
+        <div class="offcanvas offcanvas-end modal-background text-white" tabindex="-1" id="quotePhotoSidebar"
+            aria-labelledby="quotePhotoSidebarLabel" style="width: min(100%, 600px);">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title large-gold-text" id="quotePhotoSidebarLabel">Uploaded Image</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
-                <img id="fullImageModalSrc" src="" alt="Full Image" class="img-fluid rounded shadow w-100"
-                    style="max-height: 85vh; object-fit: contain;">
+            <div class="offcanvas-body text-center">
+                {% if quote.photo and quote.photo.url %}
+                <div class="text-center my-3">
+                    <img src="{{ quote.photo.url }}" alt="Uploaded image" class="img-fluid rounded shadow w-100"
+                        style="max-height: 80vh; object-fit: contain; cursor: zoom-in;" data-bs-toggle="modal"
+                        data-bs-target="#fullImageModal"
+                        onclick="document.getElementById('fullImageModalSrc').src=this.src;">
+                </div>
+                {% else %}
+                <p class="text-muted text-center">No image uploaded.</p>
+                {% endif %}
+
+                <button type="button" class="btn btn-outline-light w-100 mt-3"
+                    data-bs-dismiss="offcanvas">Close</button>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Modal: Confirm Accept -->
-<div class="modal fade" id="confirmAcceptModal" tabindex="-1" aria-labelledby="confirmAcceptModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-white">
-      <div class="modal-header border-0">
-        <h5 class="modal-title large-gold-text" id="confirmAcceptModalLabel">Confirm Quote Acceptance</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p class="mb-0">Are you sure you want to accept this quote and send the invoice to the customer for payment?</p>
-        <p class="small text-muted mt-2">This will begin the automated payment process. No job will be created until payment is successful.</p>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-silver" data-bs-dismiss="modal">Cancel</button>
-        <form method="post" action="{% url 'accept_quote' quote.pk %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-green">Yes, Send Invoice</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> 
+        <!-- Modal: Fullscreen Image Viewer -->
+        <div class="modal fade" id="fullImageModal" tabindex="-1" aria-labelledby="fullImageModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title large-gold-text" id="fullImageModalLabel">Full Size Image</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="fullImageModalSrc" src="" alt="Full Image" class="img-fluid rounded shadow w-100"
+                            style="max-height: 85vh; object-fit: contain;">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- JavaScript: Totals Calculation & Dynamic Items & View PDF in New Tab -->
-<script>
-    function updateTotals() {
-        const rows = document.querySelectorAll('.quote-item');
-        let subtotal = 0;
-        rows.forEach(row => {
-            const qty = parseFloat(row.querySelector('input[name="quantity"]').value || 0);
-            const price = parseFloat(row.querySelector('input[name="unit_price"]').value || 0);
-            subtotal += qty * price;
-        });
+        <!-- Modal: Confirm Accept -->
+        <div class="modal fade" id="confirmAcceptModal" tabindex="-1" aria-labelledby="confirmAcceptModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title large-gold-text" id="confirmAcceptModalLabel">Confirm Quote Acceptance
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">Are you sure you want to accept this quote and send the invoice to the customer
+                            for payment?</p>
+                        <p class="small text-muted mt-2">This will begin the automated payment process. No job will be
+                            created until payment is successful.</p>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-outline-silver" data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'accept_quote' quote.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-green">Yes, Send Invoice</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        const taxPercent = parseFloat(document.getElementById('taxPercent').value || 0);
-        const tax = subtotal * (taxPercent / 100);
-        const finalTotal = subtotal + tax;
+        <!-- JavaScript: Totals Calculation & Dynamic Items & View PDF in New Tab -->
+        <script>
+            function updateTotals() {
+                const rows = document.querySelectorAll('.quote-item');
+                let subtotal = 0;
+                rows.forEach(row => {
+                    const qty = parseFloat(row.querySelector('input[name="quantity"]').value || 0);
+                    const price = parseFloat(row.querySelector('input[name="unit_price"]').value || 0);
+                    subtotal += qty * price;
+                });
 
-        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
-        document.getElementById('taxAmount').textContent = tax.toFixed(2);
-        document.getElementById('finalTotal').textContent = finalTotal.toFixed(2);
-    }
+                const taxPercent = parseFloat(document.getElementById('taxPercent').value || 0);
+                const tax = subtotal * (taxPercent / 100);
+                const finalTotal = subtotal + tax;
 
-    document.getElementById('addItemBtn').addEventListener('click', function () {
-        const container = document.getElementById('itemsContainer');
-        const div = document.createElement('div');
-        div.className = 'row mb-2 quote-item dark-opaque p-2 rounded gx-1 gy-2 align-items-center';
-        div.innerHTML = `
+                document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+                document.getElementById('taxAmount').textContent = tax.toFixed(2);
+                document.getElementById('finalTotal').textContent = finalTotal.toFixed(2);
+
+                // NEW: Accept Button Enable/Disable Logic
+                const acceptBtn = document.getElementById('acceptBtn');
+                if (acceptBtn) {
+                    if (finalTotal > 0) {
+                        acceptBtn.disabled = false;
+                        acceptBtn.setAttribute('title', '');
+                    } else {
+                        acceptBtn.disabled = true;
+                        acceptBtn.setAttribute('title', 'Build job quote first please');
+                    }
+                }
+            }
+
+            document.getElementById('addItemBtn').addEventListener('click', function () {
+                const container = document.getElementById('itemsContainer');
+                const div = document.createElement('div');
+                div.className = 'row mb-2 quote-item dark-opaque p-2 rounded gx-1 gy-2 align-items-center';
+                div.innerHTML = `
             <div class="col-12 col-md-6 mb-2 mb-md-0">
                 <input type="text" name="description" class="form-control" placeholder="Description" required>
             </div>
@@ -224,62 +254,71 @@
             <div class="col-12 col-md-1 d-flex align-items-center justify-content-end justify-content-md-center">
                 <button type="button" class="btn btn-sm btn-danger remove-item" aria-label="Remove item">&times;</button>
             </div>`;
-        container.appendChild(div);
-        updateTotals();
-    });
+                container.appendChild(div);
+                updateTotals();
+            });
 
-    document.addEventListener('input', function (e) {
-        if (e.target.matches('.unit-price') || e.target.name === 'quantity' || e.target.id === 'taxPercent') {
+            document.addEventListener('input', function (e) {
+                if (e.target.matches('.unit-price') || e.target.name === 'quantity' || e.target.id === 'taxPercent') {
+                    updateTotals();
+                }
+            });
+
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-item')) {
+                    e.target.closest('.quote-item').remove();
+                    updateTotals();
+                }
+            });
+
             updateTotals();
-        }
-    });
 
-    document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-item')) {
-            e.target.closest('.quote-item').remove();
-            updateTotals();
-        }
-    });
+            // View Quote button handler: AJAX post and open PDF in new tab
+            document.getElementById('viewQuoteBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                const form = document.getElementById('quoteForm');
+                // Add or set the hidden input for view_pdf_after
+                let input = form.querySelector('input[name="view_pdf_after"]');
+                if (!input) {
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'view_pdf_after';
+                    form.appendChild(input);
+                }
+                input.value = '1';
 
-    updateTotals();
+                // Gather form data
+                const formData = new FormData(form);
 
-    // View Quote button handler: AJAX post and open PDF in new tab
-    document.getElementById('viewQuoteBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        const form = document.getElementById('quoteForm');
-        // Add or set the hidden input for view_pdf_after
-        let input = form.querySelector('input[name="view_pdf_after"]');
-        if (!input) {
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'view_pdf_after';
-            form.appendChild(input);
-        }
-        input.value = '1';
+                // AJAX POST
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: formData
+                }).then(response => {
+                    if (response.redirected) {
+                        // On redirect, open the PDF in a new tab
+                        window.open(response.url, '_blank');
+                    } else {
+                        // Fallback: Open PDF anyway
+                        window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
+                    }
+                }).catch(() => {
+                    // Fallback: Open PDF anyway if error
+                    window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
+                });
+            });
 
-        // Gather form data
-        const formData = new FormData(form);
-
-        // AJAX POST
-        fetch(form.action, {
-            method: "POST",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: formData
-        }).then(response => {
-            if (response.redirected) {
-                // On redirect, open the PDF in a new tab
-                window.open(response.url, '_blank');
-            } else {
-                // Fallback: Open PDF anyway
-                window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
-            }
-        }).catch(() => {
-            // Fallback: Open PDF anyway if error
-            window.open("{% url 'view_quote_pdf' quote.pk %}", '_blank');
-        });
-    });
-</script>
-{% endblock %}
+            // NEW: Bootstrap Tooltip Initialization
+            document.addEventListener('DOMContentLoaded', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+                updateTotals(); // Ensure correct button state on load
+            });
+        </script>
+        {% endblock %}
