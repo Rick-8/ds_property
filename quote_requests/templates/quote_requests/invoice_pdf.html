@@ -29,8 +29,27 @@
     <h2 style="text-align: center; color: #c9a93f; margin: 10px 0;">Quote Invoice</h2>
 
     <p><strong>Quote #:</strong> {{ quote.pk }}</p>
-    <p><strong>Description:</strong> {{ quote.description }}</p>
 
+    <!-- Property Address Block -->
+    {% if quote.related_property %}
+        <p>
+            <strong>Property Address:</strong><br>
+            {{ quote.related_property.label }}<br>
+            {{ quote.related_property.address_line_1 }}<br>
+            {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>{% endif %}
+            {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
+            {{ quote.related_property.country }}
+        </p>
+    {% elif quote.address_line1 or quote.city or quote.postcode %}
+        <p>
+            <strong>Property Address:</strong><br>
+            {{ quote.address_line1 }}<br>
+            {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
+            {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+        </p>
+    {% else %}
+        <p><em>No property address provided.</em></p>
+    {% endif %}
 
     <!-- Items Table -->
     <table width="100%" border="1" cellspacing="0" cellpadding="5" style="border-collapse: collapse; margin-top: 20px;">

@@ -1,29 +1,28 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
-from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-from django.core.mail import EmailMessage
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage, send_mail, mail_admins
 from django.contrib import messages
 from django.urls import reverse
-from django.core.mail import mail_admins
-from .utils import generate_invoice_pdf
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
-from django.core.mail import send_mail
+from decimal import Decimal
+from datetime import date
+import stripe
+from django.utils.html import strip_tags
+
 from .models import QuoteRequest, QuoteItem
 from .forms import QuoteRequestForm
+from .utils import generate_invoice_pdf
 from accounts.models import Property
 from staff_portal.models import Job
-from decimal import Decimal
-import stripe
-import tempfile
-from django.contrib.auth.decorators import login_required
-from datetime import date
 from memberships.models import ServiceAgreement
 from xhtml2pdf import pisa
-from django.template.loader import get_template
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @login_required
@@ -42,12 +41,10 @@ def request_quote_view(request):
             if request.user.is_authenticated:
                 quote.customer = request.user
             quote.save()
-
             mail_admins(
                 subject='New Quote Request Submitted',
-                message = f'Quote Request #{quote.pk} from {quote.name} has been submitted.'
+                message=f'Quote Request #{quote.pk} from {quote.name} has been submitted.'
             )
-
             messages.success(request, "Your quote request has been submitted successfully!")
             return redirect('home')
     else:
@@ -64,8 +61,6 @@ def request_quote_view(request):
     return render(request, 'quote_requests/request_quote.html', {'form': form})
 
 
-
-
 # Superuser-only: list all quote requests
 @user_passes_test(lambda u: u.is_superuser)
 def admin_quote_list(request):
@@ -80,75 +75,58 @@ def quote_detail_view(request, pk):
     return render(request, 'quote_requests/quote_detail.html', {'quote': quote})
 
 
-# Superuser-only: accept a quote and create a Job
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
+# Superuser-only: accept a quote and email PDF + response link to customer
 @require_POST
 @user_passes_test(lambda u: u.is_superuser)
 def accept_quote(request, pk):
-    from quote_requests.utils import generate_invoice_pdf  # make sure this function exists
-    from django.core.mail import EmailMessage
-    from django.utils.html import strip_tags
-    from django.template.loader import render_to_string
-
     quote = get_object_or_404(QuoteRequest, pk=pk)
+    print(f"HIT accept_quote VIEW for quote #{pk}, status: {quote.status}")
 
-    if quote.status == 'PENDING':
-        # Update status
-        quote.status = 'AWAITING_PAYMENT'
-        quote.payment_status = 'UNPAID'
-        quote.calculate_totals()
-        quote.save()
+    if quote.status == 'REVIEWED':
+        try:
+            quote.payment_status = 'UNPAID'
+            quote.calculate_totals()
+            quote.save()
+            print("Saved quote, generating PDF")
+            pdf_file = generate_invoice_pdf(quote)
+            print("PDF generated")
 
-        # Generate PDF invoice
-        pdf_file = generate_invoice_pdf(quote)
+            response_url = request.build_absolute_uri(
+                reverse('respond_to_quote', args=[quote.response_token])
+            )
+            print("Response URL:", response_url)
 
-        # Create Stripe Checkout session
-        YOUR_DOMAIN = 'https://ds-property-group-04ec2ca20d25.herokuapp.com'
-        session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {
-                        'name': f'Quote #{quote.pk} Payment',
-                    },
-                    'unit_amount': int(quote.total_price * 100),  # Stripe uses cents
-                },
-                'quantity': 1,
-            }],
-            metadata={
-                'quote_id': str(quote.pk),
-                'user_id': str(quote.customer.id if quote.customer else ''),
-            },
-            mode='payment',
-            customer_email=quote.email,
-            success_url=YOUR_DOMAIN + '/quotes/thank-you/',
-            cancel_url=YOUR_DOMAIN + '/quotes/cancel/',
+            subject = f"Your Quote #{quote.pk} – Please Review and Respond"
+            html_message = render_to_string('emails/send_invoice_for_response.html', {
+                'quote': quote,
+                'response_url': response_url,
+            })
+            plain_message = strip_tags(html_message)
+            email = EmailMessage(
+                subject,
+                plain_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [quote.email],
+            )
+            email.attach_alternative(html_message, "text/html")
+            pdf_file.seek(0)
+            email.attach(f"Quote-{quote.pk}.pdf", pdf_file.read(), 'application/pdf')
+            print("PDF attached, sending email...")
+            email.send()
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+            messages.error(request, f"Failed to send email: {e}")
+        else:
+            print("EMAIL SENT SUCCESSFULLY")
+            messages.success(request, "Quote sent to customer. Waiting for their response.")
+    else:
+        print(f"Cannot accept quote in status: {quote.status}")
+        messages.error(
+            request,
+            f"Quote cannot be accepted while in '{quote.status}' status. "
+            "Please click 'Pending Review' first to review and approve the quote."
         )
-
-        # Email customer with invoice and link
-        subject = f"Your Quote #{quote.pk} – Ready for Payment"
-        html_message = render_to_string('emails/send_invoice.html', {
-            'quote': quote,
-            'checkout_url': session.url,
-        })
-        plain_message = strip_tags(html_message)
-
-        email = EmailMessage(
-            subject,
-            plain_message,
-            settings.DEFAULT_FROM_EMAIL,
-            [quote.email],
-        )
-        email.attach_alternative(html_message, "text/html")
-        email.attach(f"Quote-{quote.pk}.pdf", pdf_file.read(), 'application/pdf')
-        email.send()
-
-        messages.success(request, "Invoice sent to customer. Waiting for payment before job is created.")
     return redirect(reverse('quote_detail', args=[quote.pk]))
-
-
 
 # Superuser-only: decline a quote
 @user_passes_test(lambda u: u.is_superuser)
@@ -202,6 +180,7 @@ def update_quote_items(request, pk):
             return redirect(reverse('view_quote_pdf', args=[quote.pk]))
 
     return redirect('quote_detail', pk=pk)
+
 
 def mark_quote_reviewed(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)

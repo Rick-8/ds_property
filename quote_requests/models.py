@@ -1,10 +1,9 @@
-# quote_requests/models.py
-
 from django.db import models
 from django.conf import settings
 from decimal import Decimal
 from .storage_backends import QuoteImageStorage
 from accounts.models import Property
+import uuid
 
 
 
@@ -34,6 +33,7 @@ class QuoteRequest(models.Model):
     total_tax = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    response_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     related_property = models.ForeignKey('accounts.Property', null=True, blank=True, on_delete=models.SET_NULL)
 
     # Unregistered users address fields 
