@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string, get_template
-from django.core.mail import EmailMessage, send_mail, mail_admins
+from django.core.mail import EmailMultiAlternatives, send_mail, mail_admins
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
@@ -97,12 +97,12 @@ def accept_quote(request, pk):
             print("Response URL:", response_url)
 
             subject = f"Your Quote #{quote.pk} – Please Review and Respond"
-            html_message = render_to_string('emails/send_invoice_for_response.html', {
+            html_message = render_to_string('quote_requests/emails/send_invoice_for_response.html', {
                 'quote': quote,
                 'response_url': response_url,
             })
             plain_message = strip_tags(html_message)
-            email = EmailMessage(
+            email = EmailMultiAlternatives(
                 subject,
                 plain_message,
                 settings.DEFAULT_FROM_EMAIL,
@@ -127,6 +127,7 @@ def accept_quote(request, pk):
             "Please click 'Pending Review' first to review and approve the quote."
         )
     return redirect(reverse('quote_detail', args=[quote.pk]))
+
 
 # Superuser-only: decline a quote
 @user_passes_test(lambda u: u.is_superuser)
@@ -276,3 +277,8 @@ def update_quote_description(request, quote_id):
     quote.save()
     messages.success(request, "Description updated.")
     return redirect('quote_detail', pk=quote.pk)
+
+
+def respond_to_quote(request, token):
+    quote = get_object_or_404(QuoteRequest, response_token=token)
+    return render(request, 'quote_requests/respond_to_quote.html', {'quote': quote})
