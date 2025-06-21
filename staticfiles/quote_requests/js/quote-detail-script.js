@@ -1,8 +1,4 @@
-// Set these in your template!
-window.quoteStatus = window.quoteStatus || 'PENDING';
-window.markReviewedUrl = window.markReviewedUrl || '';
-window.quotePDFUrl = window.quotePDFUrl || '';
-
+// --- Calculate totals and update review/accept button ---
 function updateTotals() {
     const rows = document.querySelectorAll('.quote-item');
     let subtotal = 0;
@@ -23,7 +19,7 @@ function updateTotals() {
     setReviewAcceptBtnState();
 }
 
-// Tooltip logic and dynamic button states
+// --- Update the Review/Accept button state based on status and total ---
 window.setReviewAcceptBtnState = function () {
     const btn = document.getElementById('reviewAcceptBtn');
     const wrapper = document.getElementById('reviewAcceptBtnWrapper');
@@ -43,11 +39,7 @@ window.setReviewAcceptBtnState = function () {
         btn.classList.remove('btn-outline-green');
         btn.classList.add('btn-outline-gold');
         btn.textContent = "Review";
-        if (total > 0) {
-            btn.disabled = false;
-        } else {
-            btn.disabled = true;
-        }
+        btn.disabled = false; // Always enabled in PENDING!
     } else if (window.quoteStatus === 'REVIEWED') {
         btn.classList.remove('btn-outline-gold');
         btn.classList.add('btn-outline-green');
@@ -74,7 +66,9 @@ updateTotals = (function (orig) {
     }
 })(updateTotals);
 
+// --- DOM Ready ---
 document.addEventListener('DOMContentLoaded', function () {
+    // Add Item button
     document.getElementById('addItemBtn').addEventListener('click', function () {
         const container = document.getElementById('itemsContainer');
         const div = document.createElement('div');
@@ -96,12 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
         updateTotals();
     });
 
+    // Input listeners (quantity, price, tax)
     document.addEventListener('input', function (e) {
         if (e.target.matches('.unit-price') || e.target.name === 'quantity' || e.target.id === 'taxPercent') {
             updateTotals();
         }
     });
 
+    // Remove item handler
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-item')) {
             e.target.closest('.quote-item').remove();
@@ -109,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // View Quote PDF
     document.getElementById('viewQuoteBtn').addEventListener('click', function (e) {
         e.preventDefault();
         const form = document.getElementById('quoteForm');
@@ -139,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Initialize totals and button state on page load
     updateTotals();
 
     // Review & Accept button click handler
@@ -154,8 +152,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(function () { window.location.reload(); })
                 .catch(function () { alert("Failed to review quote. Please try again."); });
             } else if (window.quoteStatus === 'REVIEWED') {
-                var modal = new bootstrap.Modal(document.getElementById('confirmAcceptModal'));
-                modal.show();
+                // ---- Save quote before showing modal ----
+                const quoteForm = document.getElementById('quoteForm');
+                const formData = new FormData(quoteForm);
+
+                // Submit form via AJAX POST to save latest changes
+                fetch(quoteForm.action, {
+                    method: "POST",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': quoteForm.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: formData
+                })
+                .then(function (resp) {
+                    // Always show modal (whether or not anything changed)
+                    var modal = new bootstrap.Modal(document.getElementById('confirmAcceptModal'));
+                    modal.show();
+                })
+                .catch(function () {
+                    alert("Could not save quote changes before sending invoice. Try again.");
+                });
+            }
+        });
+    }
+
+    // --- Modal accept button handler to submit the form ---
+    var confirmAcceptBtn = document.querySelector('#confirmAcceptModal .btn-outline-green');
+    if (confirmAcceptBtn) {
+        confirmAcceptBtn.addEventListener('click', function () {
+            var acceptForm = document.querySelector('#confirmAcceptModal form');
+            if (acceptForm) {
+                // Disable button to prevent double submit
+                confirmAcceptBtn.disabled = true;
+                acceptForm.submit();
             }
         });
     }
