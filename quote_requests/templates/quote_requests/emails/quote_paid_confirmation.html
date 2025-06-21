@@ -1,0 +1,144 @@
+{% autoescape on %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Received – Quote #{{ quote.pk }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f6f6f6; margin: 0; padding: 0; }
+        .container { background: #fff; max-width: 650px; margin: 40px auto; border-radius: 10px; box-shadow: 0 2px 8px #ddd; padding: 30px; }
+        .header { background: #22223b; color: #fbbf24; padding: 18px 30px; border-radius: 10px 10px 0 0; text-align: center; }
+        .content { padding: 20px 0 0 0; }
+        .paid-stamp {
+            display: inline-block;
+            color: #19b34a;
+            border: 3px solid #19b34a;
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 7px 30px;
+            margin-bottom: 30px;
+            border-radius: 18px;
+            background: #e6ffe5;
+            letter-spacing: 0.15em;
+        }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 28px 0; }
+        .summary-table th, .summary-table td {
+            text-align: left;
+            padding: 9px 8px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .summary-table th { background: #fbbf24; color: #22223b; }
+        .summary-table td { background: #fafaf9; }
+        .amount-box {
+            margin: 22px 0 14px 0; padding: 16px 18px; border-radius: 8px;
+            background: #fbbf24; color: #22223b; font-size: 1.1em; font-weight: bold;
+        }
+        .footer { margin-top: 38px; font-size: 0.95em; color: #808080; text-align: center; }
+        .job-info { background: #f2f7fa; border-left: 4px solid #19b34a; margin-top: 28px; padding: 18px; border-radius: 8px; }
+        .label { font-weight: bold; color: #22223b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Payment Received – Quote #{{ quote.pk }}</h2>
+        </div>
+
+        <div class="content">
+            <div class="paid-stamp">PAID</div>
+            <p>Hi {{ quote.name }},</p>
+            <p>We have received your payment for your quote and your job has been scheduled for processing. Below are your details:</p>
+
+            <div class="amount-box">
+                <span>Total Paid: ${{ quote.total|floatformat:2 }}</span>
+            </div>
+
+            <table class="summary-table">
+                <tr>
+                    <th>Quote #</th>
+                    <td>{{ quote.pk }}</td>
+                </tr>
+                <tr>
+                    <th>Date Submitted</th>
+                    <td>{{ quote.submitted_at|date:"Y-m-d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th>Customer Name</th>
+                    <td>{{ quote.name }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ quote.email }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ quote.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ quote.description|default:"(none)" }}</td>
+                </tr>
+                <tr>
+                    <th>Property Address</th>
+                    <td>
+                        {% if quote.related_property %}
+                            <div><strong>{{ quote.related_property.label }}</strong></div>
+                            {{ quote.related_property.address_line_1 }}<br>
+                            {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>{% endif %}
+                            {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
+                            {{ quote.related_property.country }}
+                        {% elif quote.address_line1 or quote.city or quote.postcode %}
+                            {{ quote.address_line1 }}<br>
+                            {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
+                            {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+                        {% else %}
+                            <span style="color:#888;">(No address provided)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <div>
+                <strong>Line Items:</strong>
+                <ul style="margin:12px 0 0 0; padding-left:18px;">
+                {% for item in quote.items.all %}
+                    <li>
+                        {{ item.description }} – {{ item.quantity }} × ${{ item.unit_price|floatformat:2 }}
+                        = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}{{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}${{ item.quantity|floatformat:0|floatformat:0 }}${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
+                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
+                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
+                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
+                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
+                    </li>
+                {% empty %}
+                    <li>No items listed.</li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            <div style="margin:18px 0 10px 0;">
+                <div><span class="label">Subtotal:</span> ${{ quote.subtotal|floatformat:2 }}</div>
+                <div><span class="label">Tax ({{ quote.tax_percent|floatformat:2 }}%):</span> ${{ quote.tax_amount|floatformat:2 }}</div>
+                <div><span class="label">Total Paid:</span> <strong>${{ quote.total|floatformat:2 }}</strong></div>
+            </div>
+
+            <div class="job-info">
+                <h4 style="margin-top:0; margin-bottom:10px; color:#19b34a;">Job Scheduled!</h4>
+                <div><span class="label">Job Reference:</span> {{ job.title }}</div>
+                <div><span class="label">Status:</span> {{ job.get_status_display|default:job.status }}</div>
+                {% if job.scheduled_date %}
+                    <div><span class="label">Scheduled Date:</span> {{ job.scheduled_date|date:"Y-m-d" }}</div>
+                {% endif %}
+            </div>
+
+            <p style="margin-top:28px;">If you have any questions, just reply to this email.<br>
+            Thank you for choosing DS Property Maintenance!</p>
+        </div>
+        <div class="footer">
+            &copy; {{ now|date:"Y" }} DS Property Maintenance.<br>
+            This is an automated email. Please do not reply directly.
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}

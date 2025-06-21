@@ -177,8 +177,8 @@ AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
 AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
 
 # Use S3 for media storage (uploads)
-DEFAULT_FILE_STORAGE = 'quote_requests.storage_backends.MediaStorage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = "quote_requests.storage_backends.MediaStorage"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

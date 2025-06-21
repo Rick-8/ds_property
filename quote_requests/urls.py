@@ -13,14 +13,14 @@ urlpatterns = [
 
     path('my-quotes/', views.my_quotes, name='my_quotes'),
 
-    path('quotes/<int:pk>/update-notes/', views.update_quote_notes, name='update_quote_notes'),
-    path('quotes/<int:pk>/update-items/', views.update_quote_items, name='update_quote_items'),
-    path('quotes/<int:pk>/mark-reviewed/', views.mark_quote_reviewed, name='mark_quote_reviewed'),
+    path('<int:pk>/update-notes/', views.update_quote_notes, name='update_quote_notes'),
+    path('<int:pk>/update-items/', views.update_quote_items, name='update_quote_items'),
+    path('<int:pk>/mark-reviewed/', views.mark_quote_reviewed, name='mark_quote_reviewed'),
 
-    path('quotes/<int:quote_id>/create-payment-intent/', views.create_payment_intent, name='create_payment_intent'),
-    path('quotes/payment-success/', views.payment_success, name='payment_success'),
-    path('quotes/thank-you/', views.payment_thank_you, name='payment_thank_you'),
-    path('quotes/cancel/', views.payment_cancelled, name='payment_cancelled'),
+    path('<int:quote_id>/create-payment-intent/', views.create_payment_intent, name='create_payment_intent'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    path('thank-you/', views.payment_thank_you, name='payment_thank_you'),
+    path('cancel/', views.payment_cancelled, name='payment_cancelled'),
 
     path('pdf/<int:quote_id>/', view_quote_pdf, name='view_quote_pdf'),
     path('respond/<str:token>/', views.respond_to_quote, name='respond_to_quote'),
