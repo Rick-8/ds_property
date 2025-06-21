@@ -249,3 +249,13 @@ def update_quote_description(request, quote_id):
 def respond_to_quote(request, token):
     quote = get_object_or_404(QuoteRequest, response_token=token)
     return render(request, 'quote_requests/respond_to_quote.html', {'quote': quote})
+
+
+@require_POST
+def respond_decline_quote(request, token):
+    quote = get_object_or_404(QuoteRequest, response_token=token)
+    if quote.status in ['REVIEWED', 'UNPAID']:
+        quote.status = 'DECLINED'
+        quote.save()
+
+    return render(request, "quote_requests/respond_to_quote.html", {"quote": quote})

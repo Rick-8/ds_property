@@ -1002,3 +1002,28 @@ body.error-page {
         padding: 0.3rem 0.6rem;
     }
 }
+
+@media (max-width: 600px) {
+  .container.py-5 {
+    padding: 1.5rem 0.5rem !important;
+  }
+  .dark-opaque {
+    padding: 1rem !important;
+  }
+  .large-gold-text {
+    font-size: 1.35rem !important;
+    padding-bottom: 1rem;
+  }
+  .rounded-4, .rounded-pill, .rounded-3 {
+    border-radius: 1rem !important;
+  }
+  .fs-5, .fs-4 {
+    font-size: 1.05rem !important;
+  }
+  .card.dark-opaque {
+    padding: 1rem !important;
+  }
+  form#payment-form {
+    max-width: 100% !important;
+  }
+}

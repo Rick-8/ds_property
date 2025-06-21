@@ -23,4 +23,6 @@ urlpatterns = [
 
     path('pdf/<int:quote_id>/', view_quote_pdf, name='view_quote_pdf'),
     path('respond/<str:token>/', views.respond_to_quote, name='respond_to_quote'),
+    path('respond/<str:token>/decline/', views.respond_decline_quote, name='respond_decline_quote'),
+
 ]
