@@ -3,58 +3,118 @@
 {% load static %}
 
 {% block content %}
-<h2 class="large-gold-text dark-opaque mb-4 text-center text-md-start">All Jobs</h2>
+<div class="container-xl mx-auto" style="max-width: 1100px;">
+  <h2 class="large-gold-text dark-opaque mb-4 text-center text-md-start">All Jobs</h2>
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
-  <a href="{% url 'dashboard' %}" class="btn btn-outline-silver w-10 w-md-auto">Back to Dashboard</a>
-  <button class="btn btn-red-in w-10 w-md-auto"
-          data-bs-toggle="modal"
-          data-bs-target="#confirmDeleteModal"
-          data-delete-all="true"
-          data-action-url="{% url 'delete_all_jobs' %}">
-    <strong>Delete All Jobs</strong>
-  </button>
-</div>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-silver w-10 w-md-auto">Back to Dashboard</a>
+    <button class="btn btn-red-in w-10 w-md-auto"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmDeleteModal"
+            data-delete-all="true"
+            data-action-url="{% url 'delete_all_jobs' %}">
+      <strong>Delete All Jobs</strong>
+    </button>
+  </div>
 
-<input type="text" id="searchInput" class="form-control mb-3" placeholder="Search by Job ID or Title">
+  <div class="mb-4">
+    <input type="text"
+           id="searchInput"
+           class="form-control dark-opaque border-gold text-white placeholder-gold"
+           placeholder="Search by Job ID or Title"
+           style="background: rgba(0,0,0,0.75); border:2px solid gold;" />
+  </div>
 
-{% if jobs %}
-<div class="table-responsive">
-  <table class="table table-striped align-middle" id="jobsTable">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Scheduled Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for job in jobs %}
+  {% if jobs %}
+    <!-- Desktop & Tablet: Table View in Scrollable Glass Container -->
+    <div class="d-none d-md-block">
+      <div class="border-gold rounded dark-opaque glass-accordion p-2 mx-auto"
+           style="min-height:220px; max-height: 480px; overflow-y: auto;">
+        <table class="table table-dark table-striped align-middle border-gold mb-0" id="jobsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Scheduled Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+              {% if job and job.property and job.title %}
+              <tr class="job-row">
+                <td class="job-id">J{{ job.id }}</td>
+                <td><a href="{% url 'job_detail' job.id %}" class="text-gold text-decoration-none fw-bold">{{ job.title }}</a></td>
+                <td class="text-silver">{{ job.status }}</td>
+                <td>{{ job.scheduled_date|default:"(No Date)" }}</td>
+                <td>
+                  <button class="btn btn-danger btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-job-id="{{ job.id }}"
+                          data-action-url="{% url 'delete_job' job.id %}">Delete</button>
+                  <button class="btn btn-outline-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editModal{{ job.id }}">Edit</button>
+                </td>
+              </tr>
+              {% else %}
+              <tr class="text-muted text-center">
+                <td colspan="5">(Incomplete or missing job record)</td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mobile: Responsive Glass Cards -->
+    <div class="d-md-none" id="jobsCardList">
+      <div class="row row-cols-1 g-3">
+        {% for job in jobs %}
+          {% if job and job.property and job.title %}
+          <div class="col job-row">
+            <div class="card dark-opaque border-gold" style="background:rgba(0,0,0,0.7); color:white;">
+              <div class="card-body p-3">
+                <h5 class="card-title mb-2">
+                  <a href="{% url 'job_detail' job.id %}" class="text-gold text-decoration-none fw-bold">
+                    {{ job.title }}
+                  </a>
+                </h5>
+                <p class="card-text mb-1"><strong>Job ID:</strong> J{{ job.id }}</p>
+                <p class="card-text mb-1"><strong>Status:</strong> <span class="text-silver">{{ job.status }}</span></p>
+                <p class="card-text mb-1"><strong>Scheduled:</strong> {{ job.scheduled_date|default:"(No Date)" }}</p>
+                <div class="mt-3 d-flex gap-2">
+                  <button class="btn btn-danger btn-sm flex-fill"
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-job-id="{{ job.id }}"
+                          data-action-url="{% url 'delete_job' job.id %}">Delete</button>
+                  <button class="btn btn-outline-primary btn-sm flex-fill"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editModal{{ job.id }}">Edit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="col">
+            <div class="card bg-dark border-gold">
+              <div class="card-body">
+                <p class="card-text text-muted">Incomplete job record</p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- All Edit Modals (rendered outside of scrollable table/card containers) -->
+    {% for job in jobs %}
       {% if job and job.property and job.title %}
-      <tr>
-        <td class="job-id">J{{ job.id }}</td>
-        <td><a href="{% url 'job_detail' job.id %}" class="text-decoration-underline">{{ job.title }}</a></td>
-        <td>{{ job.status }}</td>
-        <td>{{ job.scheduled_date|default:"(No Date)" }}</td>
-        <td>
-          <button class="btn btn-danger btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#confirmDeleteModal"
-                  data-job-id="{{ job.id }}"
-                  data-action-url="{% url 'delete_job' job.id %}">
-            Delete
-          </button>
-          <button class="btn btn-outline-primary btn-sm"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editModal{{ job.id }}">
-            Edit
-          </button>
-        </td>
-      </tr>
-
-      <!-- Edit Modal -->
       <div class="modal fade" id="editModal{{ job.id }}" tabindex="-1"
            aria-labelledby="editModalLabel{{ job.id }}" aria-hidden="true">
         <div class="modal-dialog">
@@ -93,42 +153,36 @@
           </form>
         </div>
       </div>
-      {% else %}
-      <tr class="text-muted text-center">
-        <td colspan="5">(Incomplete or missing job record)</td>
-      </tr>
       {% endif %}
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% else %}
-<p>No jobs found.</p>
-{% endif %}
+    {% endfor %}
+  {% else %}
+    <p class="dark-opaque p-3">No jobs found.</p>
+  {% endif %}
 
-<!-- Delete Modal -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" id="deleteForm">
-      {% csrf_token %}
-      <div class="modal-content modal-background">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p id="deleteMessage">Are you sure you want to delete this job?</p>
-          <div class="mb-3">
-            <label for="password" class="form-label">Enter your password:</label>
-            <input type="password" class="form-control" name="password" required>
+  <!-- Delete Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-content modal-background">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="deleteMessage">Are you sure you want to delete this job?</p>
+            <div class="mb-3">
+              <label for="password" class="form-label">Enter your password:</label>
+              <input type="password" class="form-control" name="password" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-red-in">Confirm</button>
+            <button type="button" class="btn btn-outline-silver" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-red-in">Confirm</button>
-          <button type="button" class="btn btn-outline-silver" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

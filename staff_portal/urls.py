@@ -10,6 +10,7 @@ urlpatterns = [
     path('jobs/delete/<int:job_id>/', views.delete_job, name='delete_job'),
     path('jobs/delete_all/', views.delete_all_jobs, name='delete_all_jobs'),
     path('my-jobs/', views.staff_job_list, name='my_jobs'),
+    path('jobs/<int:job_id>/unlock/', views.unlock_job_overlay, name='unlock_job_overlay'),
 
     # Assign job to route (superuser only, AJAX)
     path('jobs/<int:job_id>/assign_route/', views.assign_job_route, name='assign_job_route'),
@@ -22,6 +23,7 @@ urlpatterns = [
     # Job status views
     path('jobs/status/', views.job_status_overview, name='job_status_overview'),
     path('jobs/status/list/', views.jobs_by_status, name='jobs_by_status'),
+    path('jobs/<int:job_id>/save-feedback/', views.save_job_feedback, name='save_job_feedback'),
 
     # Completed jobs
     path('jobs/completed/', views.completed_jobs, name='completed_jobs'),

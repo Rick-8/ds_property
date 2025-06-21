@@ -31,19 +31,18 @@
       {% endif %}
     </section>
 
-    <!-- Staff Feedback + Actions (Combined in one form) -->
-    <form method="POST" action="{% url 'mark_job_missed' job.id %}" id="notCompletedForm"
+    <!-- Staff Feedback (form ONLY for feedback) -->
+    <form method="POST" action="{% url 'save_job_feedback' job.id %}" id="feedbackForm"
       class="col-12 col-lg-6 border rounded p-4 border-gold">
       {% csrf_token %}
       <h4 class="mb-3">Job Notes / Staff Feedback</h4>
-
       {% if user.is_authenticated %}
       {% if user.is_superuser or user in job.assigned_staff.all %}
       {{ form.feedback }}
       {% if job.status != 'COMPLETED' %}
       <button type="submit" class="btn btn-primary mt-3 mb-3">Save Feedback</button>
       {% else %}
-      <p class="text-muted mt-3">Feedback is locked because the job is completed.</p>
+      <p class=" mt-3">Feedback is locked because the job is completed.</p>
       {% endif %}
       {% elif job.jobfeedback_set.exists %}
       {% for fb in job.jobfeedback_set.all %}
@@ -53,33 +52,37 @@
       <p>No feedback available.</p>
       {% endif %}
       {% endif %}
-
-      <!-- Missed Button and Prompt -->
-      <button type="button" class="btn btn-danger w-100 mb-3" id="notCompletedBtn" disabled data-bs-toggle="modal"
-        data-bs-target="#confirmMissedModal">
-        <i class="fa-solid fa-circle-xmark pe-1"></i> Not Completed
-      </button>
-      <p id="feedbackPrompt" class="text-warning small mt-2 dark-opaque" style="display: none;">
-        Please enter a reason in the feedback box above before marking as not completed.
-      </p>
     </form>
 
-    <!-- Bottom Right: Buttons -->
-    <section class="col-12 col-lg-6 d-flex flex-column justify-content-start border rounded p-4 border-gold"
-      style="background: transparent;">
-      {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
-      <form method="POST" action="{% url 'mark_job_complete' job.id %}" class="mb-3">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success w-100">Mark as Complete</button>
-      </form>
-      {% endif %}
+    <!-- Bottom Right: Action Buttons (Responsive) -->
+    <section class="col-12 col-lg-6 border rounded p-4 border-gold d-flex flex-column justify-content-between"
+      style="background: transparent; min-height: 300px;">
+      <div class="d-grid gap-3">
+        {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
+        <form method="POST" action="{% url 'mark_job_complete' job.id %}" class="w-100">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success w-100">Mark as Complete</button>
+        </form>
+        {% endif %}
 
-      <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100">Back to Dashboard</a>
+        <!-- Not Completed Button -->
+        <button type="button" class="btn btn-danger w-100" id="notCompletedBtn" data-bs-toggle="modal"
+          data-bs-target="#confirmMissedModal" {% if job.status == 'COMPLETED' %}disabled{% endif %}>
+          <i class="fa-solid fa-circle-xmark pe-1"></i> Not Completed
+        </button>
+
+        <!-- Back Button -->
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100" id="backToDashboardBtn">Back to Dashboard</a>
+      </div>
+
+      <!-- Feedback Prompt (will always be full width) -->
+      <p id="feedbackPrompt" class="text-warning small mt-2 dark-opaque w-100" style="display: none;">
+        Please enter a reason in the feedback box above before marking as not completed.
+      </p>
     </section>
   </div>
 
-
-  <!-- Modal -->
+  <!-- Modal (now contains its own form) -->
   <div class="modal fade" id="confirmMissedModal" tabindex="-1" aria-labelledby="confirmMissedModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -88,18 +91,55 @@
           <h5 class="modal-title text-gold" id="confirmMissedModalLabel">Confirm Not Completed</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body text-white">
-          Are you sure you want to mark this job as not completed?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button id="confirmMissedBtn" class="btn btn-danger">Confirm</button>
-        </div>
+        <form method="POST" action="{% url 'mark_job_missed' job.id %}">
+          {% csrf_token %}
+          <div class="modal-body text-white">
+            Are you sure you want to mark this job as not completed?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Confirm</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
+  {% if job.status == 'COMPLETED' or job.status == 'NOT_COMPLETED' %}
+  <div id="lockOverlay" style="
+    position: fixed;
+    z-index: 1050;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(18,18,18, 0.7);
+    backdrop-filter: blur(2.5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: all;">
+    <div class="text-center p-4 dark-opaque rounded" style="min-width:320px;max-width:96vw;">
+      <i class="fa-solid fa-lock fa-3x text-gold mb-3"></i>
+      <h4 class="text-gold mb-3">Job Locked</h4>
+      <p class="text-white">This job is {{ job.get_status_display }} and can no longer be edited.</p>
+      <form id="unlockForm" class="mb-3">
+        <input type="password" class="form-control mb-2" id="superuserPassword" placeholder="Superuser password"
+          autocomplete="current-password" required>
+        <button type="submit" class="btn btn-gold w-100">Unlock as Superuser</button>
+        <div id="unlockError" class="text-danger mt-2" style="display:none;">Incorrect password or not a superuser.
+        </div>
+      </form>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
+    </div>
+  </div>
+  {% endif %}
   {% endblock content %}
 
   {% block extra_scripts %}
   <script src="{% static 'staff_portal/js/job_detail.js' %}"></script>
+<script>
+  window.JOB_DETAIL_CONTEXT = {
+    isLocked: "{% if is_locked %}true{% else %}false{% endif %}",
+    unlockUrl: "{% url 'unlock_job_overlay' job.id %}",
+    csrfToken: "{{ csrf_token }}"
+  };
+</script>
   {% endblock %}

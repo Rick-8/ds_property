@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.db.models import Prefetch
 from django.utils.timezone import localdate
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.views.decorators.http import require_POST
 from memberships.models import ServiceAgreement
 
@@ -556,3 +556,39 @@ def edit_job(request, job_id):
         form = EditJobForm(instance=job)
 
     return render(request, 'staff_portal/edit_job_modal.html', {'form': form, 'job': job})
+
+
+@login_required
+def save_job_feedback(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    # Only allow staff or superuser to submit feedback
+    if not (request.user.is_superuser or request.user in job.assigned_staff.all()):
+        messages.error(request, "You do not have permission to leave feedback for this job.")
+        return redirect('job_detail', job_id=job.id)
+
+    if request.method == "POST":
+        form = JobFeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.job = job
+            feedback.user = request.user
+            feedback.save()
+            messages.success(request, "Feedback saved.")
+        else:
+            messages.error(request, "There was an error saving feedback.")
+        return redirect('job_detail', pk=job.id)
+
+
+@csrf_exempt
+def unlock_job_overlay(request, job_id):
+    import json
+    if request.method == "POST":
+        data = json.loads(request.body)
+        pw = data.get("password")
+        if request.user.is_authenticated and request.user.is_superuser:
+            user = authenticate(username=request.user.username, password=pw)
+            if user is not None and user.is_superuser:
+                login(request, user)  # Refresh session
+                return JsonResponse({"success": True})
+        return JsonResponse({"success": False})
+    return JsonResponse({"success": False})
