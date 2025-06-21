@@ -19,6 +19,8 @@ from .utils import render_quote_pdf_bytes
 from accounts.models import Property
 from staff_portal.models import Job
 from memberships.models import ServiceAgreement
+from django.http import JsonResponse
+import json
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -175,48 +177,6 @@ def mark_quote_reviewed(request, pk):
     return redirect('quote_detail', pk=pk)
 
 
-@csrf_exempt
-def stripe_webhook(request):
-    payload = request.body
-    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
-    webhook_secret = settings.STRIPE_WEBHOOK_SECRET
-
-    try:
-        event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
-    except (ValueError, stripe.error.SignatureVerificationError):
-        return HttpResponse(status=400)
-
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        quote_id = session.get('metadata', {}).get('quote_id')
-        try:
-            quote = QuoteRequest.objects.get(pk=quote_id)
-        except QuoteRequest.DoesNotExist:
-            return HttpResponse(status=404)
-
-        if quote.payment_status != 'PAID':
-            quote.payment_status = 'PAID'
-            quote.status = 'PAID'
-            quote.save()
-            job = Job.objects.create(
-                title=f"One-off job for {quote.name}",
-                description=quote.description,
-                property=quote.property,
-                scheduled_date=quote.preferred_date or quote.submitted_at.date(),
-                quote_request=quote,
-                status='PENDING'
-            )
-            job.title = f"C{job.id} - {job.title}"
-            job.save()
-            send_mail(
-                subject=f"Payment Confirmation – Quote #{quote.pk}",
-                message=f"Hi {quote.name},\n\nYour payment has been received. Your job is now scheduled. Thank you!",
-                from_email=None,
-                recipient_list=[quote.email],
-            )
-    return HttpResponse(status=200)
-
-
 def payment_thank_you(request):
     return render(request, 'quote_requests/thanks.html')
 
@@ -248,7 +208,10 @@ def update_quote_description(request, quote_id):
 
 def respond_to_quote(request, token):
     quote = get_object_or_404(QuoteRequest, response_token=token)
-    return render(request, 'quote_requests/respond_to_quote.html', {'quote': quote})
+    return render(request, 'quote_requests/respond_to_quote.html', {
+        'quote': quote,
+        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+    })
 
 
 @require_POST
@@ -259,3 +222,35 @@ def respond_decline_quote(request, token):
         quote.save()
 
     return render(request, "quote_requests/respond_to_quote.html", {"quote": quote})
+
+
+@csrf_exempt
+def create_payment_intent(request, quote_id):
+    print("DEBUG: create_payment_intent hit with quote_id:", quote_id, "method:", request.method)
+
+    if request.method != "POST":
+        return JsonResponse({'error': 'POST required'}, status=400)
+
+    try:
+        quote = QuoteRequest.objects.get(pk=quote_id)
+    except QuoteRequest.DoesNotExist:
+        return JsonResponse({'error': 'Quote not found'}, status=404)
+
+    try:
+        body = request.body.decode('utf-8')
+        data = json.loads(body) if body else {}
+        # 'data' is not used, but parsed for robustness
+        amount = int(Decimal(quote.total) * 100)  # Stripe expects amount in cents
+        payment_intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='usd',
+            metadata={'quote_id': str(quote.id)},
+            description=f"Payment for Quote #{quote.id}",
+        )
+        return JsonResponse({'clientSecret': payment_intent.client_secret})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def payment_success(request):
+    return render(request, 'quote_requests/payment_success.html')

@@ -809,11 +809,14 @@ def cancel_agreement(request, agreement_id):
     # Always redirect to the subscriptions page after processing
     return redirect('all_subscriptions')
 
+
+logger = logging.getLogger(__name__)
+
+
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):
     from quote_requests.models import QuoteRequest
-    from staff_portal.models import Job
     from django.contrib.auth import get_user_model
 
     User = get_user_model()
@@ -835,58 +838,35 @@ def stripe_webhook(request):
         logger.error(f"⚠️ Unexpected error: {e}", exc_info=True)
         return HttpResponse(status=500)
 
-    # ✅ One-off quote payment
+    # --- Handle one-off quote payment (for both Checkout and PaymentIntent) ---
+    quote_id = None
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         metadata = session.get('metadata', {})
         quote_id = metadata.get('quote_id')
-        user_id = metadata.get('user_id')
+    elif event['type'] == 'payment_intent.succeeded':
+        intent = event['data']['object']
+        metadata = intent.get('metadata', {})
+        quote_id = metadata.get('quote_id')
 
-        if quote_id:
-            try:
-                quote = QuoteRequest.objects.get(pk=quote_id)
-
-                if quote.status != 'PAID':
-                    quote.status = 'PAID'
-                    quote.payment_status = 'PAID'
-                    quote.save()
-
-                    job = Job.objects.create(
-                        title=f"C - One-off job for {quote.name}",
-                        description=quote.description,
-                        property=quote.property if hasattr(quote, 'property') else None,
-                        quote_request=quote,
-                        status='PENDING'
-                    )
-                    job.title = f"C{job.id} - {job.title}"
-                    job.save()
-                    logger.info(f"✅ Job created for paid quote #{quote.id}.")
-
-                    # Email customer confirmation
-                    subject = f"✅ Payment Received for Quote #{quote.pk}"
-                    html = render_to_string("emails/quote_paid_confirmation.html", {
-                        'quote': quote,
-                        'job': job,
-                    })
-                    plain = strip_tags(html)
-
-                    email = EmailMessage(
-                        subject,
-                        plain,
-                        settings.DEFAULT_FROM_EMAIL,
-                        [quote.email],
-                    )
-                    email.attach_alternative(html, "text/html")
-                    email.send(fail_silently=True)
-                    logger.info(f"✅ Confirmation email sent to {quote.email}.")
-
-            except Exception as e:
-                logger.error(f"❌ Error handling quote payment: {e}", exc_info=True)
-                return HttpResponse(status=500)
-
+    if quote_id:
+        try:
+            from quote_requests.utils import create_one_off_job_from_quote
+            quote = QuoteRequest.objects.get(pk=quote_id)
+            if quote.status != 'PAID':
+                quote.status = 'PAID'
+                quote.payment_status = 'PAID'
+                quote.save()
+                create_one_off_job_from_quote(quote)
+                logger.info(f"✅ One-off job created for paid quote {quote.id}")
+            else:
+                logger.info(f"Quote {quote.id} already marked as PAID, skipping job creation.")
+        except Exception as e:
+            logger.error(f"❌ Error handling quote payment for quote_id={quote_id}: {e}", exc_info=True)
+            return HttpResponse(status=500)
         return HttpResponse(status=200)
 
-    # 🔄 Subscription events
+    # --- Handle subscription events ---
     if event['type'] == 'customer.subscription.created':
         subscription = event['data']['object']
         metadata = subscription.get('metadata', {})
@@ -996,6 +976,7 @@ def stripe_webhook(request):
                     'agreement_date': timezone.now().strftime("%Y-%m-%d"),
                 })
                 plain_message = strip_tags(html_message)
+                from django.core.mail import EmailMessage
                 email = EmailMessage(
                     subject,
                     plain_message,
@@ -1014,48 +995,9 @@ def stripe_webhook(request):
             except ServiceAgreement.DoesNotExist:
                 logger.warning(f"Invoice payment succeeded for unknown subscription {subscription_id}")
 
-    elif event['type'] == 'invoice.payment_failed':
-        invoice = event['data']['object']
-        subscription_id = invoice.get('subscription')
-        if subscription_id:
-            try:
-                agreement = ServiceAgreement.objects.get(stripe_subscription_id=subscription_id)
-                agreement.active = False
-                agreement.status = 'past_due'
-                agreement.save()
-                if agreement.property:
-                    others = ServiceAgreement.objects.filter(property=agreement.property, active=True).exclude(id=agreement.id).exists()
-                    if not others:
-                        agreement.property.has_active_service = False
-                        agreement.property.stripe_subscription_id = None
-                        agreement.property.save()
-
-                subject = "Important: Your Subscription Payment Failed"
-                html_message = render_to_string('emails/payment_failed_notification.html', {
-                    'user': agreement.user,
-                    'agreement': agreement,
-                    'site_name': 'DS Property Management',
-                    'dashboard_url': request.build_absolute_uri(reverse('account_dashboard')),
-                    'customer_portal_url': 'YOUR_STRIPE_CUSTOMER_PORTAL_URL_HERE',
-                })
-                plain_message = strip_tags(html_message)
-                email = EmailMessage(
-                    subject,
-                    plain_message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [agreement.user.email],
-                )
-                email.attach_alternative(html_message, "text/html")
-                email.send(fail_silently=True)
-
-            except ServiceAgreement.DoesNotExist:
-                logger.warning(f"Invoice payment failed for unknown subscription {subscription_id}")
-
-    else:
-        logger.info(f"🤷‍♀️ Unhandled event type: {event['type']}")
+    # You can add more event handlers below if needed.
 
     return HttpResponse(status=200)
-
 
 
 @login_required

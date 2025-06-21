@@ -1,12 +1,12 @@
 import logging
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import strip_tags
 
 from memberships.models import ServiceAgreement
-
 
 logger = logging.getLogger(__name__)
 
@@ -114,3 +114,47 @@ The Automated {settings.SITE_NAME} Notification System
         logger.info(f"Office notification email sent for new signup: {user.email} - {package.name}.")
     except Exception as e:
         logger.error(f"Failed to send office notification email for {user.email}: {e}", exc_info=True)
+
+
+def create_one_off_job_from_quote(quote):
+    """
+    Creates a one-off Job from a paid QuoteRequest.
+    Sends a confirmation email to the customer.
+    Intended for use in webhooks after payment.
+    """
+    from staff_portal.models import Job
+
+    # Safety: try/except so the webhook can log errors and continue other logic.
+    try:
+        job = Job.objects.create(
+            title=f"C - One-off job for {quote.name}",
+            description=quote.description,
+            property=getattr(quote, 'property', None),
+            quote_request=quote,
+            status='PENDING',
+            one_off=True,  # <--- key for one-off logic!
+        )
+        job.title = f"C{job.id} - {job.title}"
+        job.save()
+
+        # Confirmation email (if template exists)
+        subject = f"✅ Payment Received for Quote #{quote.pk}"
+        html = render_to_string("emails/quote_paid_confirmation.html", {
+            'quote': quote,
+            'job': job,
+        })
+        plain = strip_tags(html)
+        email = EmailMessage(
+            subject,
+            plain,
+            settings.DEFAULT_FROM_EMAIL,
+            [quote.email],
+        )
+        email.attach_alternative(html, "text/html")
+        email.send(fail_silently=True)
+
+        logger.info(f"✅ One-off Job created and confirmation sent for paid quote #{quote.id}.")
+        return job
+    except Exception as e:
+        logger.error(f"❌ Failed to create one-off job from quote {quote.id}: {e}", exc_info=True)
+        return None

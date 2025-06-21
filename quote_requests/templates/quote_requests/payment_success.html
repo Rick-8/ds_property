@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 520px;">
+    <div class="dark-opaque shadow-lg border-gold rounded-4 px-4 py-5 text-center">
+        <h2 class="large-gold-text mb-3">
+            <i class="fa-solid fa-circle-check me-2"></i>Payment Successful!
+        </h2>
+        <div class="fs-5 text-gold mb-4">
+            Thank you for your payment. <br>
+            <strong>A staff member will be in touch to arrange the details of your service.</strong>
+        </div>
+        <div class="my-3">
+            <a href="{% url 'home' %}" class="btn btn-gold rounded-pill px-4 py-2">
+                <i class="fa-solid fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

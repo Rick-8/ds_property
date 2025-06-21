@@ -30,32 +30,33 @@
         </div>
 
         {% if quote.status == 'REVIEWED' or quote.status == 'UNPAID' %}
-        <!-- Accept Button -->
-        <button id="acceptBtn" type="button" class="btn btn-gold w-100 py-2 fs-5 rounded-pill mb-3">
+        <button id="acceptBtn" type="button" class="btn btn-gold w-100 py-2 fs-5 rounded-pill mb-3"
+            data-bs-toggle="collapse" data-bs-target="#paymentAccordion" aria-expanded="false"
+            aria-controls="paymentAccordion">
             <i class="fa-solid fa-credit-card me-2"></i>Accept Quote & Pay
         </button>
-        <!-- Decline Button -->
         <button id="declineBtn" type="button" class="btn btn-outline-gold w-100 py-2 fs-5 rounded-pill">
             <i class="fa-solid fa-xmark me-2"></i>Decline Quote
         </button>
 
-        <!-- Payment Accordion (hidden by default) -->
         <div id="paymentAccordion" class="collapse mt-4">
             <div class="card dark-opaque border-gold p-4">
                 <h5 class="text-gold mb-3 text-center">
                     <i class="fa-solid fa-credit-card me-2"></i>Complete Your Payment
                 </h5>
-                <!-- Stripe Payment Form -->
-                <form id="payment-form" action="{% url 'accept_quote' quote.pk %}" method="post" style="max-width: 400px; margin: 0 auto;">
+                <form id="payment-form" data-quote-id="{{ quote.pk }}" data-stripe-key="{{ stripe_publishable_key }}"
+                    style="max-width: 400px; margin: 0 auto;">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="card-element" class="form-label text-gold">Credit or debit card</label>
                         <div id="card-element" class="form-control"
-                             style="background-color: #343a40; border-color: #495057; color: #f8f9fa;"></div>
+                            style="background-color: #343a40; border-color: #495057; color: #f8f9fa;"></div>
                         <div id="card-errors" class="text-danger mt-2"></div>
                     </div>
-                    <button type="submit" id="submit-button" class="btn btn-outline-green w-100 mb-3 fs-5 rounded-pill">
-                        <i class="fa-brands fa-cc-stripe me-2"></i>Pay ${{ quote.total }}
+                    <button type="submit" id="submit-button" class="btn btn-outline-green w-100 mb-3 fs-5 rounded-pill"
+                        style="position: relative; overflow: hidden;">
+                        <span id="payBtnText"><i class="fa-brands fa-cc-stripe me-2"></i>Pay ${{ quote.total }}</span>
+                        <span id="payBtnLottie" style="display: none; vertical-align: middle;"></span>
                     </button>
                     <button type="button" class="btn btn-outline-gold w-100 fs-5 rounded-pill" id="cancelPaymentBtn">
                         Cancel
@@ -78,7 +79,7 @@
     </div>
 </div>
 
-<!-- Decline Confirmation Modal -->
+
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content dark-opaque border-gold">
@@ -87,7 +88,7 @@
                 <div class="modal-header border-0">
                     <h5 class="modal-title" id="confirmModalLabel">Decline Quote</h5>
                     <button type="button" class="btn-close btn-outline-gold" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body fs-5" id="confirmModalBody">
                     Are you sure you want to decline this quote? This cannot be undone.
@@ -103,70 +104,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Stripe JS (if using Elements) -->
-<script src="https://js.stripe.com/v3/"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Decline button shows modal
-    document.getElementById('declineBtn').addEventListener('click', function() {
-        var confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
-        confirmModal.show();
-    });
-
-    // Accept button triggers payment accordion
-    document.getElementById('acceptBtn').addEventListener('click', function() {
-        // Fade out Accept & Decline buttons
-        this.style.display = 'none';
-        var declineBtn = document.getElementById('declineBtn');
-        if (declineBtn) {
-            declineBtn.classList.add('fade');
-            setTimeout(function() {
-                declineBtn.style.display = 'none';
-            }, 300);
-        }
-        // Show the payment accordion
-        var paymentAccordion = document.getElementById('paymentAccordion');
-        var bsCollapse = new bootstrap.Collapse(paymentAccordion, {
-            show: true,
-            toggle: true
-        });
-        // Optionally scroll into view
-        setTimeout(function() {
-            paymentAccordion.scrollIntoView({behavior: "smooth", block: "start"});
-        }, 350);
-    });
-
-    // Cancel Payment button reloads the page
-    document.getElementById('cancelPaymentBtn').addEventListener('click', function() {
-        window.location.reload();
-    });
-
-    // Stripe Elements logic (minimal demo, expand as needed)
-    var stripe = Stripe('{{ stripe_publishable_key|default:"pk_test_12345" }}');
-    var elements = stripe.elements();
-    var card = elements.create('card', {
-        style: {
-            base: {
-                color: '#F8F9FA',
-                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '16px',
-                '::placeholder': { color: '#6c757d' },
-            },
-            invalid: { color: '#dc3545', iconColor: '#dc3545' }
-        }
-    });
-    card.mount('#card-element');
-    card.on('change', function(event) {
-        document.getElementById('card-errors').textContent = event.error ? event.error.message : '';
-    });
-    // Prevent demo form submission unless you handle server-side payment!
-    document.getElementById('payment-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        document.getElementById('payment-message').textContent = "Payment integration coming soon.";
-        // Add your payment flow here!
-    });
-});
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+<script src="{% static 'quote_requests/js/respond_to_quote.js' %}"></script>
 {% endblock %}
