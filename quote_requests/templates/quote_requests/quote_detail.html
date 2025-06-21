@@ -21,17 +21,18 @@
                 <strong>Property Address:</strong>
                 <div class="bg-black bg-opacity-25 rounded px-3 py-2 mt-1 small">
                     {% if quote.related_property %}
-                        <span class="fw-bold">{{ quote.related_property.label }}</span><br>
-                        {{ quote.related_property.address_line_1 }}<br>
-                        {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>{% endif %}
-                        {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
-                        {{ quote.related_property.country }}
+                    <span class="fw-bold">{{ quote.related_property.label }}</span><br>
+                    {{ quote.related_property.address_line_1 }}<br>
+                    {% if quote.related_property.address_line_2 %}{{ quote.related_property.address_line_2 }}<br>
+                    {% endif %}
+                    {{ quote.related_property.city }}, {{ quote.related_property.postcode }}<br>
+                    {{ quote.related_property.country }}
                     {% elif quote.address_line1 or quote.city or quote.postcode %}
-                        {{ quote.address_line1 }}<br>
-                        {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
-                        {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+                    {{ quote.address_line1 }}<br>
+                    {% if quote.address_line2 %}{{ quote.address_line2 }}<br>{% endif %}
+                    {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
                     {% else %}
-                        <span class="text-muted fst-italic">No address provided</span>
+                    <span class="text-muted fst-italic">No address provided</span>
                     {% endif %}
                 </div>
             </div>
@@ -48,10 +49,12 @@
     <!-- Quote Builder -->
     <form method="post" action="{% url 'update_quote_items' quote.pk %}" id="quoteForm">
         {% csrf_token %}
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 p-3 dark-opaque rounded gap-2">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 p-3 dark-opaque rounded gap-2">
             <h4 class="mb-0 large-gold-text flex-shrink-0">Line Items</h4>
             <div class="d-flex gap-2 flex-wrap">
-                <button type="button" id="addItemBtn" class="btn btn-outline-silver flex-grow-1 flex-md-grow-0">+ Add Item</button>
+                <button type="button" id="addItemBtn" class="btn btn-outline-silver flex-grow-1 flex-md-grow-0">+ Add
+                    Item</button>
                 <button type="button" id="viewQuoteBtn" class="btn btn-outline-gold flex-grow-1 flex-md-grow-0">
                     <i class="fa fa-file-pdf-o"></i> View Quote
                 </button>
@@ -105,11 +108,7 @@
             <!-- Review/Accept Button (one button, status and state handled by JS) -->
             <span id="reviewAcceptBtnWrapper" class="d-flex flex-grow-1">
                 <span id="reviewAcceptBtnWrapper" class="d-flex flex-grow-1" tabindex="0">
-                    <button
-                        type="button"
-                        id="reviewAcceptBtn"
-                        class="flex-grow-1 btn"
-                        disabled>
+                    <button type="button" id="reviewAcceptBtn" class="flex-grow-1 btn" disabled>
                     </button>
                 </span>
             </span>
@@ -177,19 +176,38 @@
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-outline-silver" data-bs-dismiss="modal">Cancel</button>
-                    <form method="post" action="{% url 'accept_quote' quote.pk %}" style="display:inline;">
+                    <form method="post" action="{% url 'accept_quote' quote.pk %}" style="display:inline;"
+                        id="acceptQuoteForm">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-green">Yes, Send Invoice</button>
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
+<!-- Animated Overlay for Accepting Quote -->
+<div class="loading-overlay" id="savingOverlay" style="display:none;">
+    <div class="loading-content d-flex flex-column align-items-center">
+        <lottie-player
+            src="{% static 'animations/tree-cutting.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 180px; height: 180px;"
+            loop
+            autoplay>
+        </lottie-player>
+        <div class="large-gold-text saving-text mt-3">Sending Invoice&hellip;</div>
+    </div>
+</div>
 
+    {% endblock content %}
+{% block extra_scripts %}
     <script>
         window.quoteStatus = "{{ quote.status|escapejs }}";
         window.markReviewedUrl = "{% url 'mark_quote_reviewed' quote.pk %}";
         window.quotePDFUrl = "{% url 'view_quote_pdf' quote.pk %}";
     </script>
     <script src="{% static 'quote_requests/js/quote-detail-script.js' %}"></script>
-{% endblock content %}
+    <script src="{% static 'quote_requests/js/accept_quote_overlay.js' %}"></script>
+{% endblock %}

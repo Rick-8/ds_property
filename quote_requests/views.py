@@ -3,24 +3,22 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.template.loader import render_to_string, get_template
+from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives, send_mail, mail_admins
 from django.contrib import messages
 from django.urls import reverse
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.conf import settings
 from decimal import Decimal
-from datetime import date
 import stripe
 from django.utils.html import strip_tags
 
 from .models import QuoteRequest, QuoteItem
 from .forms import QuoteRequestForm
-from .utils import generate_invoice_pdf
+from .utils import render_quote_pdf_bytes
 from accounts.models import Property
 from staff_portal.models import Job
 from memberships.models import ServiceAgreement
-from xhtml2pdf import pisa
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -31,7 +29,6 @@ def my_quotes(request):
     return render(request, 'quote_requests/my_quotes.html', {'quotes': quotes})
 
 
-# Public view for customers to submit a quote request
 def request_quote_view(request):
     if request.method == 'POST':
         form = QuoteRequestForm(request.POST, request.FILES, user=request.user)
@@ -61,21 +58,18 @@ def request_quote_view(request):
     return render(request, 'quote_requests/request_quote.html', {'form': form})
 
 
-# Superuser-only: list all quote requests
 @user_passes_test(lambda u: u.is_superuser)
 def admin_quote_list(request):
     quotes = QuoteRequest.objects.all().order_by('-submitted_at')
     return render(request, 'quote_requests/admin_quote_list.html', {'quotes': quotes})
 
 
-# Superuser-only: detail view of a specific quote
 @user_passes_test(lambda u: u.is_superuser)
 def quote_detail_view(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)
     return render(request, 'quote_requests/quote_detail.html', {'quote': quote})
 
 
-# Superuser-only: accept a quote and email PDF + response link to customer
 @require_POST
 @user_passes_test(lambda u: u.is_superuser)
 def accept_quote(request, pk):
@@ -88,8 +82,9 @@ def accept_quote(request, pk):
             quote.calculate_totals()
             quote.save()
             print("Saved quote, generating PDF")
-            pdf_file = generate_invoice_pdf(quote)
-            print("PDF generated")
+            pdf_bytes = render_quote_pdf_bytes(quote, request)
+            if not pdf_bytes:
+                raise Exception("Failed to generate PDF for email.")
 
             response_url = request.build_absolute_uri(
                 reverse('respond_to_quote', args=[quote.response_token])
@@ -109,8 +104,7 @@ def accept_quote(request, pk):
                 [quote.email],
             )
             email.attach_alternative(html_message, "text/html")
-            pdf_file.seek(0)
-            email.attach(f"Quote-{quote.pk}.pdf", pdf_file.read(), 'application/pdf')
+            email.attach(f"Quote-{quote.pk}.pdf", pdf_bytes, 'application/pdf')
             print("PDF attached, sending email...")
             email.send()
         except Exception as e:
@@ -129,7 +123,6 @@ def accept_quote(request, pk):
     return redirect(reverse('quote_detail', args=[quote.pk]))
 
 
-# Superuser-only: decline a quote
 @user_passes_test(lambda u: u.is_superuser)
 def decline_quote(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)
@@ -153,16 +146,11 @@ def update_quote_items(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)
 
     if request.method == 'POST':
-        # Clear old items
         quote.items.all().delete()
-
-        # Get all item fields from POST
         descriptions = request.POST.getlist('description')
         quantities = request.POST.getlist('quantity')
         unit_prices = request.POST.getlist('unit_price')
         tax_percent = request.POST.get('tax_percent', 0)
-
-        # Save each new item
         for desc, qty, price in zip(descriptions, quantities, unit_prices):
             if desc.strip():
                 QuoteItem.objects.create(
@@ -171,12 +159,9 @@ def update_quote_items(request, pk):
                     quantity=int(qty),
                     unit_price=Decimal(price)
                 )
-
-        # Update tax percent and totals
         quote.tax_percent = Decimal(tax_percent)
         quote.calculate_totals()
 
-        # If the user clicked "Save and View PDF", redirect to PDF
         if request.POST.get('view_pdf_after'):
             return redirect(reverse('view_quote_pdf', args=[quote.pk]))
 
@@ -204,19 +189,15 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         quote_id = session.get('metadata', {}).get('quote_id')
-
         try:
             quote = QuoteRequest.objects.get(pk=quote_id)
         except QuoteRequest.DoesNotExist:
             return HttpResponse(status=404)
 
         if quote.payment_status != 'PAID':
-            # Mark quote as paid
             quote.payment_status = 'PAID'
             quote.status = 'PAID'
             quote.save()
-
-            # Create the Job
             job = Job.objects.create(
                 title=f"One-off job for {quote.name}",
                 description=quote.description,
@@ -227,15 +208,12 @@ def stripe_webhook(request):
             )
             job.title = f"C{job.id} - {job.title}"
             job.save()
-
-            # Email receipt
             send_mail(
                 subject=f"Payment Confirmation – Quote #{quote.pk}",
                 message=f"Hi {quote.name},\n\nYour payment has been received. Your job is now scheduled. Thank you!",
                 from_email=None,
                 recipient_list=[quote.email],
             )
-
     return HttpResponse(status=200)
 
 
@@ -248,24 +226,13 @@ def payment_cancelled(request):
 
 
 def view_quote_pdf(request, quote_id):
+    """Use the exact same PDF as the one attached to the email."""
     quote = get_object_or_404(QuoteRequest, pk=quote_id)
-    template_path = 'quote_requests/invoice_pdf.html'
-
-    context = {
-        'quote': quote,
-        'request': request,
-    }
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'filename="Quote-{quote.id}.pdf"'
-
-    template = get_template(template_path)
-    html = template.render(context)
-
-    pisa_status = pisa.CreatePDF(html, dest=response)
-
-    if pisa_status.err:
+    pdf_bytes = render_quote_pdf_bytes(quote, request)
+    if not pdf_bytes:
         return HttpResponse('PDF generation failed', status=500)
+    response = HttpResponse(pdf_bytes, content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="Quote-{quote.id}.pdf"'
     return response
 
 

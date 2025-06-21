@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5" style="max-width: 520px;">
+    <div class="dark-opaque shadow-lg border-gold rounded-4 px-4 py-5">
+        <h2 class="large-gold-text mb-2">Quote #{{ quote.pk }}</h2>
+        <div class="text-gold mb-4" style="font-size: 1.05rem;">
+            {{ quote.created_at|date:"F d, Y" }}
+        </div>
+        <div class="mb-3 fs-5">
+            <strong>Hello {{ quote.name }},</strong>
+            <p class="mt-2 mb-0">Please review your quote below.</p>
+        </div>
+        <div class="mb-4 p-3 rounded-3 border-gold" style="background: rgba(0,0,0,0.45);">
+            <div class="mb-2">
+                <span class="fw-bold text-gold text-uppercase">Description:</span>
+                <span>{{ quote.description }}</span>
+            </div>
+            <div class="mb-2">
+                <span class="fw-bold text-gold text-uppercase">Total:</span>
+                <span class="fs-4 fw-bold text-white">${{ quote.total }}</span>
+            </div>
+            {% if quote.additional_notes %}
+            <div class="mt-2">
+                <span class="fw-bold text-gold text-uppercase">Notes:</span>
+                <span>{{ quote.additional_notes }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if quote.status == 'REVIEWED' or quote.status == 'UNPAID' %}
+            <form method="post" action="{% url 'accept_quote' quote.pk %}" class="mb-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-gold w-100 py-2 fs-5 rounded-pill">
+                    <i class="fa-solid fa-credit-card me-2"></i>Accept Quote & Pay
+                </button>
+            </form>
+            <form method="post" action="{% url 'decline_quote' quote.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-gold w-100 py-2 fs-5 rounded-pill">
+                    <i class="fa-solid fa-xmark me-2"></i>Decline Quote
+                </button>
+            </form>
+        {% elif quote.status == 'PAID' %}
+            <div class="alert alert-success mt-4 rounded-pill py-3 fs-5 border-gold">
+                <i class="fa-solid fa-check-circle me-2"></i>
+                Thank you! Your payment has been received and your job is scheduled.
+            </div>
+        {% elif quote.status == 'DECLINED' %}
+            <div class="alert alert-warning mt-4 rounded-pill py-3 fs-5 border-gold">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                You have declined this quote.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
