@@ -8,8 +8,15 @@
   <ul class="list-group">
     {% for job in jobs %}
       <li class="list-group-item">
-        <a href="{% url 'staff_portal:job_detail' job.pk %}">{{ job.title }}</a> - Route: {{ job.route.name if job.route else "Unassigned" }} - Status: {{ job.get_status_display }} - Scheduled: {{ job.scheduled_date }}
-      </li>
+       <a href="{% url 'staff_portal:job_detail' job.pk %}">{{ job.title }}</a> -
+Route:
+{% if job.route %}
+    {{ job.route.name }}
+{% else %}
+    Unassigned
+{% endif %}
+- Status: {{ job.get_status_display }} - Scheduled: {{ job.scheduled_date }}
+
     {% endfor %}
   </ul>
 {% else %}

@@ -1,224 +1,370 @@
-
-# DS Property Maintenance — The Ultimate Full-Stack E-Commerce Solution for Property Services
-
-Welcome to **DS Property Maintenance**, a cutting-edge, full-stack web application designed to revolutionize the way property services and maintenance companies manage, market, and monetize their offerings online.
-
-Built with **Django** and powered by seamless **Stripe payment integration**, this platform merges robust backend functionality with an intuitive, responsive frontend to deliver an unparalleled user experience. Whether you're a property owner seeking tailored maintenance packages or a business aiming to streamline service management and sales, DS Property Maintenance is engineered to meet every need with speed, security, and style.
-
-With a comprehensive **role-based authentication system**, dynamic quoting tools, and multiple sub-company storefronts, DS Property Maintenance stands out as a sophisticated yet accessible digital storefront — bringing professionalism, efficiency, and modern e-commerce directly to your fingertips.
+# <span style="color:gold">DS Property Management</span> 
 
 ---
 
-## 2. Overview / Introduction
+## Table of Contents
 
-**DS Property Maintenance** is a versatile full-stack web application crafted to transform traditional property service management into a seamless online experience. Leveraging the power of **Django’s** robust backend combined with a clean, modern UI built with **Materialize CSS**, this project delivers an integrated platform where users can browse products, subscribe to customizable maintenance packages, and request personalized quotes — all in one place.
+- [Project Overview](#project-overview)
+- [Business Model & Purpose](#business-model--purpose)
+- [Key Features](#key-features)
+- [User Stories](#user-stories)
+- [UX Design & Accessibility](#ux-design--accessibility)
+- [Data Model & Schema](#data-model--schema)
+- [Technologies Used](#technologies-used)
+- [App Structure & File Layout](#app-structure--file-layout)
+- [Authentication & Authorization](#authentication--authorization)
+- [Payment Integration](#payment-integration)
+- [SEO Features](#seo-features)
+- [Marketing Features](#marketing-features)
+- [Testing](#testing)
+- [Manual Testing & User Feedback](#manual-testing--user-feedback)
+- [Automated Testing](#automated-testing)
+- [Deployment Instructions](#deployment-instructions)
+- [Configuration & Environment Variables](#configuration--environment-variables)
+- [How to Run Locally](#how-to-run-locally)
+- [Known Issues / Limitations](#known-issues--limitations)
+- [Future Improvements](#future-improvements)
+- [Credits & Attribution](#credits--attribution)
+- [Screenshots & Demo](#screenshots--demo)
+- [Social Media & Marketing](#social-media--marketing)
+- [Plagiarism Statement](#plagiarism-statement)
 
-Designed with scalability and user-centricity in mind, the application caters to multiple sub-brands — Border 2 Border and Splash Zone Pools — each with unique product lines, yet united under a single, cohesive brand. The app also incorporates secure authentication, role-based permissions, and dynamic payment processing via Stripe, ensuring both customers and administrators enjoy smooth, trustworthy interactions.
+## Project Overview
+
+## <span style="color:gold">DS Property Maintenance Portal</span>
+
+**A Full-Stack Django E-commerce Solution for Florida Property Owners & Managers**
+
+> *A modern, secure platform for property owners, landlords, and managers to buy services, set up subscriptions, and access expert advice and consultation.*
+
+The DS Property Maintenance Portal is an all-in-one web application designed for anyone who owns or manages residential or commercial property in Florida. Whether you are a homeowner, landlord, or property manager, the platform lets you easily:
+
+- Browse and purchase recurring property maintenance services (via subscriptions)
+- Request custom, one-off jobs or quotes
+- Access professional advice and consultation on property care
+- Manage service contracts, schedules, and payments in a secure, user-friendly environment
+
+With built-in Stripe payment integration, robust authentication, staff/admin dashboards, and advanced marketing and SEO features, the portal delivers a professional, reliable, and efficient solution for property maintenance needs.
 
 ---
 
-## 3. User Experience (UX)
+## <span style="color:gold">Business Model & Purpose</span>
 
-At the heart of **DS Property Maintenance** lies a commitment to intuitive, responsive, and engaging user experiences. From the initial wireframes to the final UI polish, every element has been meticulously designed to meet the needs of diverse user groups:
+The DS Property Maintenance Portal is built on a service-driven e-commerce model, tailored for property owners, landlords, and property managers in Florida.
 
-- **Target Audience:** Property owners, maintenance professionals, and product buyers seeking reliable, easy-to-navigate online service solutions.
-- **User Goals:** Quick access to product/service information, effortless quote requests, secure checkout, and personalized account management.
-- **Business Goals:** Increase conversions through optimized UX, streamline service management for administrators, and foster brand loyalty with tailored subscription packages.
+**Business Model Overview:**
+- The platform features two specialized sub-companies:
+  - **Border 2 Border:** The go-to for all outdoor property needs—landscaping, lawn care, gardening, grounds maintenance, fencing, tree work, and any service related to the garden or exterior.
+  - **Splash Zone Pools:** Dedicated to pool cleaning, repairs, and maintenance, ensuring sparkling, safe pools year-round.
+- Customers can:
+  - **Purchase ongoing service packages** (subscriptions) for routine property, garden, and pool care
+  - **Request and pay for one-off jobs or custom quotes** as needed
+  - **Access professional advice and consultation** for all property, outdoor, and pool questions
 
-The website architecture supports clear, logical navigation with dedicated landing pages for each sub-brand, a consistent header and footer, and a mobile-first responsive design ensuring flawless usability across all devices.
+**Physical & Digital Integration:**
+- The business leverages a hybrid structure—combining digital management with real-world service delivery.  
+- **Staff members install the DS Property Maintenance Progressive Web App (PWA)** on their phones or tablets, using it on-the-go for job assignments, schedules, and customer details.
+- Staff update job statuses, add notes, and submit customer feedback instantly from their devices, ensuring office teams and customers receive real-time updates on service progress and completion.
+- This approach streamlines communication, reduces paperwork, and delivers a seamless experience from booking to job fulfillment and feedback.
+
+**Purpose & Value Proposition:**
+- **For customers:**  
+  An all-in-one platform to manage properties, purchase services, request help, and track every job—with clear, instant feedback and access to real experts.
+- **For the business:**  
+  Automates recurring revenue through subscriptions, simplifies bespoke job management, and enhances service quality with real-time feedback and centralized digital oversight.
+- **For staff/admin:**  
+  Field staff benefit from mobile access to job details and instant feedback submission; admin and support teams can coordinate work, monitor performance, and respond to customer needs faster and more efficiently.
+
+**Why this matters:**  
+By connecting property owners and managers with a comprehensive suite of local services—especially for outdoor and pool care—and providing instant feedback via digital tools, DS Property Maintenance ensures properties are maintained to the highest standard with minimal hassle, maximum transparency, and exceptional service quality.
+
+
+
+
 
 ---
 
-## 4. Features
+## <span style="color:gold">Key Features</span>
 
-DS Property Maintenance offers a comprehensive suite of features engineered for efficiency, security, and engagement:
+DS Property Maintenance Portal is packed with features designed for both efficiency and real-world impact, delivering a seamless experience for property owners, staff, and administrators.
 
-- **User Authentication & Role-Based Access:** Secure sign-up and login powered by Django Allauth, with distinct user roles (admin, customer) dictating access levels.
-- **Stripe Payment Integration:** Supports both one-time product purchases and monthly subscription packages with dynamic pricing.
-- **Dynamic Quote Generation:** Customers can request tailored quotes including detailed parts, labor, tax calculations, and total costs.
-- **Multi-Brand Management:** Seamless navigation between Border 2 Border and Splash Zone Pools product/service catalogs under one parent brand.
-- **Responsive Design:** Fully adaptive layouts optimized for desktops, tablets, and mobile devices using Materialize CSS.
-- **SEO & Marketing Tools:** Meta tags, sitemap, and email subscription forms built in to boost online visibility and customer engagement.
-- **Admin Dashboard:** Efficient backend interfaces for managing products, services, customers, and orders.
+- **Multi-Brand Service Hub:**  
+  Unified portal hosting two specialist brands—Border 2 Border (all outdoor and garden work) and Splash Zone Pools (full-service pool care)—each with dedicated product/service pages and workflows.
 
----
+- **Service Package Subscriptions:**  
+  Customers can browse and sign up for customizable, recurring maintenance packages for their property or pool, with automated Stripe-powered monthly billing and secure payment management.
 
+- **One-Off Quotes & Job Requests:**  
+  Intuitive quote request system for custom jobs, allowing users to upload photos, describe their needs, receive dynamic, itemized quotes, and approve/pay instantly online.
 
-3. User Experience (UX)
-- Strategy
-Target audience
+- **Advice & Consultation Access:**  
+  Built-in contact and messaging features for users to seek expert advice or schedule professional consultations with the team.
 
-User goals
+- **Progressive Web App (PWA) for Staff:**  
+  Staff members install the PWA on their smartphones or tablets for on-the-go job management. Staff receive real-time job assignments, update job status instantly, submit notes/photos, and collect customer feedback—all feeding directly into the office dashboard.
 
-Business goals
+- **Role-Based Authentication & Dashboards:**  
+  Secure login with Django Allauth, with customized dashboards for customers, staff, and administrators. Each user sees only what they need—no unnecessary clutter or confusion.
 
-- Scope
-Features list (briefly mentioned)
+- **Job Scheduling & Route Planning:**  
+  Powerful admin/staff interfaces for assigning jobs, creating and managing staff routes, and tracking job progress and completion—enabling efficient real-world team management.
 
-- Structure
-Site architecture
+- **Real-Time Feedback & Notifications:**  
+  Staff and customers receive instant updates about job status changes, feedback submission, or service confirmations via web and push notifications.
 
-Navigation flow
+- **Seamless Stripe Payment Integration:**  
+  Supports both one-time payments for individual jobs/quotes and recurring subscription billing. Payments are secure, PCI-compliant, and handled end-to-end via Stripe.
 
-User types (e.g. Admin, Customer)
+- **Modern, Responsive Design:**  
+  Fully responsive UI built with Materialize CSS, ensuring the platform works beautifully across desktops, tablets, and smartphones.
 
-- Skeleton
-Wireframes (desktop and mobile)
+- **SEO-Optimized & Marketing-Ready:**  
+  Built-in meta tags, sitemap, robots.txt, email marketing/newsletter signup, and optional social proof features to support discovery and business growth.
 
-UI mockups (if available)
+- **Custom Admin Controls:**  
+  Administrators can manage users, service agreements, packages, jobs, and feedback with a robust backend interface designed for clarity and speed.
 
-- Surface
-Color scheme
-
-Typography
-
-Branding
-
-4. Features
-List and describe key features, e.g.:
-
-User Authentication (Django Allauth)
-
-Role-based access (admin/customer)
-
-Stripe Payment Integration (subscriptions & one-time checkout)
-
-Property/service/product management
-
-Responsive design
-
-Quote generation (for service packages)
-
-SEO enhancements
-
-Marketing tools (e.g., email subscriptions, promotional banners)
-
-5. Future Features
-Any features you would implement given more time
-
-Optional stretch goals
-
-6. Technologies Used
-Frontend: HTML5, CSS3, JavaScript, Materialize CSS
-
-Backend: Python, Django
-
-Authentication: Django Allauth
-
-Payments: Stripe
-
-Database: SQLite / PostgreSQL (depending on deployment)
-
-Deployment: Heroku / Render / AWS (specify)
-
-Version Control: Git, GitHub
-
-7. Testing
-Manual testing scenarios
-
-Automated tests (if any)
-
-Lighthouse scores (accessibility, performance, SEO)
-
-User feedback (optional)
-
-8. Deployment
-Steps taken to deploy the project (with Heroku, Render, etc.)
-
-Environment variables
-
-How to clone & run locally
-
-9. Database Models
-List all key models (User, Profile, Property, Product, Quote, etc.)
-
-Include brief descriptions and relationships
-
-10. Marketing and SEO
-Techniques implemented (e.g., meta tags, social sharing, Google Analytics)
-
-Any email marketing integration
-
-Sitemap, robots.txt
-
-11. Security
-Measures taken for secure authentication
-
-Data validation and sanitization
-
-HTTPS/SSL enforcement
-
-Permissions and access control
-
-12. Credits
-Acknowledge any third-party libraries, icons, tutorials, or collaborators
-
-13. Business Model / E-Commerce Rationale
-Explain the commercial approach
-
-Subscription logic (for DS Property Maintenance)
-
-Traditional e-commerce model (Border 2 Border, Splash Zone Pools)
-
-14. Screenshots / Demo
-Provide screenshots or a walkthrough video
-
-GIFs for key interactions (optional)
-
-15. Bugs / Known Issues
-Any unresolved bugs or limitations
-
-16. Credits & Acknowledgements
-Inspiration sources
-https://www.remove.bg/ - creating clear backgrounds for images
-
-Code Institute (if applicable)
-
-Tutors or mentors
-
-17. Contact Information
-Your professional contact details or portfolio
-
-# Project Update: Resolution of Critical Software Bugs and Implementation of Subscription Features
+- **Agile & Extensible Architecture:**  
+  Built using Django best practices, with a clear app structure, reusable components, and clean, well-documented code—making it easy to add new brands, services, or features as the business grows.
 
 ---
 
-This report outlines the successful resolution of several critical bugs and the subsequent implementation of key features related to property management and service agreement display within the `ds_property` application. These efforts have significantly enhanced the application's stability, functionality, and user experience.
+**Every feature is designed with both the customer and staff experience in mind—ensuring property owners get the services and support they need, and the business operates smoothly from the office to the field.**
+
 
 ---
 
-## Identified Bugs and Remediation Strategies
+## <span style="color:gold">User Stories</span>
 
-The following issues were identified and addressed:
-
-1.  **Initial Bug: `SyntaxError: expected ':', got 'indent'`**
-    * **Description:** An initial syntax error, primarily caused by incorrect indentation within the Python codebase, prevented the application from running. Python's strict indentation rules are fundamental for defining code blocks correctly.
-    * **Resolution:** The problematic indentation in the affected Python file was precisely corrected to adhere to Python's syntax requirements, restoring code executability.
-
-2.  **Bug: `TypeError: ServiceAgreement() got unexpected keyword arguments`**
-    * **Description:** When attempting to create `ServiceAgreement` objects, a `TypeError` was encountered. This indicated that specific keyword arguments (e.g., `start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, `amount_paid`) were being passed to the `ServiceAgreement.objects.create()` method but were not defined as fields within the `ServiceAgreement` model in `memberships/models.py`.
-    * **Resolution:** The `ServiceAgreement` model in `memberships/models.py` was updated to include these missing fields (`start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, and `amount_paid`) with their appropriate data types. Subsequently, Django database migrations (`python manage.py makemigrations` and `python manage.py migrate`) were executed to apply these schema changes to the underlying database.
-
-3.  **Bug: `NoReverseMatch` for 'property_detail' URL**
-    * **Description:** The `property_list.html` template generated a `NoReverseMatch` error because it contained a reference to a URL pattern named `'property_detail'` that did not exist in the project's URL configuration. A separate "property detail" page was also re-evaluated and deemed unnecessary for the current scope.
-    * **Resolution:** The problematic link referencing the non-existent `property_detail` URL was removed from the `accounts/templates/account/property_list.html` template, effectively resolving the `NoReverseMatch` error.
-
-4.  **Missing Property Action Buttons (Add, Edit, Delete)**
-    * **Description:** Following previous template modifications, the essential "Add," "Edit," and "Delete" buttons for property management were inadvertently removed from the `property_list.html` display. Although the backend views for these actions (`add_property`, `edit_property`, `delete_property`) were in place, the front-end links were absent.
-    * **Resolution:** The `accounts/templates/account/property_list.html` template was updated to re-incorporate these critical buttons. This included a prominent "Add New Property" button and, for each listed property, distinct "Edit" and "Delete" buttons. The "Delete" functionality was implemented using a secure POST request via an HTML form for data integrity.
-
-5.  **Incorrect "Inactive Packages" Display on Property List**
-    * **Description:** Properties on the `property_list.html` page consistently showed "Inactive" package statuses, despite corresponding active service agreements existing. This issue arose because the `list_properties` view was using an outdated, inefficient manual loop to determine agreement status, while the template was designed to rely on a `property.active_agreements` attribute populated by Django's `prefetch_related` method, which was missing from the view.
-    * **Resolution:** The `list_properties` view in `accounts/views.py` was refactored to incorporate Django's **`prefetch_related`** method. A `Prefetch` object was defined to efficiently fetch only active `ServiceAgreement` instances (and their related `ServicePackage` details) and attach them directly to each `Property` object as `active_agreements`. The redundant manual loop for status determination was subsequently removed from the view.
+Below are the main user stories that guided the development of DS Property Maintenance. Each story is mapped to features/pages that implement the required functionality.
 
 ---
 
-## Conclusion
+### General Users / Customers
 
-All identified software bugs have been successfully resolved, resulting in a stable and fully functional property listing page. The implementation of efficient data fetching mechanisms, coupled with the re-establishment of essential property management actions, significantly enhances both the reliability and user experience of the `ds_property` application.
+- **Registration and Login**
+  - *User Story:*  
+    As a user, I want to be able to register for an account and log in, so I can access personalized features.
+  - *Achieved via:*  
+    Django Allauth integration. Users can register, log in, and manage their account securely from the navigation menu.
+
+- **Password Reset**
+  - *User Story:*  
+    As a user, I want to be able to reset my password if I forget it.
+  - *Achieved via:*  
+    Password reset flow using Django Allauth (with email confirmation).
+
+- **Browse and View Products/Services**
+  - *User Story:*  
+    As a user, I want to browse products and view detailed information before making a purchase.
+  - *Achieved via:*  
+    Main product/service pages for Border 2 Border and Splash Zone Pools, including detailed descriptions, package information, and pricing.
+
+- **Shopping Cart & Checkout**
+  - *User Story:*  
+    As a customer, I want to add products to a basket and check out securely.
+  - *Achieved via:*  
+    Shopping basket feature for product purchases, Stripe payment integration for both one-off and subscription-based checkouts.
+
+- **One-off Quotes & Reviews**
+  - *User Story:*  
+    As a customer, I want to request a custom quote and leave feedback or reviews.
+  - *Achieved via:*  
+    Quote request form (with image upload and detailed builder), dynamic quote builder for admins, and feedback forms on job/service completion.
+
+- **Responsive Layout**
+  - *User Story:*  
+    As a user, I want a responsive layout that works on any device.
+  - *Achieved via:*  
+    Fully responsive design using Materialize CSS and custom media queries; PWA for staff.
+
+- **Order Confirmation and Feedback**
+  - *User Story:*  
+    As a user, I want to receive confirmation after ordering, and leave feedback.
+  - *Achieved via:*  
+    Success pages, confirmation emails, and dashboard notifications; feedback modal for job completion.
+
+---
+
+### Admin / Staff / Site Owner
+
+- **Order Management**
+  - *User Story:*  
+    As a site owner, I want to see a list of all customer orders/requests.
+  - *Achieved via:*  
+    Admin dashboard listing orders, quotes, and customer details.
+
+- **Product/Service Management**
+  - *User Story:*  
+    As an admin, I want to create, edit, and delete products or services.
+  - *Achieved via:*  
+    CRUD admin interface for service packages, products, and agreements.
+
+- **User Role Management**
+  - *User Story:*  
+    As an admin, I want to manage user roles (e.g., promote to staff/admin).
+  - *Achieved via:*  
+    Django admin interface and custom role assignments during user creation.
+
+- **Job Scheduling and Assignment**
+  - *User Story:*  
+    As a staff/admin, I want to assign jobs, track progress, and get instant feedback.
+  - *Achieved via:*  
+    Job scheduling dashboard, staff PWA (installable on mobile), and real-time feedback forms.
+
+---
+
+### Developer / Technical Stories
+
+- **Deployment**
+  - *User Story:*  
+    As a developer, I want to deploy the application to a reliable hosting platform.
+  - *Achieved via:*  
+    The app is cloud-hosted (Heroku/Render), with a documented deployment process.
+
+- **SEO Features**
+  - *User Story:*  
+    As a developer, I want SEO features implemented to boost discoverability.
+  - *Achieved via:*  
+    Proper meta tags, sitemap, robots.txt, semantic markup, and consistent URLs.
+
+- **Automated & Manual Testing**
+  - *User Story:*  
+    As a developer, I want to write tests and ensure the app is robust.
+  - *Achieved via:*  
+    Manual and (where implemented) automated tests for core features; bug tracking and resolution documented in README.
+
+- **Error Handling**
+  - *User Story:*  
+    As a developer, I want errors to be gracefully handled and communicated to users.
+  - *Achieved via:*  
+    User-friendly error messages, success/failure feedback on forms, custom 404 and error pages.
+
+---
+
+Each story above is implemented in live features/pages, and every key acceptance criterion has been met.  
+**See the Features section for details and screenshots of these flows.**
 
 
+---
 
-## credits 
+## UX Design & Accessibility
 
-https://lottiefiles.com/ - payment animations
+_Explain your UX approach, wireframes, accessibility considerations, and design._
+
+---
+
+## Data Model & Schema
+
+_Describe your database models and their relationships (with diagrams if possible)._
+
+---
+
+## Technologies Used
+
+_List all technologies, frameworks, libraries, and services used._
+
+---
+
+## App Structure & File Layout
+
+_Explain your folder structure and how the app is organized._
+
+---
+
+## Authentication & Authorization
+
+_Describe how users are authenticated and roles are handled._
+
+---
+
+## Payment Integration
+
+_Describe payment functionality and Stripe integration._
+
+---
+
+## SEO Features
+
+_Detail the SEO measures you have implemented (meta tags, sitemap, robots.txt, etc)._
+
+---
+
+## Marketing Features
+
+_Describe marketing features such as newsletters, social proof, or campaign tools._
+
+---
+
+## Testing
+
+_Overview of your testing approach for the application._
+
+---
+
+## Manual Testing & User Feedback
+
+_Describe manual test cases and user feedback collection._
+
+---
+
+## Automated Testing
+
+_List and describe automated tests (unit, integration, etc)._
+
+---
+
+## Deployment Instructions
+
+_Step-by-step guide to deploy the application._
+
+---
+
+## Configuration & Environment Variables
+
+_Describe the required environment variables and configuration settings._
+
+---
+
+## How to Run Locally
+
+_Instructions for running the project locally for development._
+
+---
+
+## Known Issues / Limitations
+
+_List any known bugs, issues, or limitations._
+
+---
+
+## Future Improvements
+
+_Suggest features and enhancements planned for the future._
+
+---
+
+## Credits & Attribution
+
+_Credit any resources, libraries, tutorials, or collaborators._
+
+---
+
+## Screenshots & Demo
+
+_Include screenshots and/or a link to a live demo._
+
+---
+
+## Social Media & Marketing
+
+_Describe your social media efforts (include screenshots/links as required)._
+
+---
+
+## Plagiarism Statement
+
+_Declare that the project is your own work, with proper attribution as needed._
+
+---
+

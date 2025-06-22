@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    "allauth.socialaccount",
     'allauth',
     'allauth.account',
     'home',
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     'staff_pwa',
     'quote_requests',
     'storages',
+    'django_extensions',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
