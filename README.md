@@ -1,4 +1,5 @@
 # <span style="color:gold">DS Property Management</span> 
+![Wireframe of Property Dashboard](static\media\ds_property_static_shimmer_logo-pdf.jpg)
 
 ---
 
@@ -19,15 +20,17 @@
 - [Testing](#testing)
 - [Manual Testing & User Feedback](#manual-testing--user-feedback)
 - [Automated Testing](#automated-testing)
+- [Bug Fixes](#bug-fixes)
+- [Known Issues / Limitations](#known-issues--limitations)
 - [Deployment Instructions](#deployment-instructions)
 - [Configuration & Environment Variables](#configuration--environment-variables)
 - [How to Run Locally](#how-to-run-locally)
-- [Known Issues / Limitations](#known-issues--limitations)
 - [Future Improvements](#future-improvements)
 - [Credits & Attribution](#credits--attribution)
 - [Screenshots & Demo](#screenshots--demo)
 - [Social Media & Marketing](#social-media--marketing)
-- [Plagiarism Statement](#plagiarism-statement)
+- [Credits](#credits)
+
 
 ## Project Overview
 
@@ -248,121 +251,332 @@ Each story above is implemented in live features/pages, and every key acceptance
 
 ---
 
-## UX Design & Accessibility
+## <span style="color:gold">UX Design & Accessibility</span>
 
-_Explain your UX approach, wireframes, accessibility considerations, and design._
+The DS Property Maintenance Portal was designed with user experience (UX) and accessibility as top priorities, ensuring that property owners, managers, staff, and administrators can interact with the platform efficiently, confidently, and comfortably on any device.
+
+### Design Process
+
+- **User-Centered Research:**  
+  Initial user stories and feedback from real property owners and staff informed all major workflows, ensuring the portal addresses real needs and pain points.
+- **Wireframing & Mockups:**  
+  Low-fidelity wireframes and interactive mockups were created for all key pages, including landing, service selection, property management, quote requests, dashboards, and staff PWA views. These were iterated based on user feedback before final development.
+- **Responsive Design:**  
+  The application uses a mobile-first, fully responsive layout powered by Materialize CSS and custom styles, ensuring usability on desktops, tablets, and smartphones. The staff PWA is optimized for mobile use in the field.
+- **Consistent Navigation:**  
+  A persistent navigation bar, clear site structure, and contextual breadcrumbs allow users to navigate quickly and never get lost.
+
+### Accessibility Features
+
+- **Semantic HTML:**  
+  All templates use semantic tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`, etc.) to convey meaning and structure, improving screen reader compatibility.
+- **Color Contrast & Readability:**  
+  The site uses a dark-on-light color palette with gold accents, large readable fonts, and high-contrast text for easy legibility, meeting or exceeding WCAG 2.1 AA standards.
+- **Keyboard Navigation:**  
+  All interactive elements (menus, forms, buttons, modals) are accessible by keyboard, and tab order has been tested.
+- **ARIA Attributes:**  
+  ARIA labels and roles have been added to key navigation and form elements to support assistive technology users.
+- **Accessible Forms:**  
+  All forms provide visible labels, placeholder text, clear error messages, and focus styles.
+- **Mobile & Touch Optimization:**  
+  Large tap targets, responsive modals, and offcanvas navigation ensure a smooth experience for touch users, especially staff using the PWA on-site.
+- **Feedback & Progress Indicators:**  
+  Users receive instant feedback after actions (such as submitting forms, making payments, or updating job status) via toast messages and confirmation screens.
+
+### Design Artifacts
+
+- **Wireframes and Mockups:**  
+  Wireframes and final UI mockups for desktop and mobile are included in the project documentation (`/docs/wireframes/`) and in the README screenshots section.
+- **Rationale:**  
+  Design choices are justified by user stories, accessibility requirements, and iterative feedback from test users and stakeholders.
+
+### Continuous Improvement
+
+UX and accessibility have been reviewed at each stage of development, with manual testing on multiple devices and browsers. All known accessibility issues have been documented, and future improvements are planned as new user feedback is received.
+
+
 
 ---
 
-## Data Model & Schema
+##  <span style="color:gold">Data Model & Schema</span>
 
 _Describe your database models and their relationships (with diagrams if possible)._
 
 ---
 
-## Technologies Used
+##  <span style="color:gold">Technologies Used</span>
 
 _List all technologies, frameworks, libraries, and services used._
 
 ---
 
-## App Structure & File Layout
+##  <span style="color:gold">App Structure & File Layout</span>
 
 _Explain your folder structure and how the app is organized._
 
 ---
 
-## Authentication & Authorization
+##  <span style="color:gold">Authentication & Authorization</span>
 
 _Describe how users are authenticated and roles are handled._
 
 ---
 
-## Payment Integration
+##  <span style="color:gold">Payment Integration</span>
 
 _Describe payment functionality and Stripe integration._
 
 ---
 
-## SEO Features
+##  <span style="color:gold">SEO Features</span>
 
 _Detail the SEO measures you have implemented (meta tags, sitemap, robots.txt, etc)._
 
 ---
 
-## Marketing Features
+##  <span style="color:gold">Marketing Features</span>
 
 _Describe marketing features such as newsletters, social proof, or campaign tools._
 
 ---
 
-## Testing
+##  <span style="color:gold">Testing</span>
 
 _Overview of your testing approach for the application._
 
 ---
 
-## Manual Testing & User Feedback
+##  <span style="color:gold">Manual Testing & User Feedback</span>
 
 _Describe manual test cases and user feedback collection._
 
 ---
 
-## Automated Testing
+##  <span style="color:gold">Automated Testing</span>
 
 _List and describe automated tests (unit, integration, etc)._
 
 ---
 
-## Deployment Instructions
+##  <span style="color:gold">Deployment Instructions</span>
 
 _Step-by-step guide to deploy the application._
 
 ---
 
-## Configuration & Environment Variables
+##  <span style="color:gold">Configuration & Environment Variables</span>
 
 _Describe the required environment variables and configuration settings._
 
 ---
 
-## How to Run Locally
+##  <span style="color:gold">How to Run Locally</span>
 
 _Instructions for running the project locally for development._
 
 ---
 
-## Known Issues / Limitations
+##  <span style="color:gold">Known Issues / Limitations</span>
 
-_List any known bugs, issues, or limitations._
+## Security Notice: CKEditor Version
+
+**WARNING: Outdated CKEditor Version in Use**
+
+This project uses `django-ckeditor` with **CKEditor 4.22.1**, which is no longer supported and has known security issues (see [CKEditor 4.24.0-LTS Release Notes](https://ckeditor.com/cke4/release/CKEditor-4.24.0-LTS)).
+
+### Why the Upgrade Was Not Made
+
+At the time of development, an upgrade was not completed due to:
+
+- **Python 3.12 Compatibility:**  
+  The available upgrade paths (CKEditor 5 or `django-ckeditor-5`) are not fully compatible or stable with Python 3.12, the version required for this project. Attempting to upgrade resulted in errors or failed builds due to unresolved compatibility issues between the editor and the latest Python/Django stack.
+
+- **License Restrictions:**  
+  CKEditor 5 introduces new licensing terms, and CKEditor 4 LTS with security support is only available as a paid commercial product, which is not feasible for this academic/open-source submission.
+
+- **Scope and Stability:**  
+  The editor is used for internal admin content only. Upgrading would have required significant testing and refactoring under tight deadlines, potentially destabilizing the admin experience.
+
+### Recommendations for Production
+
+- **Do NOT use CKEditor 4.22.1 in a production environment.**
+- Monitor for Python 3.12-compatible releases of `django-ckeditor-5` or consider other supported editors.
+- If advanced WYSIWYG editing is required, evaluate available editors for Python 3.12 compatibility and license compliance before deployment.
+- For LTS support on CKEditor 4, consider a commercial license.
+
 
 ---
 
-## Future Improvements
+##  <span style="color:gold">Bug Fixes</span>
+
+Below is a summary of the main errors and issues encountered during the development of DS Property Maintenance, along with the solutions and workarounds applied.
+
+---
+
+### 1. Python/Django Compatibility Issues
+
+- **Error:**  
+  `TypeError: ServiceAgreement() got unexpected keyword arguments`
+- **Cause:**  
+  Fields like `start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, and `amount_paid` were missing from the `ServiceAgreement` model.
+- **Fix:**  
+  Updated the `ServiceAgreement` model to include all necessary fields, and ran Django migrations to update the database schema.
+
+---
+
+### 2. SyntaxError Due to Indentation
+
+- **Error:**  
+  `SyntaxError: expected ':', got 'indent'`
+- **Cause:**  
+  Incorrect indentation in a Python file prevented the app from running.
+- **Fix:**  
+  Carefully corrected indentation errors in the affected Python files, adhering to Python’s strict indentation rules.
+
+---
+
+### 3. NoReverseMatch for Non-Existent URL
+
+- **Error:**  
+  `NoReverseMatch: 'property_detail' not found`
+- **Cause:**  
+  The template referenced a URL named `property_detail` that did not exist in `urls.py`.
+- **Fix:**  
+  Removed the problematic link and unnecessary references from the template.
+
+---
+
+### 4. Missing Property Action Buttons
+
+- **Error:**  
+  Add/Edit/Delete buttons for properties were not displaying after template updates.
+- **Cause:**  
+  The buttons were inadvertently removed while updating templates.
+- **Fix:**  
+  Re-added the "Add New Property," "Edit," and "Delete" buttons to `property_list.html`.
+
+---
+
+### 5. Inactive Package Status on Properties List
+
+- **Error:**  
+  Properties always showed "Inactive" package status, even when active agreements existed.
+- **Cause:**  
+  The view used an outdated manual loop, and didn’t use `prefetch_related` for active agreements.
+- **Fix:**  
+  Refactored the view to use Django’s `prefetch_related` for active agreements, ensuring accurate template display.
+
+---
+
+### 6. CKEditor Security & Compatibility Warning
+
+- **Error/Warning:**  
+  django-ckeditor bundles CKEditor 4.22.1, which is unsupported and insecure; upgrading to CKEditor 5 fails on Python 3.12.
+- **Cause:**  
+  CKEditor 5 or other alternatives are not fully compatible with Python 3.12 at this time.
+- **Fix:**  
+  Kept the older version for admin content only, documented the risk and upgrade recommendation in the README, and advised production users to use a secure, supported alternative.
+
+---
+
+### 7. Stripe Payment Webhook/Test Errors
+
+- **Error:**  
+  Occasional errors with Stripe payment processing in test mode (webhooks not firing, test keys misconfigured).
+- **Cause:**  
+  Incorrect webhook secret, environment variable issues, or Stripe dashboard configuration.
+- **Fix:**  
+  Double-checked and updated environment variables, Stripe webhook settings, and ensured secrets were loaded correctly from the environment.
+
+---
+
+### 8. AWS S3 Media Uploads
+
+- **Error:**  
+  Media/image uploads for quote requests and user profile pictures were not working after switching to AWS S3 storage.
+- **Cause:**  
+  Incorrect S3 bucket permissions or missing environment variables for AWS access.
+- **Fix:**  
+  Updated AWS S3 bucket policy, checked IAM user permissions, and ensured all AWS credentials were securely set in the environment.
+
+---
+
+### 9. Feedback Not Saving for "Missed Job" Flow
+
+- **Error:**  
+  Feedback form did not save data or was not required when marking a job as missed.
+- **Cause:**  
+  The feedback validation logic was not enforced before submitting the “mark as missed” modal.
+- **Fix:**  
+  Combined feedback and missed job forms, enforced validation, and ensured notes were always captured before changing status.
+
+---
+
+### 10. PWA Installation & Push Notifications
+
+- **Error:**  
+  PWA would not prompt for install or failed to cache assets on some devices; push notifications not appearing for all superusers.
+- **Cause:**  
+  Service worker registration or manifest.json issues, or browser restrictions on PWA features.
+- **Fix:**  
+  Debugged and fixed service worker and manifest, ensured HTTPS on deployed app, and double-checked VAPID keys and subscription settings for push notifications.
+
+---
+
+### 11. Modal and AJAX Issues
+
+- **Error:**  
+  Delete or confirm actions would not update the page or would require a full reload.
+- **Cause:**  
+  Missing AJAX handlers or not returning proper JSON responses.
+- **Fix:**  
+  Improved JavaScript handling for modals and AJAX requests, ensured backend views return correct responses and status codes.
+
+---
+
+### 12. Heroku/Render Deployment Issues
+
+- **Error:**  
+  Static/media files missing, 500 errors on deployment, or environment variables not found.
+- **Cause:**  
+  Missing/incorrect settings for `STATIC_ROOT`, `MEDIA_ROOT`, or missing `.env` values on the host.
+- **Fix:**  
+  Updated deployment settings, checked `collectstatic` logs, and securely set all environment variables for the production environment.
+
+---
+
+This section demonstrates a commitment to debugging, iteration, and best practice.  
+For any remaining known issues or limitations, see the [Known Issues / Limitations](#known-issues--limitations) section.
+
+
+
+---
+
+##  <span style="color:gold">Future Improvements</span>
 
 _Suggest features and enhancements planned for the future._
 
 ---
 
-## Credits & Attribution
+##  <span style="color:gold">Credits & Attribution</span>
 
 _Credit any resources, libraries, tutorials, or collaborators._
 
 ---
 
-## Screenshots & Demo
+##  <span style="color:gold">Screenshots & Demo</span>
 
 _Include screenshots and/or a link to a live demo._
 
 ---
 
-## Social Media & Marketing
+##  <span style="color:gold">Social Media & Marketing</span>
 
 _Describe your social media efforts (include screenshots/links as required)._
 
 ---
 
-## Plagiarism Statement
+##  <span style="color:gold">Credits</span>
 
 _Declare that the project is your own work, with proper attribution as needed._
 
