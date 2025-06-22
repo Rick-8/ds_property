@@ -54,10 +54,12 @@ def staff_dashboard(request):
 
 @login_required
 def job_detail(request, pk):
-    job = get_object_or_404(Job.objects.select_related('property').prefetch_related('assigned_staff'), pk=pk)
+    job = get_object_or_404(
+        Job.objects.select_related('property').prefetch_related('assigned_staff'), pk=pk
+    )
 
     if not (request.user.is_superuser or request.user in job.assigned_staff.all()):
-        return HttpResponseForbidden("You cannot leave feedback on this job.")
+        return HttpResponseForbidden("You cannot view this job.")
 
     feedback_instance = JobFeedback.objects.filter(job=job, user=request.user).first()
 
@@ -72,13 +74,21 @@ def job_detail(request, pk):
     else:
         form = JobFeedbackForm(instance=feedback_instance)
 
+    # Only lock if the job is completed or not completed, and not unlocked in session
+    is_locked = job.status in ['COMPLETED', 'NOT_COMPLETED']
+    unlocked = request.session.get("unlocked_jobs", [])
+    if str(job.id) in unlocked:
+        is_locked = False
+
     context = {
         'job': job,
         'form': form,
         'job_display_id': f"J{job.id}",
         'property_display_id': f"P{job.property.id}",
+        'is_locked': is_locked,
     }
-
+    print("Unlocked jobs in session:", request.session.get("unlocked_jobs", []))
+    print("Current job id:", job.id)
     return render(request, 'staff_portal/job_detail.html', context)
 
 
@@ -589,6 +599,13 @@ def unlock_job_overlay(request, job_id):
             user = authenticate(username=request.user.username, password=pw)
             if user is not None and user.is_superuser:
                 login(request, user)  # Refresh session
+
+                # Store unlocked jobs in session for persistent unlock
+                unlocked = request.session.get("unlocked_jobs", [])
+                if str(job_id) not in unlocked:
+                    unlocked.append(str(job_id))
+                    request.session["unlocked_jobs"] = unlocked
+
                 return JsonResponse({"success": True})
         return JsonResponse({"success": False})
     return JsonResponse({"success": False})

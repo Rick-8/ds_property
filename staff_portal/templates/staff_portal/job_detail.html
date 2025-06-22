@@ -31,34 +31,34 @@
       {% endif %}
     </section>
 
-    <!-- Staff Feedback (form ONLY for feedback) -->
+    <!-- Staff Feedback -->
     <form method="POST" action="{% url 'save_job_feedback' job.id %}" id="feedbackForm"
       class="col-12 col-lg-6 border rounded p-4 border-gold">
       {% csrf_token %}
       <h4 class="mb-3">Job Notes / Staff Feedback</h4>
       {% if user.is_authenticated %}
-      {% if user.is_superuser or user in job.assigned_staff.all %}
-      {{ form.feedback }}
-      {% if job.status != 'COMPLETED' %}
-      <button type="submit" class="btn btn-primary mt-3 mb-3">Save Feedback</button>
-      {% else %}
-      <p class=" mt-3">Feedback is locked because the job is completed.</p>
-      {% endif %}
-      {% elif job.jobfeedback_set.exists %}
-      {% for fb in job.jobfeedback_set.all %}
-      <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
-      {% endfor %}
-      {% else %}
-      <p>No feedback available.</p>
-      {% endif %}
+        {% if user.is_superuser or user in job.assigned_staff.all %}
+          {{ form.feedback }}
+          {% if not is_locked %}
+            <button type="submit" class="btn btn-primary mt-3 mb-3">Save Feedback</button>
+          {% else %}
+            <p class="mt-3">Feedback is locked because the job is {{ job.get_status_display|lower }}.</p>
+          {% endif %}
+        {% elif job.jobfeedback_set.exists %}
+          {% for fb in job.jobfeedback_set.all %}
+            <p><strong>{{ fb.user.get_full_name|default:fb.user.username }}:</strong> {{ fb.feedback }}</p>
+          {% endfor %}
+        {% else %}
+          <p>No feedback available.</p>
+        {% endif %}
       {% endif %}
     </form>
 
-    <!-- Bottom Right: Action Buttons (Responsive) -->
+    <!-- Action Buttons -->
     <section class="col-12 col-lg-6 border rounded p-4 border-gold d-flex flex-column justify-content-between"
       style="background: transparent; min-height: 300px;">
       <div class="d-grid gap-3">
-        {% if user.is_authenticated and user.is_superuser and job.status != 'COMPLETED' %}
+        {% if user.is_authenticated and user.is_superuser and not is_locked %}
         <form method="POST" action="{% url 'mark_job_complete' job.id %}" class="w-100">
           {% csrf_token %}
           <button type="submit" class="btn btn-success w-100">Mark as Complete</button>
@@ -67,7 +67,7 @@
 
         <!-- Not Completed Button -->
         <button type="button" class="btn btn-danger w-100" id="notCompletedBtn" data-bs-toggle="modal"
-          data-bs-target="#confirmMissedModal" {% if job.status == 'COMPLETED' %}disabled{% endif %}>
+          data-bs-target="#confirmMissedModal" {% if is_locked %}disabled{% endif %}>
           <i class="fa-solid fa-circle-xmark pe-1"></i> Not Completed
         </button>
 
@@ -75,14 +75,13 @@
         <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100" id="backToDashboardBtn">Back to Dashboard</a>
       </div>
 
-      <!-- Feedback Prompt (will always be full width) -->
       <p id="feedbackPrompt" class="text-warning small mt-2 dark-opaque w-100" style="display: none;">
         Please enter a reason in the feedback box above before marking as not completed.
       </p>
     </section>
   </div>
 
-  <!-- Modal (now contains its own form) -->
+  <!-- Not Completed Modal -->
   <div class="modal fade" id="confirmMissedModal" tabindex="-1" aria-labelledby="confirmMissedModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -105,7 +104,8 @@
     </div>
   </div>
 
-  {% if job.status == 'COMPLETED' or job.status == 'NOT_COMPLETED' %}
+  <!-- Lock Overlay -->
+  {% if is_locked %}
   <div id="lockOverlay" style="
     position: fixed;
     z-index: 1050;
@@ -124,17 +124,16 @@
         <input type="password" class="form-control mb-2" id="superuserPassword" placeholder="Superuser password"
           autocomplete="current-password" required>
         <button type="submit" class="btn btn-gold w-100">Unlock as Superuser</button>
-        <div id="unlockError" class="text-danger mt-2" style="display:none;">Incorrect password or not a superuser.
-        </div>
+        <div id="unlockError" class="text-danger mt-2" style="display:none;">Incorrect password or not a superuser.</div>
       </form>
       <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
     </div>
   </div>
   {% endif %}
-  {% endblock content %}
+{% endblock content %}
 
-  {% block extra_scripts %}
-  <script src="{% static 'staff_portal/js/job_detail.js' %}"></script>
+{% block extra_scripts %}
+<script src="{% static 'staff_portal/js/job_detail.js' %}"></script>
 <script>
   window.JOB_DETAIL_CONTEXT = {
     isLocked: "{% if is_locked %}true{% else %}false{% endif %}",
@@ -142,4 +141,4 @@
     csrfToken: "{{ csrf_token }}"
   };
 </script>
-  {% endblock %}
+{% endblock %}

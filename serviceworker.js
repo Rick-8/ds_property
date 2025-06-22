@@ -50,6 +50,9 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   const url = new URL(req.url);
 
+  // 🛑 Skip non-GET requests (fix for POST caching error)
+  if (req.method !== 'GET') return;
+
   // 🔒 Skip excluded paths
   if (isExcluded(url)) return;
 
