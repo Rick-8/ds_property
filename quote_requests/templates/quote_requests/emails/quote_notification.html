@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Quote Request Received</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 30px auto; padding: 20px;
+            border: 1px solid #ddd; border-radius: 7px; background: #fafbfd; }
+        .header { color: #00627a; font-size: 1.6em; margin-bottom: 0.7em; }
+        .info-list { margin: 0; padding: 0; list-style: none; }
+        .info-list li { margin-bottom: 0.4em; }
+        .label { font-weight: bold; }
+        .footer { margin-top: 2em; font-size: 0.96em; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">New Quote Request Received</div>
+        <ul class="info-list">
+            <li><span class="label">Name:</span> {{ quote.name }}</li>
+            <li><span class="label">Email:</span> {{ quote.email }}</li>
+            <li><span class="label">Phone:</span> {{ quote.phone }}</li>
+            <li><span class="label">Submitted at:</span>
+                {{ quote.submitted_at|date:"Y-m-d H:i" }}</li>
+            <li><span class="label">Status:</span> {{ quote.status }}</li>
+            <li><span class="label">Description:</span>
+                <br>
+                <span style="white-space:pre-line">{{ quote.description }}</span>
+            </li>
+            {% if quote.photo %}
+                <li><span class="label">Photo attached:</span> Yes</li>
+            {% else %}
+                <li><span class="label">Photo attached:</span> No</li>
+            {% endif %}
+            {% if quote.related_property %}
+                <li>
+                    <span class="label">Related Property:</span>
+                    {{ quote.related_property }}
+                </li>
+            {% endif %}
+            {% if quote.address_line1 %}
+                <li>
+                    <span class="label">Address:</span>
+                    {{ quote.address_line1 }},
+                    {% if quote.address_line2 %}{{ quote.address_line2 }}, {% endif %}
+                    {{ quote.city }}, {{ quote.state }} {{ quote.postcode }}
+                </li>
+            {% endif %}
+        </ul>
+        <div class="footer">
+            This is an automated notification for your records.
+        </div>
+    </div>
+</body>
+</html>
