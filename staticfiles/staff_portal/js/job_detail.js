@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // --- Existing Feedback / Missed logic ---
   const feedbackInput = document.querySelector('#feedbackInput') || document.querySelector('textarea[name="feedback"]');
   const notCompletedBtn = document.getElementById("notCompletedBtn");
   const feedbackPrompt = document.getElementById("feedbackPrompt");
@@ -66,4 +67,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Run the check on page load
   checkFeedback();
+
+  // --- Overlay Lock/Unlock Logic ---
+  if (window.JOB_DETAIL_CONTEXT && window.JOB_DETAIL_CONTEXT.isLocked) {
+    // Disable all controls except overlay and its Back button
+    document.querySelectorAll('input, textarea, select, button').forEach(function(el) {
+      if (!el.closest('#lockOverlay')) el.disabled = true;
+    });
+    document.querySelectorAll('a').forEach(function(link) {
+      if (!link.closest('#lockOverlay')) {
+        link.style.pointerEvents = "none";
+        link.style.opacity = "0.5";
+      }
+    });
+
+    // Unlock overlay logic (AJAX)
+    var unlockForm = document.getElementById('unlockForm');
+    if (unlockForm) {
+      unlockForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var pw = document.getElementById('superuserPassword').value;
+        var errorMsg = document.getElementById('unlockError');
+        errorMsg.style.display = 'none';
+
+        fetch(window.JOB_DETAIL_CONTEXT.unlockUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": window.JOB_DETAIL_CONTEXT.csrfToken,
+          },
+          body: JSON.stringify({ password: pw }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('lockOverlay').style.display = 'none';
+            // Re-enable controls if unlocked
+            document.querySelectorAll('input, textarea, select, button').forEach(function(el) {
+              el.disabled = false;
+            });
+            document.querySelectorAll('a').forEach(function(link) {
+              link.style.pointerEvents = "";
+              link.style.opacity = "";
+            });
+          } else {
+            errorMsg.style.display = 'block';
+          }
+        });
+      });
+    }
+  }
 });

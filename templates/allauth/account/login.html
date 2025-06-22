@@ -15,13 +15,13 @@
         <div class="col-md-6">
             <!-- Dark Opaque Card with padding and rounded corners -->
             <div class="dark-opaque p-5 rounded shadow-lg">
-                <h1 class="text-center mb-4">{% trans "Sign In" %}</h1>
+                <h1 class="text-center large-gold-text mb-4">{% trans "Sign In" %}</h1>
 
                 {% if not SOCIALACCOUNT_ONLY %}
                 <p class="text-center">
                     {% blocktrans %}
-                        If you have not created an account yet, then please
-                        <a href="{{ signup_url }}" class="text-warning">sign up</a> first.
+                    If you have not created an account yet, then please
+                    <a href="{{ signup_url }}" class="text-gold">sign up</a> first.
                     {% endblocktrans %}
                 </p>
                 {% endif %}
@@ -42,9 +42,11 @@
                     {% for field in form %}
                     <div class="form-group mb-3">
                         {% if field.field.widget.input_type == "checkbox" %}
-                        <div class="form-check">
-                            {{ field|add_class:"form-check-input" }}
-                            <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
+                        <div class="form-check d-flex align-items-center gap-2 ps-1 mb-3" style="min-height: 1.5rem;">
+                            {{ field|add_class:"form-check-input m-0" }}
+                            <label for="{{ field.id_for_label }}" class="form-check-label text-gold mb-0">
+                                {{ field.label }}
+                            </label>
                         </div>
                         {% else %}
                         <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>

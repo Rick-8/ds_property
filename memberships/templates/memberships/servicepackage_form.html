@@ -3,50 +3,65 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if form.instance.pk %}Edit Service Package{% else %}Create Service Package{% endif %}
+{% if form.instance.pk %}
+Edit Service Package
+{% else %}
+Create Service Package
+{% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">
+        <div class="col-lg-7 col-xl-6">
+            <div class="dark-opaque shadow-lg">
+                <div class="mb-4 text-center">
+                    <h2 class="mb-0 large-gold-text" style="font-size:2rem;">
                         {% if form.instance.pk %}
-                            Edit Service Package
+                        Edit Service Package
                         {% else %}
-                            Create New Service Package
+                        Create Service Package
                         {% endif %}
                     </h2>
                 </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <hr>
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <a href="{% url 'servicepackage_list' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i> Back to List
-                            </a>
-                            <button type="submit" class="btn btn-success">
-                                {% if form.instance.pk %}
-                                    <i class="fas fa-save me-2"></i> Update Package
-                                {% else %}
-                                    <i class="fas fa-plus-circle me-2"></i> Create Package
-                                {% endif %}
-                            </button>
-                        </div>
-                    </form>
+                <div class="mb-4" style="color:silver;">
+                    <span>
+                        Fill out the form below to
+                        {% if form.instance.pk %}
+                        update this
+                        {% else %}
+                        create a new
+                        {% endif %}
+                        service package.
+                    </span>
                 </div>
+                {{ form.media }}
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ form|crispy }}
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{% url 'servicepackage_list' %}" class="btn btn-outline-gold rounded-pill px-4 py-2">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Back to List
+                        </a>
+                        <button type="submit" class="btn btn-glass-gold rounded-pill px-4 py-2">
+                            {% if form.instance.pk %}
+                            <i class="fas fa-save me-2"></i> Update Package
+                            {% else %}
+                            <i class="fas fa-plus-circle me-2"></i> Create Package
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-{% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
+{% block extra_scripts %}
+<script src="{% static 'js/whatsapp.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

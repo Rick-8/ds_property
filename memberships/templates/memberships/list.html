@@ -3,129 +3,70 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-4 px-3 px-md-5">
-    <h1 class="text-center mb-4 dark-opaque large-gold-text display-6 display-md-4">
-        Service Packages
+<div class="container py-4 px-2 px-md-5">
+  <div class="dark-opaque modal-background" style="max-width:900px; margin:auto;">
+    <h1 class="text-center mb-4 large-gold-text display-6">
+      Service Packages
     </h1>
 
     <div class="d-grid gap-2 gap-md-3 d-md-flex justify-content-center mb-4 flex-wrap">
-        {% if user.is_superuser %}
+      {% if user.is_superuser %}
         <a href="{% url 'servicepackage_create' %}" class="btn btn-gold">
-            + Create New Package
+          + Create New Package
         </a>
-        {% endif %}
-        {% if user.is_authenticated %}
+      {% endif %}
+      {% if user.is_authenticated %}
         <a href="{% url 'package_selection' %}" class="btn btn-primary btn-glass-gold">
-            Buy a Service Package
+          Buy a Service Package
         </a>
-        {% else %}
+      {% else %}
         <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-glass-gold">
-            Login or Sign Up to buy a Service Package
+          Login or Sign Up to buy a Service Package
         </a>
-        {% endif %}
+      {% endif %}
     </div>
 
     {% if packages %}
-    <div class="table-responsive d-none d-md-block">
-        <table class="table table-striped table-dark align-middle text-nowrap">
-            <thead>
-                <tr class="text-gold">
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Tier</th>
-                    <th>Price (USD)</th>
-                    <th>Description</th>
-                    {% if user.is_superuser %}
-                    <th class="text-center">Actions</th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for package in packages %}
-                <tr>
-                    <td class="text-gold fw-bold">{{ package.name }}</td>
-                    <td class="text-white">{{ package.category }}</td>
-                    <td class="text-white">{{ package.tier }}</td>
-                    <td class="text-white">${{ package.price_usd }}</td>
-                    <td>
-                        <div class="accordion glass-accordion" id="accordionDescription{{ package.pk }}">
-                            <div class="accordion-item glass-item">
-                                <h2 class="accordion-header" id="heading{{ package.pk }}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapse{{ package.pk }}" aria-expanded="false"
-                                        aria-controls="collapse{{ package.pk }}">
-                                        View Description
-                                    </button>
-                                </h2>
-                                <div id="collapse{{ package.pk }}" class="accordion-collapse collapse"
-                                    aria-labelledby="heading{{ package.pk }}" data-bs-parent="#accordionDescription{{ package.pk }}">
-                                    <div class="accordion-body" style="white-space: pre-wrap;">
-                                        {{ package.description|safe }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    {% if user.is_superuser %}
-                    <td>
-                        <div class="d-flex flex-column flex-sm-row gap-1 justify-content-center">
-                            <a href="{% url 'servicepackage_update' package.pk %}" class="btn btn-sm btn-warning w-100 w-sm-auto">Edit</a>
-                            <a href="{% url 'servicepackage_delete' package.pk %}" class="btn btn-sm btn-danger w-100 w-sm-auto">Delete</a>
-                        </div>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="d-md-none">
+      <div class="accordion glass-accordion" id="packagesAccordion">
         {% for package in packages %}
-        <div class="card mb-3 bg-dark text-white border-gold">
-            <div class="card-body">
-                <h5 class="card-title text-gold">{{ package.name }}</h5>
-                <p class="mb-1"><strong>Category:</strong> {{ package.category }}</p>
-                <p class="mb-1"><strong>Tier:</strong> {{ package.tier }}</p>
-                <p class="mb-1"><strong>Price:</strong> ${{ package.price_usd }}</p>
-
-                <div class="accordion glass-accordion" id="mobileAccordion{{ package.pk }}">
-                    <div class="accordion-item glass-item">
-                        <h2 class="accordion-header" id="mobileHeading{{ package.pk }}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#mobileCollapse{{ package.pk }}" aria-expanded="false"
-                                aria-controls="mobileCollapse{{ package.pk }}">
-                                View Description
-                            </button>
-                        </h2>
-                        <div id="mobileCollapse{{ package.pk }}" class="accordion-collapse collapse"
-                            aria-labelledby="mobileHeading{{ package.pk }}" data-bs-parent="#mobileAccordion{{ package.pk }}">
-                            <div class="accordion-body" style="white-space: pre-wrap;">
-                                {{ package.description|safe }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {% if user.is_superuser %}
-                <div class="d-flex flex-column gap-2 mt-3">
-                    <a href="{% url 'servicepackage_update' package.pk %}" class="btn btn-warning btn-sm w-100">Edit</a>
-                    <a href="{% url 'servicepackage_delete' package.pk %}" class="btn btn-danger btn-sm w-100">Delete</a>
-                </div>
-                {% endif %}
+        <div class="accordion-item glass-item border-0" style="margin-bottom:0.3rem;">
+          <h2 class="accordion-header" id="heading{{ package.pk }}">
+            <button class="accordion-button collapsed px-3 py-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ package.pk }}"
+                    aria-expanded="false"
+                    aria-controls="collapse{{ package.pk }}">
+              <span class="fw-bold large-gold-text">{{ package.name }}</span>
+              <span class="package-price ms-3 text-white">${{ package.price_usd }}</span>
+    
+            </button>
+          </h2>
+          <div id="collapse{{ package.pk }}"
+               class="accordion-collapse collapse"
+               aria-labelledby="heading{{ package.pk }}"
+               data-bs-parent="#packagesAccordion">
+            <div class="accordion-body package-description" style="padding-top:0.7rem; padding-bottom:0.9rem;">
+              <div>{{ package.description|safe }}</div>
+              {% if user.is_superuser %}
+              <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+                <a href="{% url 'servicepackage_update' package.pk %}" class="btn btn-warning btn-sm w-100">Edit</a>
+                <a href="{% url 'servicepackage_delete' package.pk %}" class="btn btn-danger btn-sm w-100">Delete</a>
+              </div>
+              {% endif %}
             </div>
+          </div>
         </div>
         {% endfor %}
-    </div>
-
+      </div>
     {% else %}
-    <p class="text-white text-center mt-4">No active service packages available.</p>
+      <p class="text-white text-center mt-4">No active service packages available.</p>
     {% endif %}
+  </div>
 </div>
 
 {% block extra_scripts %}
   <script src="{% static 'js/whatsapp.js' %}"></script>
   <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
-
 {% endblock %}
