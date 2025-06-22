@@ -5,58 +5,23 @@
 <h2>Pending, In Progress, and Missed Jobs</h2>
 
 {% if jobs %}
-  <ul class="list-group">
-    {% for job in jobs %}
-      <li class="list-group-item">
-       <a href="{% url 'staff_portal:job_detail' job.pk %}">{{ job.title }}</a> -
-Route:
-{% if job.route %}
+<ul class="list-group">
+  {% for job in jobs %}
+  <li class="list-group-item">
+    <a href="{% url 'staff_portal:job_detail' job.pk %}">{{ job.title }}</a> -
+    Route:
+    {% if job.route %}
     {{ job.route.name }}
-{% else %}
+    {% else %}
     Unassigned
-{% endif %}
-- Status: {{ job.get_status_display }} - Scheduled: {{ job.scheduled_date }}
+    {% endif %}
+    - Status: {{ job.get_status_display }} - Scheduled: {{ job.scheduled_date }}
 
     {% endfor %}
-  </ul>
+</ul>
 {% else %}
-  <p>No jobs with those statuses.</p>
+<p>No jobs with those statuses.</p>
 {% endif %}
 
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}My Jobs{% endblock %}
-
-{% block content %}
-<div class="container mt-5">
-  <h2 class="large-gold-text dark-opaque">My Assigned Jobs</h2>
-
-  {% if jobs %}
-  <ul class="list-group mt-3">
-    {% for job in jobs %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <div>
-        <a href="{% url 'job_detail' job.pk %}" class="fw-bold">{{ job.title }}</a><br>
-        {{ job.property.label }}<br>
-        Scheduled for: {{ job.scheduled_date }}<br>
-        Status: {{ job.get_status_display }}
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>You have no assigned jobs.</p>
-  {% endif %}
-
-  <a href="{% url 'dashboard' %}" class="btn btn-outline-silver mt-3">Back to Dashboard</a>
-</div>
-
-{% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
-{% endblock %}
-
-{% endblock content %}
 
 {% endblock %}
