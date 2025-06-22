@@ -11,7 +11,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  navigator.serviceWorker.register('/static/js/serviceworker.js')
+  navigator.serviceWorker.register('/serviceworker.js')
     .then(function (registration) {
       console.log('Service Worker registered with scope:', registration.scope);
 

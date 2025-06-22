@@ -4,69 +4,69 @@
 
 {% block content %}
 <div class="container py-4 px-2 px-md-5">
-  <div class="dark-opaque modal-background" style="max-width:900px; margin:auto;">
-    <h1 class="text-center mb-4 large-gold-text display-6">
-      Service Packages
-    </h1>
+    <div class="dark-opaque modal-background" style="max-width:900px; margin:auto;">
+        <h1 class="text-center mb-4 large-gold-text display-6">
+            Service Packages
+        </h1>
 
-    <div class="d-grid gap-2 gap-md-3 d-md-flex justify-content-center mb-4 flex-wrap">
-      {% if user.is_superuser %}
-        <a href="{% url 'servicepackage_create' %}" class="btn btn-gold">
-          + Create New Package
-        </a>
-      {% endif %}
-      {% if user.is_authenticated %}
-        <a href="{% url 'package_selection' %}" class="btn btn-primary btn-glass-gold">
-          Buy a Service Package
-        </a>
-      {% else %}
-        <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-glass-gold">
-          Login or Sign Up to buy a Service Package
-        </a>
-      {% endif %}
-    </div>
-
-    {% if packages %}
-      <div class="accordion glass-accordion" id="packagesAccordion">
-        {% for package in packages %}
-        <div class="accordion-item glass-item border-0" style="margin-bottom:0.3rem;">
-          <h2 class="accordion-header" id="heading{{ package.pk }}">
-            <button class="accordion-button collapsed px-3 py-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse{{ package.pk }}"
-                    aria-expanded="false"
-                    aria-controls="collapse{{ package.pk }}">
-              <span class="fw-bold large-gold-text">{{ package.name }}</span>
-              <span class="package-price ms-3 text-white">${{ package.price_usd }}</span>
-    
-            </button>
-          </h2>
-          <div id="collapse{{ package.pk }}"
-               class="accordion-collapse collapse"
-               aria-labelledby="heading{{ package.pk }}"
-               data-bs-parent="#packagesAccordion">
-            <div class="accordion-body package-description" style="padding-top:0.7rem; padding-bottom:0.9rem;">
-              <div>{{ package.description|safe }}</div>
-              {% if user.is_superuser %}
-              <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
-                <a href="{% url 'servicepackage_update' package.pk %}" class="btn btn-warning btn-sm w-100">Edit</a>
-                <a href="{% url 'servicepackage_delete' package.pk %}" class="btn btn-danger btn-sm w-100">Delete</a>
-              </div>
-              {% endif %}
-            </div>
-          </div>
+        <div class="d-grid gap-2 gap-md-3 d-md-flex justify-content-center mb-4 flex-wrap">
+            {% if user.is_superuser %}
+            <a href="{% url 'servicepackage_create' %}" class="btn btn-gold">
+                + Create New Package
+            </a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <a href="{% url 'package_selection' %}" class="btn btn-primary btn-glass-gold">
+                Buy a Service Package
+            </a>
+            {% else %}
+            <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-glass-gold">
+                Login or Sign Up to buy a Service Package
+            </a>
+            {% endif %}
         </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p class="text-white text-center mt-4">No active service packages available.</p>
-    {% endif %}
-  </div>
+
+        {% if packages %}
+        <div class="accordion glass-accordion" id="packagesAccordion">
+            {% for package in packages %}
+            <div class="accordion-item glass-item border-0" style="margin-bottom:0.3rem;">
+                <h2 class="accordion-header" id="heading{{ package.pk }}">
+                    <button class="accordion-button collapsed px-3 py-2" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ package.pk }}" aria-expanded="false"
+                        aria-controls="collapse{{ package.pk }}">
+                        <div class="d-flex align-items-center">
+                            <span class="fw-bold large-gold-text">{{ package.name }}</span>
+                            <span class="flex-grow-1 mx-2" style="border-top: 1px solid #C0C0C0;"></span>
+                            <span class="package-price text-white">${{ package.price_usd }}</span>
+                        </div>
+
+                    </button>
+                </h2>
+                <div id="collapse{{ package.pk }}" class="accordion-collapse collapse"
+                    aria-labelledby="heading{{ package.pk }}" data-bs-parent="#packagesAccordion">
+                    <div class="accordion-body package-description" style="padding-top:0.7rem; padding-bottom:0.9rem;">
+                        <div>{{ package.description|safe }}</div>
+                        {% if user.is_superuser %}
+                        <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+                            <a href="{% url 'servicepackage_update' package.pk %}"
+                                class="btn btn-warning btn-sm w-100">Edit</a>
+                            <a href="{% url 'servicepackage_delete' package.pk %}"
+                                class="btn btn-danger btn-sm w-100">Delete</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-white text-center mt-4">No active service packages available.</p>
+        {% endif %}
+    </div>
 </div>
 
 {% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/whatsapp.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 {% endblock %}

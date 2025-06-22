@@ -13,7 +13,6 @@
             {% for package in packages %}
             <div class="package border rounded p-3 mb-3 shadow-sm dark-opaque">
                 <h6 class="gold mb-1 fs-4">{{ package.name }}</h6>
-                <p class="mb-1"><strong>{% trans "Tier:" %}</strong> {{ package.get_tier_display }}</p>
                 <p class="mb-2 silver-text"><strong>{% trans "Price:" %}</strong> ${{ package.price_usd }} / {% trans "month" %}</p>
                 <form method="post" action="{% url 'select_package' package.id %}" class="select-form"
                     data-package-id="{{ package.id }}" data-category="{{ package.category }}">

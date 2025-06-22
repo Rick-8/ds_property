@@ -45,7 +45,7 @@
     <meta name="theme-color" content="#1a1a1a">
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register("{% url 'serviceworker' %}")
+            navigator.serviceWorker.register("/serviceworker.js")
                 .then(reg => console.log("Service worker registered:", reg))
                 .catch(err => console.error("Service worker registration failed:", err));
         }
@@ -88,20 +88,20 @@
         <div class="offcanvas-gold-line"></div>
         <div class="offcanvas-header justify-content-between align-items-start">
             <h5 class="offcanvas-title large-gold-text" id="sidebarLabel">Menu</h5>
-                 {% if user.is_authenticated and user.is_staff %}
-                <!-- PWA Tools for Staff -->
-                <li class="nav-item mt-3">
-                    <button id="pwa-install-btn" class="btn btn-outline-warning w-100" style="display: none;">
-                        Install Staff App <i class="fa-solid fa-download"></i>
-                    </button>
-                </li>
-                <li class="nav-item mt-2">
-                    <a href="#" onclick="localStorage.removeItem('dsPwaBannerDismissed'); location.reload();"
-                        class="nav-link text-warning text-center">
-                        <i class="fa-solid fa-download"></i>
-                    </a>
-                </li>
-                {% endif %}
+            {% if user.is_authenticated and user.is_staff %}
+            <!-- PWA Tools for Staff -->
+            <li class="nav-item mt-3">
+                <button id="pwa-install-btn" class="btn btn-outline-warning w-100" style="display: none;">
+                    Install Staff App <i class="fa-solid fa-download"></i>
+                </button>
+            </li>
+            <li class="nav-item mt-2">
+                <a href="#" onclick="localStorage.removeItem('dsPwaBannerDismissed'); location.reload();"
+                    class="nav-link text-warning text-center">
+                    <i class="fa-solid fa-download"></i>
+                </a>
+            </li>
+            {% endif %}
             <button type="button" class="btn gold-close border-0 bg-transparent fs-3 ms-auto"
                 data-bs-dismiss="offcanvas" aria-label="Close">
                 <i class="fa-solid fa-x"></i>
@@ -126,7 +126,7 @@
                 <li class="nav-item"><a href="{% url 'splashzone_pools' %}" class="nav-link blue">Splash Zone Pools</a>
                 </li>
 
-           
+
 
                 <li class="nav-item mt-2">
                     {% if user.is_authenticated %}
