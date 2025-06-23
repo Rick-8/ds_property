@@ -63,6 +63,9 @@ def package_create(request):
     """
     Creates a new ServicePackage in Django and a Stripe Product/Price.
     """
+    if not request.user.profile.profile_completed:
+        return redirect('/profile/setup/')
+
     if request.method == 'POST':
         form = ServicePackageForm(request.POST)
         if form.is_valid():
@@ -72,6 +75,7 @@ def package_create(request):
                 f"{package.get_tier_display()} - {package.name}"
             )
             price_in_cents = int(package.price_usd * 100)
+
             try:
                 with transaction.atomic():
                     stripe_product = stripe.Product.create(
@@ -84,10 +88,8 @@ def package_create(request):
                         }
                     )
                     package.stripe_product_id = stripe_product.id
-                    logger.info(
-                        f"Stripe Product created: {stripe_product.id} "
-                        f"for package '{package.name}'"
-                    )
+                    logger.info(f"Stripe Product created: {stripe_product.id} for package '{package.name}'")
+
                     stripe_price = stripe.Price.create(
                         product=stripe_product.id,
                         unit_amount=price_in_cents,
@@ -100,10 +102,8 @@ def package_create(request):
                         }
                     )
                     package.stripe_price_id = stripe_price.id
-                    logger.info(
-                        f"Stripe Price created: {stripe_price.id} for product "
-                        f"'{stripe_product.id}'"
-                    )
+                    logger.info(f"Stripe Price created: {stripe_price.id} for product '{stripe_product.id}'")
+
                     package.save()
                     stripe.Product.modify(
                         stripe_product.id,
@@ -113,39 +113,30 @@ def package_create(request):
                         stripe_price.id,
                         metadata={'django_package_id': package.id}
                     )
-                    logger.info(
-                        f"Stripe Product/Price metadata updated with "
-                        f"django_package_id: {package.id}"
-                    )
+                    logger.info(f"Stripe Product/Price metadata updated with django_package_id: {package.id}")
+
                     messages.success(
                         request,
-                        f"Service package '{package.name}' created successfully "
-                        f"and linked to Stripe."
+                        f"Service package '{package.name}' created successfully and linked to Stripe."
                     )
                     return redirect('servicepackage_list')
             except stripe.error.StripeError as e:
-                logger.error(
-                    f"Stripe API Error during package creation for '{package.name}': "
-                    f"{e}", exc_info=True
-                )
+                logger.error(f"Stripe API Error during package creation for '{package.name}': {e}", exc_info=True)
                 messages.error(
                     request,
                     f"Failed to create package in Stripe: {e.user_message or e}"
                 )
             except Exception as e:
-                logger.error(
-                    f"Unexpected error during package creation for '{package.name}': "
-                    f"{e}", exc_info=True
-                )
+                logger.error(f"Unexpected error during package creation for '{package.name}': {e}", exc_info=True)
                 messages.error(request, f"An unexpected error occurred: {e}")
         else:
             messages.error(request, "Please correct the errors in the form.")
+            return render(request, 'memberships/servicepackage_form.html', {'form': form})
     else:
         form = ServicePackageForm()
-    return render(
-        request, 'memberships/servicepackage_form.html',
-        {'form': form, 'title': 'Create Service Package'}
-    )
+
+    return render(request, 'memberships/servicepackage_form.html', {'form': form, 'title': 'Create Service Package'})
+
 
 
 @superuser_required

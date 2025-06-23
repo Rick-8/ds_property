@@ -6,10 +6,11 @@ from django.contrib import messages
 
 User = get_user_model()
 
+
 def superuser_required(view_func):
     """
     Decorator that ensures the requesting user is authenticated and is a superuser.
-    
+
     Wraps the view function to:
     - Require user login
     - Check if the user is a superuser
@@ -64,7 +65,8 @@ def toggle_superuser(request, user_id):
 
     Promotes or demotes the user to/from superuser status.
 
-    Shows a success message upon change and redirects back to the user admin panel.
+    Shows a success message upon change and redirects back to the
+    user admin panel.
 
     Only accessible by superusers.
 
@@ -86,7 +88,8 @@ def toggle_staff(request, user_id):
 
     Grants or removes staff privileges.
 
-    Shows a success message upon change and redirects back to the user admin panel.
+    Shows a success message upon change and redirects back to the user
+    admin panel.
 
     Only accessible by superusers.
 

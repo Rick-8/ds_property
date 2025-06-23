@@ -6,6 +6,8 @@ from django.contrib import messages
 from webpush import send_user_notification
 from .models import Profile
 
+
+# Automatically create or update user profile on save
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -17,11 +19,15 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             profile.save()
 
 
+# Clear auth messages when a user logs in or out
+@receiver(user_logged_in)
+@receiver(user_logged_out)
 def clear_auth_messages(sender, request, **kwargs):
     storage = messages.get_messages(request)
-    storage.used = True
+    list(storage)
 
 
+# Notify superusers when a staff member logs in
 @receiver(user_logged_in)
 def notify_superuser_on_login(sender, request, user, **kwargs):
     if user.is_staff:
@@ -39,7 +45,3 @@ def notify_superuser_on_login(sender, request, user, **kwargs):
                 send_user_notification(user=superuser, payload=payload, ttl=1000)
             except Exception as e:
                 print(f"Web push failed: {e}")
-
-
-user_logged_in.connect(clear_auth_messages)
-user_logged_out.connect(clear_auth_messages)

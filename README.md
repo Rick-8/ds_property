@@ -81,10 +81,6 @@ The DS Property Maintenance Portal is built on a service-driven e-commerce model
 **Why this matters:**  
 By connecting property owners and managers with a comprehensive suite of local services—especially for outdoor and pool care—and providing instant feedback via digital tools, DS Property Maintenance ensures properties are maintained to the highest standard with minimal hassle, maximum transparency, and exceptional service quality.
 
-
-
-
-
 ---
 
 ## <span style="color:gold">Key Features</span>
@@ -300,13 +296,149 @@ UX and accessibility have been reviewed at each stage of development, with manua
 
 ##  <span style="color:gold">Data Model & Schema</span>
 
-_Describe your database models and their relationships (with diagrams if possible)._
+## Data Model & Schema
+
+The DS Property Maintenance Portal is built on a robust relational database schema using Django’s ORM, ensuring data integrity, consistency, and scalability.
+
+### Key Models & Relationships
+
+- **User (Django User)**
+  - Represents all users: property owners, staff, admins.
+  - Extended with a Profile model for additional user info (e.g., phone, address, role).
+
+- **Profile**
+  - Linked to User (OneToOne).
+  - Stores contact info and extra profile data for each user.
+
+- **Property**
+  - Linked to User (ForeignKey: owner/customer).
+  - Stores address, property type, and metadata.
+  - Related to ServiceAgreement, Job, and QuoteRequest.
+
+- **ServicePackage**
+  - Defines subscription-based maintenance packages (e.g., Silver, Gold).
+  - Linked to sub-company (Border 2 Border or Splash Zone Pools).
+
+- **ServiceAgreement**
+  - Represents a user’s active subscription/package for a property.
+  - Linked to User, Property, and ServicePackage.
+  - Stores status, start/end dates, Stripe subscription/payment info.
+
+- **Job**
+  - Represents a scheduled or completed task for a property.
+  - Linked to Property, assigned Staff (User), and optionally a QuoteRequest.
+  - Tracks job status, feedback, completion date, and related notes.
+
+- **JobFeedback**
+  - Linked to Job and Staff (User).
+  - Captures staff or customer feedback, with timestamps and status.
+
+- **QuoteRequest**
+  - Linked to User (customer) and Property.
+  - Stores request details, images, admin review status, and quote items.
+  - Can be converted into a Job upon acceptance and payment.
+
+- **QuoteItem**
+  - Linked to QuoteRequest.
+  - Each item represents a part/labor/service, quantity, and price, supporting dynamic quote building.
+
+---
+
+### Model Relationships Diagram
+
+![Entity Relationship Diagram](myapp_models.png)
+
+
 
 ---
 
 ##  <span style="color:gold">Technologies Used</span>
 
-_List all technologies, frameworks, libraries, and services used._
+
+The DS Property Maintenance Portal leverages modern, industry-standard technologies across the stack to deliver a robust, secure, and scalable e-commerce experience.
+
+### Core Technologies
+
+- **Python 3.12**  
+  Main backend programming language, powering the Django framework.
+
+- **Django**  
+  Full-stack web framework for rapid, secure, and scalable web development.
+
+- **Django Allauth**  
+  Handles user authentication, registration, and social account support.
+
+- **Stripe**  
+  Provides secure online payment processing for subscriptions and one-off jobs.
+
+- **Bootstrap 5**  
+  Modern, responsive frontend CSS framework for a clean, accessible user interface and grid-based layout.
+
+- **HTML5 & CSS3**  
+  Semantic markup and custom styles for structure, layout, and branding.
+
+- **JavaScript (Vanilla & jQuery)**  
+  For frontend interactivity, AJAX, dynamic form handling, and enhanced UX.
+
+- **Progressive Web App (PWA)**  
+  Staff portal is installable on mobile devices for real-time, offline-capable job management and push notifications.
+
+### Database & Storage
+
+- **PostgreSQL**  
+  Relational database for production (or SQLite for local development).
+
+- **AWS S3**  
+  Cloud file storage for user uploads (images, documents, quote attachments).
+
+### Deployment & Infrastructure
+
+- **Heroku / Render**  
+  Cloud hosting platforms for reliable deployment and automatic scaling.
+
+- **Gunicorn**  
+  WSGI HTTP server for serving Django in production.
+
+- **Whitenoise**  
+  For efficient static file serving in production.
+
+### Testing & DevOps
+
+- **Pytest / Django Test Framework**  
+  For automated testing of backend functionality.
+
+- **Git & GitHub**  
+  Version control and code collaboration.
+
+### Security & Optimization
+
+- **django-environ**  
+  Secure management of environment variables and secrets.
+
+- **django-csp (optional)**  
+  Content Security Policy for enhanced security.
+
+- **SEO Tools**  
+  Meta tags, sitemap.xml, robots.txt for improved search engine visibility.
+
+### Other Packages
+
+- **django-ckeditor**  
+  Rich text editor for admin content (see security notice).
+
+- **Pillow**  
+  Image handling for uploads and thumbnails.
+
+- **django-webpush**  
+  Web push notifications for staff and admin alerts.
+
+- **Boto3**  
+  AWS integration for media file storage.
+
+---
+
+**All technologies were selected for their reliability, security, community support, and suitability for a commercial-grade Django e-commerce platform.**
+
 
 ---
 

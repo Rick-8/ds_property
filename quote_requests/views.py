@@ -6,7 +6,7 @@ PDF invoice generation, payment, and responses.
 
 from decimal import Decimal
 import json
-
+from django.test import TestCase
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import (
@@ -25,15 +25,12 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
-import stripe
-
+from django.contrib.auth import get_user_model
 from .models import QuoteRequest, QuoteItem
 from .forms import QuoteRequestForm
 from .utils import render_quote_pdf_bytes
-from accounts.models import Property
-from staff_portal.models import Job
-from memberships.models import ServiceAgreement
+import stripe
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
