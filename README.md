@@ -481,7 +481,13 @@ _Overview of your testing approach for the application._
 ##  <span style="color:gold">Manual Testing & User Feedback</span>
 
 _Describe manual test cases and user feedback collection._
-
+Scenario	Card Number	Description
+Insufficient funds	4000 0000 0000 9995	Always declined
+Expired card	4000 0000 0000 0069	Use past expiry date
+Incorrect CVC	4000 0000 0000 0127	Fails if CVC check required
+Processing error	4000 0000 0000 0119	Generic processing error
+Incorrect number	4242 4242 4242 4241	Fails Luhn check
+Authentication required	4000 0027 6000 3184	3D Secure (SCA) authentication required
 ---
 
 ##  <span style="color:gold">Automated Testing</span>
