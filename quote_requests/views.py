@@ -30,6 +30,7 @@ from .models import QuoteRequest, QuoteItem
 from .forms import QuoteRequestForm
 from .utils import render_quote_pdf_bytes
 import stripe
+from django.utils.safestring import mark_safe
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -106,11 +107,18 @@ def request_quote_view(request):
                     'has been submitted.'
                 )
             )
-            messages.success(
-                request,
-                "Your quote request has been submitted successfully!"
+
+        quote_list_url = reverse("my_quotes")
+
+        messages.success(
+            request,
+            mark_safe(
+                f'Your quote request has been submitted successfully! '
+                f'<a href="{quote_list_url}" class="btn btn-sm btn-outline-light ms-3">'
+                f'View My Quotes</a>'
             )
-            return redirect('home')
+        )
+        return redirect('home')
     else:
         if request.user.is_authenticated:
             initial_data = {
@@ -129,9 +137,8 @@ def request_quote_view(request):
         else:
             form = QuoteRequestForm(user=request.user)
 
-    return render(
-        request, 'quote_requests/request_quote.html', {'form': form}
-    )
+    return render(request, 'quote_requests/request_quote.html', {'form': form})
+
 
 # ===============================
 # ADMIN QUOTE VIEWS

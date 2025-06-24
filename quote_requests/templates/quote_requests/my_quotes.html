@@ -19,6 +19,7 @@
                         <span class="badge text-white mt-2 
                 {% if quote.status == 'UNPAID' %}bg-danger
                 {% elif quote.status == 'PAID' %}bg-success
+                {% elif quote.status == 'ACCEPTED' %}bg-success
                 {% elif quote.status == 'REVIEWED' %}bg-info
                 {% elif quote.status == 'DECLINED' %}bg-secondary
                 {% else %}bg-warning text-dark
@@ -56,13 +57,7 @@
                     <p><strong>Phone:</strong> {{ quote.phone }}</p>
                     <p><strong>Description:</strong><br>{{ quote.description }}</p>
 
-                    {% if quote.image %}
-                    <div class="my-3">
-                        <img src="{{ quote.image.url }}" alt="Uploaded Image"
-                            class="img-fluid rounded border border-light">
-                    </div>
-                    {% endif %}
-
+                    {% if quote.total_amount > 0 and quote.status == "ACCEPTED" and quote.response_token %}
                     <hr class="text-gold">
                     <p><strong>Items:</strong></p>
                     <ul class="list-group mb-3">
@@ -80,6 +75,20 @@
                         class="btn btn-outline-light btn-sm mt-2">
                         Download PDF
                     </a>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if quote.status == "PENDING" or quote.status == "REVIEWED" %}
+                    <h6 class="text-gold mt-4">
+                        You have submitted this quote for review. Once accepted, your invoice
+                        and instructions will appear here.<br><br>
+                        If you need to update anything, please call us or contact us via WhatsApp
+                        <a href="{% url 'contact' %}" class="text-decoration-underline text-info">
+                            our Contact Page
+                        </a>.
+                    <br><br>
+                        Please dont submit a new quote unless we ask you to.
+                    </h6>
                     {% endif %}
 
                     {% if quote.total_amount > 0 and quote.status == "ACCEPTED" and quote.response_token %}
