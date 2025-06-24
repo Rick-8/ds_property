@@ -87,8 +87,7 @@ def job_detail(request, pk):
         'property_display_id': f"P{job.property.id}",
         'is_locked': is_locked,
     }
-    print("Unlocked jobs in session:", request.session.get("unlocked_jobs", []))
-    print("Current job id:", job.id)
+
     return render(request, 'staff_portal/job_detail.html', context)
 
 
@@ -282,10 +281,20 @@ def staff_job_list(request):
 def save_schedule(request):
     if request.method == 'POST':
         try:
-            current_keys = set(k for k in request.POST if k.startswith('assignment_'))
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+
+            current_keys = set(
+                k for k in request.POST if k.startswith('assignment_')
+            )
             dates = {k.split('_')[1] for k in current_keys}
-            start_date = min(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
-            end_date = max(datetime.strptime(d, '%Y-%m-%d').date() for d in dates)
+            start_date = min(
+                datetime.strptime(d, '%Y-%m-%d').date() for d in dates
+            )
+            end_date = max(
+                datetime.strptime(d, '%Y-%m-%d').date() for d in dates
+            )
+
             assignments_to_keep = []
 
             for key, staff_id_str in request.POST.items():
@@ -293,30 +302,24 @@ def save_schedule(request):
                     _, day, route_id = key.split('_')
                     day_date = datetime.strptime(day, '%Y-%m-%d').date()
                     route_id_int = int(route_id)
+
                     if staff_id_str:
                         staff_id = int(staff_id_str)
-
-                        # Optional: Validate if staff_id and route_id exist in DB
-                        from django.contrib.auth import get_user_model
-                        User = get_user_model()
                         try:
                             staff_obj = User.objects.get(pk=staff_id)
-                        except User.DoesNotExist:
-                            logger.error(f"Staff with id {staff_id} does not exist.")
-                            return JsonResponse({'success': False, 'error': f'Staff id {staff_id} invalid'}, status=400)
-
-                        try:
                             route_obj = Route.objects.get(pk=route_id_int)
-                        except Route.DoesNotExist:
-                            logger.error(f"Route with id {route_id_int} does not exist.")
-                            return JsonResponse({'success': False, 'error': f'Route id {route_id_int} invalid'}, status=400)
+                        except (User.DoesNotExist, Route.DoesNotExist):
+                            continue
 
                         assignment, created = StaffRouteAssignment.objects.update_or_create(
                             route=route_obj,
                             start_date=day_date,
                             end_date=day_date,
-                            defaults={'staff': staff_obj}
+                            defaults={
+                                'staff': staff_obj,
+                            }
                         )
+                        print(f"Saved assignment: {day_date} route={route_id_int} -> staff={staff_obj}")
                         assignments_to_keep.append(assignment.id)
                     else:
                         StaffRouteAssignment.objects.filter(
@@ -325,10 +328,11 @@ def save_schedule(request):
                             end_date=day_date
                         ).delete()
 
-            StaffRouteAssignment.objects.filter(
-                start_date__gte=start_date,
-                end_date__lte=end_date
-            ).exclude(id__in=assignments_to_keep).delete()
+            if assignments_to_keep:
+                StaffRouteAssignment.objects.filter(
+                    start_date__gte=start_date,
+                    end_date__lte=end_date
+                ).exclude(id__in=assignments_to_keep).delete()
 
             return JsonResponse({'success': True})
 

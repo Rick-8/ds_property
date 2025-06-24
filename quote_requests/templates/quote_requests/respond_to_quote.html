@@ -29,13 +29,14 @@
             {% endif %}
         </div>
 
-        {% if quote.status == 'REVIEWED' or quote.status == 'UNPAID' %}
+        {% if quote.status == 'REVIEWED' or quote.status == 'ACCEPTED' %}
         <button id="acceptBtn" type="button" class="btn btn-gold w-100 py-2 fs-5 rounded-pill mb-3"
             data-bs-toggle="collapse" data-bs-target="#paymentAccordion" aria-expanded="false"
             aria-controls="paymentAccordion">
             <i class="fa-solid fa-credit-card me-2"></i>Accept Quote & Pay
         </button>
-        <button id="declineBtn" type="button" class="btn btn-outline-gold w-100 py-2 fs-5 rounded-pill">
+        <button id="declineBtn" type="button" class="btn btn-outline-gold w-100 py-2 fs-5 rounded-pill"
+            data-bs-toggle="modal" data-bs-target="#confirmModal">
             <i class="fa-solid fa-xmark me-2"></i>Decline Quote
         </button>
 
@@ -79,7 +80,7 @@
     </div>
 </div>
 
-
+<!-- Decline Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content dark-opaque border-gold">
@@ -101,9 +102,21 @@
         </div>
     </div>
 </div>
+
+<!-- Payment Overlay -->
+<div id="paymentOverlay" class="loading-overlay">
+    <div class="loading-content">
+        <div id="paymentLottie" style="width: 250px; height: 250px;"></div>
+        <p id="paymentOverlayMsg" class="text-gold mt-3 h4">
+            Processing your payment...
+        </p>
+        <p class="text-gold">Please do not refresh or close this page.</p>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+<script src="{% static 'quote_requests/js/pay_quote_overlay.js' %}"></script>
 <script src="{% static 'quote_requests/js/respond_to_quote.js' %}"></script>
 {% endblock %}

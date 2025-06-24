@@ -67,14 +67,13 @@ class StaffRouteAssignment(models.Model):
     route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    shift_type = models.CharField(max_length=50, choices=[('MORNING', 'Morning'), ('AFTERNOON', 'Afternoon'), ('EVENING', 'Evening')], default='MORNING')
 
     class Meta:
         ordering = ['start_date']
-        unique_together = ('staff', 'route', 'start_date', 'end_date', 'shift_type')
+        unique_together = ('staff', 'route', 'start_date', 'end_date')
 
     def __str__(self):
-        return f"{self.staff} on {self.route} from {self.start_date} to {self.end_date} ({self.shift_type})"
+        return f"{self.staff} on {self.route} from {self.start_date} to {self.end_date}"
 
 
 class JobFeedback(models.Model):

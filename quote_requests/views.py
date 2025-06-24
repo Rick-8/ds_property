@@ -42,11 +42,16 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required
 def my_quotes(request):
     """
-    Show logged-in user's quote requests, newest first.
+    Show logged-in user's quote requests, ensuring totals are accurate.
     """
     quotes = QuoteRequest.objects.filter(
         customer=request.user
     ).order_by('-submitted_at')
+
+    for quote in quotes:
+        quote.calculate_totals()
+        quote.save()  # <-- This line is essential
+
     return render(
         request, 'quote_requests/my_quotes.html', {'quotes': quotes}
     )
@@ -68,7 +73,6 @@ def request_quote_view(request):
             quote.save()
 
             # Notify all superusers via email
-            from django.contrib.auth import get_user_model
             User = get_user_model()
             superusers = User.objects.filter(
                 is_superuser=True
@@ -178,7 +182,7 @@ def accept_quote(request, pk):
     quote = get_object_or_404(QuoteRequest, pk=pk)
     if quote.status == 'REVIEWED':
         try:
-            quote.payment_status = 'UNPAID'
+            quote.status = 'ACCEPTED'
             quote.calculate_totals()
             quote.save()
 
@@ -188,9 +192,7 @@ def accept_quote(request, pk):
                 is_superuser=True
             ).values_list('email', flat=True)
             if superusers:
-                subject = (
-                    f"Quote Accepted: {quote.name} - {quote.email}"
-                )
+                subject = f"Quote Accepted: {quote.name} - {quote.email}"
                 admin_context = {'quote': quote}
                 try:
                     admin_html = render_to_string(
@@ -215,9 +217,11 @@ def accept_quote(request, pk):
             if not pdf_bytes:
                 raise Exception("Failed to generate PDF for email.")
 
-            response_url = request.build_absolute_uri(
-                reverse('respond_to_quote', args=[quote.response_token])
-            )
+            from django.conf import settings
+            domain = getattr(settings, 'SITE_DOMAIN', 'localhost:8000')
+            scheme = 'https' if not settings.DEBUG else 'http'
+            response_url = f"{scheme}://{domain}{reverse('respond_to_quote', args=[quote.response_token])}"
+
             subject = f"Your Quote #{quote.pk} – Please Review and Respond"
             html_message = render_to_string(
                 'quote_requests/emails/send_invoice_for_response.html',
@@ -241,7 +245,7 @@ def accept_quote(request, pk):
         else:
             messages.success(
                 request,
-                "Quote sent to customer. Waiting for their response."
+                "Quote marked as ACCEPTED and sent to customer."
             )
     else:
         messages.error(
