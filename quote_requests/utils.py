@@ -61,8 +61,7 @@ def create_one_off_job_from_quote(quote):
         job.save()
 
         # Confirmation email (if template exists)
-        subject = f"✅ Payment Received for Quote #{quote.pk}"
-        html = render_to_string("emails/quote_paid_confirmation.html", {
+        html = render_to_string("quote_requests/emails/quote_paid_confirmation.html", {
             'quote': quote,
             'job': job,
         })
