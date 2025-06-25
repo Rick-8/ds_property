@@ -224,10 +224,9 @@ def accept_quote(request, pk):
             if not pdf_bytes:
                 raise Exception("Failed to generate PDF for email.")
 
-            from django.conf import settings
-            domain = getattr(settings, 'SITE_DOMAIN', 'localhost:8000')
-            scheme = 'https' if not settings.DEBUG else 'http'
-            response_url = f"{scheme}://{domain}{reverse('respond_to_quote', args=[quote.response_token])}"
+            response_url = request.build_absolute_uri(
+                reverse('respond_to_quote', args=[quote.response_token])
+            )
 
             subject = f"Your Quote #{quote.pk} – Please Review and Respond"
             html_message = render_to_string(

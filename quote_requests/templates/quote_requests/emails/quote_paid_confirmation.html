@@ -98,23 +98,7 @@
                 </tr>
             </table>
 
-            <div>
-                <strong>Line Items:</strong>
-                <ul style="margin:12px 0 0 0; padding-left:18px;">
-                {% for item in quote.items.all %}
-                    <li>
-                        {{ item.description }} – {{ item.quantity }} × ${{ item.unit_price|floatformat:2 }}
-                        = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}{{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}${{ item.quantity|floatformat:0|floatformat:0 }}${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
-                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
-                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
-                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
-                        = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0 }} × ${{ item.unit_price|floatformat:2 }} = ${{ item.quantity|floatformat:0|add:"0"|floatformat:0|add:"0"|add:"0" }}${{ item.unit_price|floatformat:2|add:"0"|floatformat:2|add:"0"|add:"0" }}
-                    </li>
-                {% empty %}
-                    <li>No items listed.</li>
-                {% endfor %}
-                </ul>
-            </div>
+
 
             <div style="margin:18px 0 10px 0;">
                 <div><span class="label">Subtotal:</span> ${{ quote.subtotal|floatformat:2 }}</div>
@@ -122,14 +106,6 @@
                 <div><span class="label">Total Paid:</span> <strong>${{ quote.total|floatformat:2 }}</strong></div>
             </div>
 
-            <div class="job-info">
-                <h4 style="margin-top:0; margin-bottom:10px; color:#19b34a;">Job Scheduled!</h4>
-                <div><span class="label">Job Reference:</span> {{ job.title }}</div>
-                <div><span class="label">Status:</span> {{ job.get_status_display|default:job.status }}</div>
-                {% if job.scheduled_date %}
-                    <div><span class="label">Scheduled Date:</span> {{ job.scheduled_date|date:"Y-m-d" }}</div>
-                {% endif %}
-            </div>
 
             <p style="margin-top:28px;">If you have any questions, just reply to this email.<br>
             Thank you for choosing DS Property Maintenance!</p>
