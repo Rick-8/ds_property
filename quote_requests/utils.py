@@ -55,16 +55,17 @@ def create_one_off_job_from_quote(quote):
             property=prop,
             quote_request=quote,
             status='PENDING',
-            scheduled_date=timezone.now().date(),  # REQUIRED FIELD!
+            scheduled_date=timezone.now().date(),
         )
         job.title = f"C{job.id} - {job.title}"
         job.save()
 
         # Confirmation email (if template exists)
-        html = render_to_string("quote_requests/emails/quote_paid_confirmation.html", {
-            'quote': quote,
-            'job': job,
-        })
+        subject = f"✅ Payment Received for Quote #{quote.pk}"
+        html = render_to_string(
+            "quote_requests/emails/quote_paid_confirmation.html",
+            {'quote': quote, 'job': job},
+        )
         plain = strip_tags(html)
         email = EmailMessage(
             subject,
@@ -77,6 +78,7 @@ def create_one_off_job_from_quote(quote):
 
         logger.info(f"✅ One-off Job created and confirmation sent for paid quote #{quote.pk}.")
         return job
+
 
     except Exception as e:
         logger.error(f"❌ Failed to create one-off job from quote {quote.pk}: {e}", exc_info=True)
