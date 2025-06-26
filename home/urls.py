@@ -16,4 +16,5 @@ urlpatterns = [
     path('<int:pk>/edit/', views.ServicePackageUpdateView.as_view(), name='servicepackage_update'),
     path('<int:pk>/delete/', views.ServicePackageDeleteView.as_view(), name='servicepackage_delete'),
     path('webpush/', include('webpush.urls')),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 ]

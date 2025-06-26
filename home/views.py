@@ -90,3 +90,7 @@ class ServicePackageDeleteView(SuperuserRequiredMixin, DeleteView):
     model = ServicePackage
     template_name = 'memberships/servicepackage_confirm_delete.html'
     success_url = reverse_lazy('servicepackage_list')
+
+
+def privacy_policy(request):
+    return render(request, "privacy_policy.html")

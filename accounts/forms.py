@@ -1,5 +1,6 @@
 from django import forms
 from .models import Profile, Property
+from allauth.account.forms import SignupForm
 
 
 class ProfileForm(forms.ModelForm):
@@ -19,6 +20,7 @@ class ProfileForm(forms.ModelForm):
             'default_address_line_1', 'default_address_line_2',
             'default_city', 'default_postcode', 'default_country',
             'preferred_contact_time', 'timezone', 'notes',
+            'marketing_consent',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -67,3 +69,19 @@ class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
         exclude = ['profile', 'date_added', 'route_number', 'has_active_service', 'stripe_subscription_id']
+
+
+class CustomSignupForm(SignupForm):
+    marketing_consent = forms.BooleanField(
+        required=False,
+        label="I would like to receive news, offers, and updates by email from DS Property Maintenance."
+    )
+
+    def save(self, request):
+        user = super().save(request)
+        # Save marketing consent to the user's profile
+        profile = getattr(user, 'profile', None)
+        if profile:
+            profile.marketing_consent = self.cleaned_data.get('marketing_consent', False)
+            profile.save()
+        return user

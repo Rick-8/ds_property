@@ -39,6 +39,7 @@ class Profile(models.Model):
     notes = RichTextField(blank=True, null=True)
 
     profile_completed = models.BooleanField(default=False)
+    marketing_consent = models.BooleanField(default=False, help_text="User has opted in to marketing emails")
 
     date_created = models.DateTimeField(auto_now_add=True)
 
