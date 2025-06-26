@@ -1,8 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  if (typeof showPaymentOverlay === "function") {
-    showPaymentOverlay(false);
-  }
-
   let payBtnLottie = document.getElementById("payBtnLottie");
   let payBtnLottieInstance = null;
 
@@ -40,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     paymentForm.addEventListener("submit", async function (e) {
       e.preventDefault();
+      console.log("Form submitted");
 
       const payBtn = document.getElementById("submit-button");
       const cancelPaymentBtn = document.getElementById("cancelPaymentBtn");
@@ -56,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
         payBtnLottieInstance.goToAndPlay(0, true);
       }
 
-      showPaymentOverlay(true, "Processing your payment...");
       document.getElementById("payment-message").textContent = "";
 
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -76,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelPaymentBtn.style.display = "inline-block";
         payBtnLottie.style.display = "none";
         payBtnLottieInstance.stop();
-        showPaymentOverlay(false);
         document.getElementById("payment-message").textContent = `Server error: ${resp.status}`;
         return;
       }
@@ -89,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelPaymentBtn.style.display = "inline-block";
         payBtnLottie.style.display = "none";
         payBtnLottieInstance.stop();
-        showPaymentOverlay(false);
         document.getElementById("payment-message").textContent = data.error;
         return;
       }
@@ -105,7 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelPaymentBtn.style.display = "inline-block";
         payBtnLottie.style.display = "none";
         payBtnLottieInstance.stop();
-        showPaymentOverlay(false);
         document.getElementById("payment-message").textContent = error.message;
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
         setTimeout(() => {
@@ -117,7 +110,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelPaymentBtn.style.display = "inline-block";
         payBtnLottie.style.display = "none";
         payBtnLottieInstance.stop();
-        showPaymentOverlay(false);
         document.getElementById("payment-message").textContent =
           "Unexpected error occurred. Please try again.";
       }
@@ -138,9 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const cancelPaymentBtn = document.getElementById("cancelPaymentBtn");
   if (cancelPaymentBtn) {
     cancelPaymentBtn.addEventListener("click", function () {
-      if (typeof showPaymentOverlay === "function") {
-        showPaymentOverlay(false);
-      }
       window.location.reload();
     });
   }
