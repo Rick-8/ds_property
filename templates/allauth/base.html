@@ -11,17 +11,98 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO: Meta Title & Description -->
+    <title>
+        {% block extra_title %}
+        DS Property Maintenance | Home, Pool, Lawn & Garden Services Florida
+        {% endblock %}
+    </title>
     <meta name="description"
-        content="DS Property Maintenance offers expert home improvement services and products via Border 2 Border and Splash Zone Pools. Trusted, reliable, and professional." />
+        content="Keep your Florida property beautiful with DS Property Maintenance. We provide monthly pool cleaning, home improvement, lawn care, garden landscaping, and customizable service plans for homeowners, landlords, and HOAs in Florida. Trusted, reliable, and professional." />
+
+    <!-- SEO: Meta Keywords -->
     <meta name="keywords"
-        content="DS Property Maintenance, Border 2 Border, Splash Zone Pools, home improvement, property services, garden landscaping, swimming pools, ecommerce" />
+        content="property maintenance Florida, pool cleaning, garden landscaping, home improvement, lawn care, Splash Zone Pools, Border 2 Border, property management, monthly maintenance, subscription services, DS Property Group, handyman Florida, lawn care plans, affordable pool cleaning Florida, garden design, repair services, emergency pool repair, property management for landlords" />
+
     <meta name="author" content="DS Property Group" />
+
+    <!-- OpenGraph for social sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="DS Property Maintenance" />
+    <meta property="og:title"
+        content="DS Property Maintenance - Florida's Trusted Property & Pool Maintenance Experts" />
     <meta property="og:description"
-        content="Premium property services and products through Border 2 Border and Splash Zone Pools." />
+        content="Property and pool maintenance, garden landscaping, and home improvement services in Florida. Expert monthly plans for homeowners, landlords, and HOAs." />
     <meta property="og:image" content="{% static 'images/seo-preview.jpg' %}" />
     <meta property="og:url" content="https://www.dspropertygroup.com/" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DS Property Maintenance | Home, Pool & Lawn Services Florida" />
+    <meta name="twitter:description"
+        content="Monthly pool cleaning, garden landscaping, and property management in Florida. Subscriptions and custom quotes available." />
+    <meta name="twitter:image" content="{% static 'images/seo-preview.jpg' %}" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://ds-property-group-04ec2ca20d25.herokuapp.com/" />
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What property maintenance services do you offer in Florida?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We offer monthly pool cleaning, lawn care, garden landscaping, handyman repairs, and customizable maintenance packages for homeowners, landlords, and HOAs throughout Florida."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does monthly pool cleaning cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our pool cleaning plans start at affordable rates for regular maintenance. Contact us or request a custom quote online for detailed pricing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you offer property maintenance packages for landlords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, we provide tailored maintenance packages for landlords and rental properties, including regular inspections, repairs, and landscaping to keep your investment in top shape."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I sign up for services online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolutely! You can browse service packages, request quotes, and subscribe to monthly maintenance plans directly through our website."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What areas of Florida do you serve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We proudly serve customers throughout Florida, including [insert your city/region names here for better local SEO]."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are your staff insured and background checked?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, all of our property maintenance staff are fully insured and background checked for your peace of mind."
+      }
+    }
+  ]
+}
+</script>
+
     {% endblock %}
 
     {% block corecss %}
@@ -37,8 +118,6 @@
         href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playfair+Display+SC:wght@400;700;900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-
-    <title>DS Property Maintenance {% block extra_title %}{% endblock %}</title>
 
     {% if user.is_authenticated and user.is_staff %}
     <link rel="manifest" href="{% url 'manifest' %}">
@@ -66,7 +145,8 @@
     <nav class="navbar navbar-expand-lg dark-opaque-nav fixed-top">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-                <img src="{% static 'media/dsproperty-logo.png' %}" alt="DS Property Maintenance Logo"
+                <img src="{% static 'media/dsproperty-logo.png' %}"
+                    alt="DS Property Maintenance Logo - Florida Home, Pool & Lawn Experts"
                     class="navbar-logo img-fluid rounded-circle me-2" />
             </a>
             <div class="d-flex align-items-center gap-3">
@@ -89,7 +169,6 @@
         <div class="offcanvas-header justify-content-between align-items-start">
             <h5 class="offcanvas-title large-gold-text" id="sidebarLabel">Menu</h5>
             {% if user.is_authenticated and user.is_staff %}
-            <!-- PWA Tools for Staff -->
             <li class="nav-item mt-3">
                 <button id="pwa-install-btn" class="btn btn-outline-warning w-100" style="display: none;">
                     Install Staff App <i class="fa-solid fa-download"></i>
@@ -125,9 +204,6 @@
                 </li>
                 <li class="nav-item"><a href="{% url 'splashzone_pools' %}" class="nav-link blue">Splash Zone Pools</a>
                 </li>
-
-
-
                 <li class="nav-item mt-2">
                     {% if user.is_authenticated %}
                     <form method="POST" action="{% url 'account_logout' %}">
@@ -142,7 +218,6 @@
             </ul>
         </div>
     </div>
-
 
     <!-- Main Content -->
     <div class="container-fluid mt-5 pt-3 flex-fill">
@@ -168,8 +243,10 @@
     <!-- WhatsApp Button -->
     <div class="whatsapp-popup" id="whatsapp-popup">
         <a href="https://wa.me/13865664027?text=Hi%20there" target="_blank" class="whatsapp-button"
-            aria-label="Chat on WhatsApp">
-            <img src="{% static 'media/Digital_Glyph_Green.png' %}" alt="WhatsApp Icon" class="whatsapp-icon" />
+            aria-label="Chat on WhatsApp - DS Property Maintenance Florida">
+            <img src="{% static 'media/Digital_Glyph_Green.png' %}"
+                alt="WhatsApp Icon for DS Property Maintenance - Contact Florida Property Experts"
+                class="whatsapp-icon" />
         </a>
         <div class="whatsapp-text">Chat or Call</div>
         <button class="whatsapp-close" id="close-whatsapp" aria-label="Close WhatsApp chat popup">&times;</button>
@@ -177,6 +254,7 @@
 
     {% block extra_content %}
     {% endblock %}
+
     {% if user.is_authenticated and user.is_staff %}
     <div id="pwa-install-banner"
         class="d-none position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 shadow-lg zindex-sticky"
@@ -197,7 +275,7 @@
                 class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center text-sm-start gap-2">
                 <div>
                     <a href="https://www.facebook.com/border2borderlandscapes" class="mx-2 text-decoration-none"
-                        target="_blank" title="Facebook">
+                        target="_blank" title="Facebook - Border 2 Border Landscaping Florida">
                         <span class="text-white d-flex align-items-center">
                             Check us out! <i class="fab fa-facebook-f ms-2 text-primary"></i>
                         </span>

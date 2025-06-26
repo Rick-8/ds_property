@@ -480,6 +480,83 @@ _Overview of your testing approach for the application._
 
 ##  <span style="color:gold">Manual Testing & User Feedback</span>
 
+lighthouse 
+
+## Lighthouse Best Practices, Stripe Integration, and Security Headers
+
+### Lighthouse Scores
+
+| Category        | Score |
+|-----------------|-------|
+| Performance     | 99    |
+| Accessibility   | 93    |
+| Best Practices  | 78    |
+| SEO             | 100   |
+
+#### Summary
+
+The DS Property Group production site has been optimized to achieve high Lighthouse scores in all major categories. The **Best Practices** score is slightly below 100 due to third-party cookies set by Stripe (used for secure payments). This is an expected and accepted outcome for real-world e-commerce sites.
+
+---
+
+### Why Best Practices Is Not 100
+
+- **Stripe Integration:**  
+  Stripe (https://js.stripe.com) sets third-party cookies for fraud detection, PCI compliance, and secure payment processing.
+- **Lighthouse Limitation:**  
+  Lighthouse automatically penalizes any site that sets third-party cookies, regardless of necessity or industry best practice.
+- **No Code Fix Possible:**  
+  Disabling or blocking Stripe cookies would break payments and is **not recommended or permitted** by Stripe. This is standard for all modern e-commerce platforms using external payment providers.
+
+---
+
+### Security Enhancements Implemented
+
+All best-practice security headers are enforced in production:
+
+- **Strict-Transport-Security (HSTS):**  
+  Forces HTTPS for all requests.
+- **Content Security Policy (CSP):**  
+  Restricts loading of scripts, styles, images, and fonts to trusted sources only (self, CDN, Google Fonts, Stripe).
+- **X-Content-Type-Options:**  
+  Prevents MIME-type sniffing.
+- **X-XSS-Protection:**  
+  Enables browser cross-site scripting filter.
+- **Secure Cookies:**  
+  Session and CSRF cookies are only sent over HTTPS.
+- **Referrer Policy:**  
+  Referrer data only sent to same-origin or HTTPS.
+- **CSP "Report Only" Mode:**  
+  Used during deployment to test policy before enforcement; switched to full enforcement after confirming no violations.
+
+**All security-related settings are configured via environment variables for 12-factor compatibility (Heroku), including easy CSP enforcement switching.**
+
+---
+
+### Example: Security Settings (settings.py)
+
+```python
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    # CSP for scripts, styles, Stripe, CDN, Google Fonts
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'", "cdn.jsdelivr.net", "js.stripe.com",)
+    CSP_STYLE_SRC = ("'self'", "fonts.googleapis.com", "cdn.jsdelivr.net",)
+    CSP_FONT_SRC = ("'self'", "fonts.gstatic.com", "cdn.jsdelivr.net",)
+    CSP_IMG_SRC = ("'self'", "data:", "cdn.jsdelivr.net", "js.stripe.com",)
+    # Toggle CSP_REPORT_ONLY via environment variable in Heroku
+    CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "False") == "True"
+
+
+
 _Describe manual test cases and user feedback collection._
 Scenario	Card Number	Description
 Insufficient funds	4000 0000 0000 9995	Always declined

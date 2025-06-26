@@ -290,4 +290,4 @@ if not DEBUG:
         "cdn.jsdelivr.net",
         "js.stripe.com",
     )
-    CSP_REPORT_ONLY = True
+    CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "False") == "True"
