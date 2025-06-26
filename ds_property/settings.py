@@ -244,24 +244,24 @@ SITE_DOMAIN = os.getenv("SITE_DOMAIN", "localhost:8000")
 
 
 # --- STRONG SECURITY HEADERS FOR LIGHTHOUSE BEST PRACTICES ---
+if not DEBUG:
+    # Force HTTPS for all requests (Heroku: only works if you use SSL)
+    SECURE_HSTS_SECONDS = 31536000           # One year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
-# Force HTTPS for all requests (Heroku: only works if you use SSL)
-SECURE_HSTS_SECONDS = 31536000           # One year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+    # Prevent content sniffing
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Prevent content sniffing
-SECURE_CONTENT_TYPE_NOSNIFF = True
+    # Enable browser's XSS filter
+    SECURE_BROWSER_XSS_FILTER = True
 
-# Enable browser's XSS filter
-SECURE_BROWSER_XSS_FILTER = True
+    # Only send referrer to same-origin or HTTPS
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
-# Only send referrer to same-origin or HTTPS
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    # Ensure cookies are only sent over HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
-# Ensure cookies are only sent over HTTPS
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# (OPTIONAL, but good for new Django)
-SECURE_SSL_REDIRECT = True
+    # Redirect all HTTP to HTTPS
+    SECURE_SSL_REDIRECT = True
