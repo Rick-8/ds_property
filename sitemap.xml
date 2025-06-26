@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/memberships/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/quotes/request/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/border-2-border/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/splashzone/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/account/login/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/account/signup/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/contact/</loc>
+  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+
+</urlset>

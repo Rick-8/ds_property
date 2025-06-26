@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /account/
+Disallow: /accounts/
+Disallow: /profile/
+Disallow: /dashboard/
+Disallow: /staff/
+Disallow: /my-jobs/
+Disallow: /reset/
+Sitemap: https://ds-property-group-04ec2ca20d25.herokuapp.com/sitemap.xml
