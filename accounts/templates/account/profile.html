@@ -186,13 +186,13 @@
 </div>
 
 {% for agreement in agreements %}
-<div class="my-3 p-3 border rounded bg-dark bg-opacity-75 text-light">
+<div class="my-3 p-3 border rounded dark-opaque bg-opacity-75 text-light">
   <strong>Package:</strong> <span class="text-gold">{{ agreement.service_package.name }}</span><br>
   <strong>Property:</strong> {{ agreement.property.label }} - {{ agreement.property.address_line_1 }}<br>
   <strong>Billing Address:</strong> {{ agreement.billing_address.address_line_1 }}, {{ agreement.billing_address.city }}
 </div>
 {% empty %}
-<p class="text-center text-warning mt-5">No active service agreements.</p>
+<p class="text-center dark-opaque text-warning mt-5">No active service agreements.</p>
 {% endfor %}
 
 <!-- Bootstrap Tooltip Initialization -->

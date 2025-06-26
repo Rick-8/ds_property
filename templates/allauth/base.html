@@ -306,10 +306,17 @@
                 <div>
                     <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-bold"
                         title="{% trans 'Contact Us' %}">{% trans "Contact Us" %}</a>
+                    <span class="text-light-50 mx-1">|</span>
+                    <a href="{% url 'privacy_policy' %}" class="text-warning text-decoration-none fw-bold"
+                        title="Privacy Policy">Privacy Policy</a>
+                    <span class="text-light-50 mx-1">|</span>
+                    <a href="{% url 'cookie_policy' %}" class="text-warning text-decoration-none fw-bold"
+                        title="Cookie Policy">Cookie Policy</a>
                 </div>
             </div>
         </div>
     </footer>
+
 
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/58851690d4.js" crossorigin="anonymous"></script>
