@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'storages',
     'django_extensions',
     'django.contrib.humanize',
+    'csp',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -265,3 +266,28 @@ if not DEBUG:
 
     # Redirect all HTTP to HTTPS
     SECURE_SSL_REDIRECT = True
+
+    # --- Content Security Policy ---
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = (
+        "'self'",
+        "cdn.jsdelivr.net",
+        "js.stripe.com",
+    )
+    CSP_STYLE_SRC = (
+        "'self'",
+        "fonts.googleapis.com",
+        "cdn.jsdelivr.net",
+    )
+    CSP_FONT_SRC = (
+        "'self'",
+        "fonts.gstatic.com",
+        "cdn.jsdelivr.net",
+    )
+    CSP_IMG_SRC = (
+        "'self'",
+        "data:",
+        "cdn.jsdelivr.net",
+        "js.stripe.com",
+    )
+    CSP_REPORT_ONLY = True
