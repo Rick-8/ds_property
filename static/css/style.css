@@ -1065,3 +1065,9 @@ body.error-page {
     max-width: 100% !important;
   }
 }
+#payBtnLottie {
+  display: none;
+  max-width: 100%;
+  margin: auto;
+  margin-top: 20px;
+}
