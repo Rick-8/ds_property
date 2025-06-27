@@ -499,6 +499,115 @@ The DS Property Group production site has been optimized to achieve high Lightho
 
 ---
 
+## <span style="color:gold">GDPR Compliance & Staff Training</span>
+
+DS Property Maintenance is built with user privacy, transparency, and legal compliance at its core. The platform follows the General Data Protection Regulation (GDPR) and UK Data Protection Act principles.
+
+---
+
+### 1. What Data Is Collected and Why
+
+- **User accounts:**  
+  Basic information for login and identification (email, name, password).
+
+- **Property & service details:**  
+  Address, service requests, quote details, and any files/images the user submits.
+
+- **Payments:**  
+  Payments are handled securely via Stripe. **No payment card details are stored on this site**.
+
+- **Feedback & communications:**  
+  User-submitted feedback, support queries, and related job information.
+
+> **Only data required to operate the site and provide services is collected. Data is never sold or used for advertising.**
+
+---
+
+### 2. User Rights and Controls
+
+- **Access:**  
+  Users may request a copy of all personal data held about them by contacting support.
+
+- **Rectification:**  
+  Users can edit their profile at any time and request corrections if any data is inaccurate.
+
+- **Erasure (“Right to be Forgotten”):**  
+  Users may request deletion of their account and personal data. Data needed for legal or business records (such as completed jobs or paid invoices) will be retained only as required by law.
+
+- **Transparency:**  
+  All uses of data are explained clearly in the site’s terms and during onboarding.
+
+---
+
+### 3. Staff Training & Audit Trail
+
+- **GDPR Requests Cheat Sheet:**  
+  Anyone with access to user data (currently only the site owner) is required to read and follow the [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md), which is included in this repository and onboarding documentation.
+
+- **Training Process:**  
+  - Before being granted admin or support access, staff must review and confirm understanding of the GDPR cheat sheet and data handling procedures.
+  - All GDPR requests (access, correction, deletion) are handled according to this documented process.
+
+- **Request Logging:**  
+  - All privacy-related requests and the actions taken are recorded in a secure log (private admin record or secure file).
+  - The log includes: date, user identity, request type, and outcome.
+  - This audit trail is available for compliance checks and demonstrates accountability.
+
+- **Onboarding & Refresher:**  
+  - All new staff will be trained in these procedures before being granted data access.
+  - If new staff are hired or procedures are updated, this section and the cheat sheet will be updated and reviewed.
+
+> **Currently, only the site owner has access to user data and handles GDPR requests. The same process will be followed for any future staff or administrators.**
+
+---
+
+### 4. Data Security
+
+- **Strict Access Controls:**  
+  Only authenticated admin or staff with confirmed GDPR training can access user data.
+
+- **Data Minimisation:**  
+  Only essential data is collected and retained.
+
+- **Secure Storage:**  
+  Passwords are hashed; sensitive data is protected and never shared with third parties (except as required for payments via Stripe).
+
+- **No Data Selling:**  
+  User data is **never** sold, rented, or used for marketing outside of this service.
+
+---
+
+### 5. How to Make a GDPR Request
+
+- Users can request access, correction, or deletion of their data at any time by contacting support via the website’s contact page or email.
+- The request will be acknowledged, identity verified, and a response provided within 30 days.
+
+---
+
+### 6. Reference: GDPR Requests Cheat Sheet
+
+See [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md) for the exact step-by-step procedure followed for every GDPR data request.
+
+#### Example Cheat Sheet Contents:
+
+```markdown
+# GDPR Requests Cheat Sheet
+
+Anyone handling user data (staff/admin) must follow these steps for any request to access, delete, or correct personal data:
+
+1. **Acknowledge the request** politely.
+2. **Record the request** (date, user, type of request).
+3. **Verify identity** before releasing/changing data.
+4. **Forward to the Data Protection Lead** (site owner) if unsure.
+5. **Respond within 30 days** as required by law.
+
+**NEVER**:
+- Share data unless you are sure of the user’s identity.
+- Ignore any privacy request.
+
+All staff must read and understand this document before handling user data.
+
+
 ### Why Best Practices Is Not 100
 
 - **Stripe Integration:**  

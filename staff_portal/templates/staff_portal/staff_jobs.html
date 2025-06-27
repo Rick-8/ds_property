@@ -31,13 +31,19 @@
     <div class="text-center mt-4">
       <a href="{% url 'dashboard' %}" class="btn btn-outline-silver">Back to Dashboard</a>
     </div>
-
+    <div class="text-center mt-4">
+      <a href="{% url 'gdpr_cheatsheet' %}" class="btn btn-outline-blue" target="_blank" rel="noopener">
+        📄 View Staff GDPR Requests Cheat Sheet
+      </a>
+      <br>
+      <small class="text-muted">Please read before handling user data.</small>
+    </div>
   </div>
 </div>
 
 {% block extra_scripts %}
-  <script src="{% static 'js/whatsapp.js' %}"></script>
-  <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/whatsapp.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
 
 {% endblock content %}

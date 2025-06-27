@@ -40,6 +40,9 @@ urlpatterns = [
     path('routes/jobs/', views.route_job_list, name='route_job_list'),
     path('missed-jobs/', views.missed_jobs_view, name='missed_jobs'),
     path('jobs/<int:pk>/mark-missed/', views.mark_job_missed, name='mark_job_missed'),
+    path('gdpr-cheat-sheet/', views.gdpr_cheatsheet, name='gdpr_cheatsheet'),
+    path('gdpr-request/', views.gdpr_request, name='gdpr_request'),
+
 
     # Staff schedule planner (superuser only)
     path('schedule/planner/', views.staff_schedule_planner, name='staff_schedule_planner'),

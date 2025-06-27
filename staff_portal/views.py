@@ -18,6 +18,10 @@ from django.utils.timezone import localdate
 from django.contrib.auth import authenticate, login
 from django.views.decorators.http import require_POST
 from memberships.models import ServiceAgreement
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+from django.conf import settings
+
 
 import json
 import logging
@@ -613,3 +617,38 @@ def unlock_job_overlay(request, job_id):
                 return JsonResponse({"success": True})
         return JsonResponse({"success": False})
     return JsonResponse({"success": False})
+
+
+@login_required
+def gdpr_cheatsheet(request):
+    return render(request, "staff_portal/GDPR-Requests-CheatSheet.html")
+
+
+@require_POST
+def gdpr_request(request):
+    name = request.POST.get("name", "")
+    email = request.POST.get("email", "")
+    request_types = request.POST.getlist("request_types")
+    notes = request.POST.get("notes", "")
+
+    request_types_display = ", ".join(request_types) if request_types else "Not specified"
+
+    # Get all superuser emails
+    User = get_user_model()
+    superuser_emails = list(User.objects.filter(is_superuser=True, email__isnull=False).values_list('email', flat=True))
+    if not superuser_emails:
+        superuser_emails = [settings.DEFAULT_FROM_EMAIL]
+
+    subject = f"GDPR Request from {name or 'Unknown'}"
+    message = (
+        f"A GDPR request was submitted via the staff portal:\n\n"
+        f"Name: {name}\n"
+        f"Email: {email}\n"
+        f"Request Type(s): {request_types_display}\n"
+        f"Additional Notes: {notes or '(None)'}\n"
+    )
+
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, superuser_emails)
+    messages.success(request, "GDPR request sent to management.")
+    # Redirect to the same page (cheat sheet)
+    return redirect(request.META.get("HTTP_REFERER", "/"))
