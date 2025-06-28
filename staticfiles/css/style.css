@@ -123,16 +123,16 @@ body {
 
 /* Navbar Styles */
 nav.navbar {
-  position: fixed; /* Fixed to top */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 60px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
   z-index: 1030;
   display: flex;
-  align-items: flex-start; /* Align children to top */
+  align-items: flex-start;
   padding: 0 1rem;
   overflow: visible;
 }
@@ -140,11 +140,11 @@ nav.navbar {
 .navbar-brand {
   height: 60px;
   display: flex;
-  align-items: flex-start; /* Top align */
+  align-items: flex-start;
   padding-top: 0;
-  line-height: 60px; /* Vertically center text if text-based */
+  line-height: 60px;
   transition: all 0.3s ease;
-  font-size: 3rem; /* Desktop size */
+  font-size: 3rem;
   font-weight: bold;
   color: #000;
 }
@@ -197,7 +197,7 @@ nav.navbar {
 }
 
 .nav-link.green:hover {
-  color: #32cd32 !important; /* bright green */
+  color: #32cd32 !important;
   text-shadow: 0 0 5px #32cd32, 0 0 10px #32cd32, 0 0 15px #32cd32,
     0 0 20px #32cd32, 0 0 25px #32cd32;
   transition: text-shadow 0.3s ease, color 0.3s ease;
@@ -776,7 +776,6 @@ body.error-page {
 }
 /* Dropdown menu background matches navbar on mobile */
 @media (max-width: 768px) {
-  /* Dropdown menu background */
   .navbar-collapse .dropdown-menu {
     background-color: rgba(0, 0, 0, 0.7) !important;
     border: none;
@@ -788,11 +787,10 @@ body.error-page {
 
   .navbar-collapse .dropdown-menu .dropdown-item:hover,
   .navbar-collapse .dropdown-menu .dropdown-item:focus {
-    background-color: #d4af37 !important; /* gold highlight */
+    background-color: #d4af37 !important;
     color: black !important;
   }
 
-  /* Toggler menu (collapsed menu) background with gold border */
   .navbar-collapse {
     background-color: rgba(0, 0, 0, 0.7);
     border: 2px solid #d4af37;
@@ -803,7 +801,7 @@ body.error-page {
 
 .offcanvas {
   z-index: 1055;
-  background-color: rgba(0, 0, 0, 0.9) !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
   width: 400px;
 }
 

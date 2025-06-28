@@ -1,5 +1,15 @@
-# <span style="color:gold">DS Property Management</span> 
-![Wireframe of Property Dashboard](static\media\ds_property_static_shimmer_logo-pdf.jpg)
+# <span style="color:gold">DS Property Management</span>
+![Wireframe of Property Dashboard](static/media/ds_property_static_shimmer_logo-pdf.jpg)
+
+---
+
+## Prerequisites & Viewing Notes
+
+- This README is designed to be viewed on platforms or editors that support **dark mode** or **black backgrounds** for optimal readability, especially for gold and white text sections.
+- Gold-highlighted headings and certain images may appear less readable or visually appealing on a white or light background.
+- For best results, use a Markdown viewer, code editor, or GitHub dark theme.
+- Some screenshots, UI mockups, and wireframes are shown as designed for a dark-themed web interface.
+- If any color contrast or formatting issues are seen in your viewer, please try switching to dark mode or a compatible Markdown app.
 
 ---
 
@@ -25,884 +35,561 @@
 - [Deployment Instructions](#deployment-instructions)
 - [Configuration & Environment Variables](#configuration--environment-variables)
 - [How to Run Locally](#how-to-run-locally)
+- [GDPR Compliance & Staff Training](#gdpr-compliance--staff-training)
 - [Future Improvements](#future-improvements)
 - [Credits & Attribution](#credits--attribution)
 - [Screenshots & Demo](#screenshots--demo)
 - [Social Media & Marketing](#social-media--marketing)
 - [Credits](#credits)
 
+---
 
 ## Project Overview
 
-## <span style="color:gold">DS Property Maintenance Portal</span>
+### <span style="color:gold">DS Property Maintenance Portal</span>
 
 **A Full-Stack Django E-commerce Solution for Florida Property Owners & Managers**
 
-> *A modern, secure platform for property owners, landlords, and managers to buy services, set up subscriptions, and access expert advice and consultation.*
+A modern, secure platform for property owners, landlords, and managers to buy services, set up subscriptions, and access expert advice and consultation.
 
-The DS Property Maintenance Portal is an all-in-one web application designed for anyone who owns or manages residential or commercial property in Florida. Whether you are a homeowner, landlord, or property manager, the platform lets you easily:
-
-- Browse and purchase recurring property maintenance services (via subscriptions)
-- Request custom, one-off jobs or quotes
-- Access professional advice and consultation on property care
+The portal allows users to:
+- Browse and purchase recurring property maintenance services (subscriptions)
+- Request custom, one-off jobs or quotes (with photo upload)
 - Manage service contracts, schedules, and payments in a secure, user-friendly environment
-
-With built-in Stripe payment integration, robust authentication, staff/admin dashboards, and advanced marketing and SEO features, the portal delivers a professional, reliable, and efficient solution for property maintenance needs.
 
 ---
 
 ## <span style="color:gold">Business Model & Purpose</span>
 
-The DS Property Maintenance Portal is built on a service-driven e-commerce model, tailored for property owners, landlords, and property managers in Florida.
-
-**Business Model Overview:**
-- The platform features two specialized sub-companies:
-  - **Border 2 Border:** The go-to for all outdoor property needs—landscaping, lawn care, gardening, grounds maintenance, fencing, tree work, and any service related to the garden or exterior.
-  - **Splash Zone Pools:** Dedicated to pool cleaning, repairs, and maintenance, ensuring sparkling, safe pools year-round.
+- Two specialized sub-companies:
+  - **Border 2 Border:** Landscaping, gardening, grounds, fencing, tree work.
+  - **Splash Zone Pools:** Pool cleaning, repair, and maintenance.
 - Customers can:
-  - **Purchase ongoing service packages** (subscriptions) for routine property, garden, and pool care
-  - **Request and pay for one-off jobs or custom quotes** as needed
-  - **Access professional advice and consultation** for all property, outdoor, and pool questions
+  - Purchase ongoing maintenance packages (subscriptions)
+  - Request/pay for one-off jobs or custom quotes
+  - Access professional advice and consultation
 
-**Physical & Digital Integration:**
-- The business leverages a hybrid structure—combining digital management with real-world service delivery.  
-- **Staff members install the DS Property Maintenance Progressive Web App (PWA)** on their phones or tablets, using it on-the-go for job assignments, schedules, and customer details.
-- Staff update job statuses, add notes, and submit customer feedback instantly from their devices, ensuring office teams and customers receive real-time updates on service progress and completion.
-- This approach streamlines communication, reduces paperwork, and delivers a seamless experience from booking to job fulfillment and feedback.
-
-**Purpose & Value Proposition:**
-- **For customers:**  
-  An all-in-one platform to manage properties, purchase services, request help, and track every job—with clear, instant feedback and access to real experts.
-- **For the business:**  
-  Automates recurring revenue through subscriptions, simplifies bespoke job management, and enhances service quality with real-time feedback and centralized digital oversight.
-- **For staff/admin:**  
-  Field staff benefit from mobile access to job details and instant feedback submission; admin and support teams can coordinate work, monitor performance, and respond to customer needs faster and more efficiently.
-
-**Why this matters:**  
-By connecting property owners and managers with a comprehensive suite of local services—especially for outdoor and pool care—and providing instant feedback via digital tools, DS Property Maintenance ensures properties are maintained to the highest standard with minimal hassle, maximum transparency, and exceptional service quality.
+Hybrid model: digital management + real-world service delivery.  
+Staff use the PWA on their phones/tablets for jobs, feedback, and updates.
 
 ---
 
 ## <span style="color:gold">Key Features</span>
 
-DS Property Maintenance Portal is packed with features designed for both efficiency and real-world impact, delivering a seamless experience for property owners, staff, and administrators.
-
-- **Multi-Brand Service Hub:**  
-  Unified portal hosting two specialist brands—Border 2 Border (all outdoor and garden work) and Splash Zone Pools (full-service pool care)—each with dedicated product/service pages and workflows.
-
-- **Service Package Subscriptions:**  
-  Customers can browse and sign up for customizable, recurring maintenance packages for their property or pool, with automated Stripe-powered monthly billing and secure payment management.
-
-- **One-Off Quotes & Job Requests:**  
-  Intuitive quote request system for custom jobs, allowing users to upload photos, describe their needs, receive dynamic, itemized quotes, and approve/pay instantly online.
-
-- **Advice & Consultation Access:**  
-  Built-in contact and messaging features for users to seek expert advice or schedule professional consultations with the team.
-
-- **Progressive Web App (PWA) for Staff:**  
-  Staff members install the PWA on their smartphones or tablets for on-the-go job management. Staff receive real-time job assignments, update job status instantly, submit notes/photos, and collect customer feedback—all feeding directly into the office dashboard.
-
-- **Role-Based Authentication & Dashboards:**  
-  Secure login with Django Allauth, with customized dashboards for customers, staff, and administrators. Each user sees only what they need—no unnecessary clutter or confusion.
-
-- **Job Scheduling & Route Planning:**  
-  Powerful admin/staff interfaces for assigning jobs, creating and managing staff routes, and tracking job progress and completion—enabling efficient real-world team management.
-
-- **Real-Time Feedback & Notifications:**  
-  Staff and customers receive instant updates about job status changes, feedback submission, or service confirmations via web and push notifications.
-
-- **Seamless Stripe Payment Integration:**  
-  Supports both one-time payments for individual jobs/quotes and recurring subscription billing. Payments are secure, PCI-compliant, and handled end-to-end via Stripe.
-
-- **Modern, Responsive Design:**  
-  Fully responsive UI built with Materialize CSS, ensuring the platform works beautifully across desktops, tablets, and smartphones.
-
-- **SEO-Optimized & Marketing-Ready:**  
-  Built-in meta tags, sitemap, robots.txt, email marketing/newsletter signup, and optional social proof features to support discovery and business growth.
-
-- **Custom Admin Controls:**  
-  Administrators can manage users, service agreements, packages, jobs, and feedback with a robust backend interface designed for clarity and speed.
-
-- **Agile & Extensible Architecture:**  
-  Built using Django best practices, with a clear app structure, reusable components, and clean, well-documented code—making it easy to add new brands, services, or features as the business grows.
-
----
-
-**Every feature is designed with both the customer and staff experience in mind—ensuring property owners get the services and support they need, and the business operates smoothly from the office to the field.**
-
+- Multi-brand portal (Border 2 Border + Splash Zone Pools)
+- Recurring service package subscriptions (Stripe-powered)
+- Dynamic, itemized one-off quotes with image upload
+- Role-based dashboards (customer, staff, admin)
+- Admin tools for job assignment, scheduling, and feedback
+- PWA for staff (mobile job management, push notifications)
+- Secure authentication (Django Allauth)
+- Robust permission controls
+- SEO optimized structure
+- Secure, PCI-compliant Stripe payments
+- Real-time feedback and updates for customers
 
 ---
 
 ## <span style="color:gold">User Stories</span>
 
-Below are the main user stories that guided the development of DS Property Maintenance. Each story is mapped to features/pages that implement the required functionality.
+### Customers
+- Register/login and reset password (Django Allauth)
+- Browse services, add to basket, secure checkout
+- Request and view custom quotes, leave feedback
+- Responsive design across all devices
 
----
+### Staff/Admin
+- Dashboard of all jobs/requests/quotes
+- CRUD for services, packages, agreements
+- Assign jobs, view feedback, mark as complete/missed
 
-### General Users / Customers
-
-- **Registration and Login**
-  - *User Story:*  
-    As a user, I want to be able to register for an account and log in, so I can access personalized features.
-  - *Achieved via:*  
-    Django Allauth integration. Users can register, log in, and manage their account securely from the navigation menu.
-
-- **Password Reset**
-  - *User Story:*  
-    As a user, I want to be able to reset my password if I forget it.
-  - *Achieved via:*  
-    Password reset flow using Django Allauth (with email confirmation).
-
-- **Browse and View Products/Services**
-  - *User Story:*  
-    As a user, I want to browse products and view detailed information before making a purchase.
-  - *Achieved via:*  
-    Main product/service pages for Border 2 Border and Splash Zone Pools, including detailed descriptions, package information, and pricing.
-
-- **Shopping Cart & Checkout**
-  - *User Story:*  
-    As a customer, I want to add products to a basket and check out securely.
-  - *Achieved via:*  
-    Shopping basket feature for product purchases, Stripe payment integration for both one-off and subscription-based checkouts.
-
-- **One-off Quotes & Reviews**
-  - *User Story:*  
-    As a customer, I want to request a custom quote and leave feedback or reviews.
-  - *Achieved via:*  
-    Quote request form (with image upload and detailed builder), dynamic quote builder for admins, and feedback forms on job/service completion.
-
-- **Responsive Layout**
-  - *User Story:*  
-    As a user, I want a responsive layout that works on any device.
-  - *Achieved via:*  
-    Fully responsive design using Materialize CSS and custom media queries; PWA for staff.
-
-- **Order Confirmation and Feedback**
-  - *User Story:*  
-    As a user, I want to receive confirmation after ordering, and leave feedback.
-  - *Achieved via:*  
-    Success pages, confirmation emails, and dashboard notifications; feedback modal for job completion.
-
----
-
-### Admin / Staff / Site Owner
-
-- **Order Management**
-  - *User Story:*  
-    As a site owner, I want to see a list of all customer orders/requests.
-  - *Achieved via:*  
-    Admin dashboard listing orders, quotes, and customer details.
-
-- **Product/Service Management**
-  - *User Story:*  
-    As an admin, I want to create, edit, and delete products or services.
-  - *Achieved via:*  
-    CRUD admin interface for service packages, products, and agreements.
-
-- **User Role Management**
-  - *User Story:*  
-    As an admin, I want to manage user roles (e.g., promote to staff/admin).
-  - *Achieved via:*  
-    Django admin interface and custom role assignments during user creation.
-
-- **Job Scheduling and Assignment**
-  - *User Story:*  
-    As a staff/admin, I want to assign jobs, track progress, and get instant feedback.
-  - *Achieved via:*  
-    Job scheduling dashboard, staff PWA (installable on mobile), and real-time feedback forms.
-
----
-
-### Developer / Technical Stories
-
-- **Deployment**
-  - *User Story:*  
-    As a developer, I want to deploy the application to a reliable hosting platform.
-  - *Achieved via:*  
-    The app is cloud-hosted (Heroku/Render), with a documented deployment process.
-
-- **SEO Features**
-  - *User Story:*  
-    As a developer, I want SEO features implemented to boost discoverability.
-  - *Achieved via:*  
-    Proper meta tags, sitemap, robots.txt, semantic markup, and consistent URLs.
-
-- **Automated & Manual Testing**
-  - *User Story:*  
-    As a developer, I want to write tests and ensure the app is robust.
-  - *Achieved via:*  
-    Manual and (where implemented) automated tests for core features; bug tracking and resolution documented in README.
-
-- **Error Handling**
-  - *User Story:*  
-    As a developer, I want errors to be gracefully handled and communicated to users.
-  - *Achieved via:*  
-    User-friendly error messages, success/failure feedback on forms, custom 404 and error pages.
-
----
-
-Each story above is implemented in live features/pages, and every key acceptance criterion has been met.  
-**See the Features section for details and screenshots of these flows.**
-
+### Developer
+- Cloud deployment
+- Automated/manual testing
+- Error handling and robust security
 
 ---
 
 ## <span style="color:gold">UX Design & Accessibility</span>
 
-The DS Property Maintenance Portal was designed with user experience (UX) and accessibility as top priorities, ensuring that property owners, managers, staff, and administrators can interact with the platform efficiently, confidently, and comfortably on any device.
+- Mobile-first responsive design (Bootstrap & Bootstrap CSS + custom styles)
+- Consistent navigation (header/footer)
+- Semantic HTML for screen reader support
+- High color contrast and readable fonts (WCAG 2.1 AA)
+- ARIA labels/roles on key elements
+- All forms: visible labels, placeholders, error messages
+- Keyboard accessible (tab order tested)
+- Touch-optimized components (large tap targets, offcanvas nav)
+- Real-time feedback (toast messages, confirmations)
 
-### Design Process
+Wireframes and mockups in `/docs/wireframes/` and [Screenshots & Demo](#screenshots--demo).
 
-- **User-Centered Research:**  
-  Initial user stories and feedback from real property owners and staff informed all major workflows, ensuring the portal addresses real needs and pain points.
-- **Wireframing & Mockups:**  
-  Low-fidelity wireframes and interactive mockups were created for all key pages, including landing, service selection, property management, quote requests, dashboards, and staff PWA views. These were iterated based on user feedback before final development.
-- **Responsive Design:**  
-  The application uses a mobile-first, fully responsive layout powered by Materialize CSS and custom styles, ensuring usability on desktops, tablets, and smartphones. The staff PWA is optimized for mobile use in the field.
-- **Consistent Navigation:**  
-  A persistent navigation bar, clear site structure, and contextual breadcrumbs allow users to navigate quickly and never get lost.
+---
 
-### Accessibility Features
+## <span style="color:gold">Data Model & Schema</span>
 
-- **Semantic HTML:**  
-  All templates use semantic tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`, etc.) to convey meaning and structure, improving screen reader compatibility.
-- **Color Contrast & Readability:**  
-  The site uses a dark-on-light color palette with gold accents, large readable fonts, and high-contrast text for easy legibility, meeting or exceeding WCAG 2.1 AA standards.
-- **Keyboard Navigation:**  
-  All interactive elements (menus, forms, buttons, modals) are accessible by keyboard, and tab order has been tested.
-- **ARIA Attributes:**  
-  ARIA labels and roles have been added to key navigation and form elements to support assistive technology users.
-- **Accessible Forms:**  
-  All forms provide visible labels, placeholder text, clear error messages, and focus styles.
-- **Mobile & Touch Optimization:**  
-  Large tap targets, responsive modals, and offcanvas navigation ensure a smooth experience for touch users, especially staff using the PWA on-site.
-- **Feedback & Progress Indicators:**  
-  Users receive instant feedback after actions (such as submitting forms, making payments, or updating job status) via toast messages and confirmation screens.
+- **User:** Extended with Profile (one-to-one)
+- **Property:** Linked to User, used for jobs/quotes
+- **ServicePackage:** Defines Silver/Gold (Border 2 Border/Splash Zone)
+- **ServiceAgreement:** Tracks active/canceled subscriptions (linked to Stripe)
+- **Job:** Scheduled/completed jobs for a property
+- **JobFeedback:** Linked to Job/Staff, tracks feedback
+- **QuoteRequest:** Custom quotes, supports file upload, admin review/status
+- **QuoteItem:** Dynamic items (parts/labour) for each quote
 
-### Design Artifacts
+See `/myapp_models.png` for a relationship diagram.
 
-- **Wireframes and Mockups:**  
-  Wireframes and final UI mockups for desktop and mobile are included in the project documentation (`/docs/wireframes/`) and in the README screenshots section.
-- **Rationale:**  
-  Design choices are justified by user stories, accessibility requirements, and iterative feedback from test users and stakeholders.
+---
 
-### Continuous Improvement
+## <span style="color:gold">Technologies Used</span>
 
-UX and accessibility have been reviewed at each stage of development, with manual testing on multiple devices and browsers. All known accessibility issues have been documented, and future improvements are planned as new user feedback is received.
+**Backend:** Python 3.12, Django, Django Allauth  
+**Frontend:** Bootstrap 5, HTML5, CSS3, Vanilla JS, jQuery  
+**Payments:** Stripe (subscriptions and one-off payments)  
+**Database:** PostgreSQL (prod) / SQLite (dev)  
+**Storage:** AWS S3 for file uploads  
+**PWA:** Installable for staff (real-time jobs, offline support, push notifications)  
+**Deployment:** Heroku/Render, Gunicorn, Whitenoise  
+**Other:** django-environ, django-csp, Pillow, django-webpush, boto3
+
+---
+
+## <span style="color:gold">App Structure & File Layout</span>
+
+
+---
+
+## <span style="color:gold">Authentication & Authorization</span>
+
+- User accounts managed with Django Allauth (registration, login, password reset)
+- Roles: Customer (default), Staff, Superuser/Admin
+- Customers can view/manage their own jobs, quotes, and properties only
+- Staff can view jobs assigned to them and submit feedback
+- Superusers/admins can access all jobs, quotes, users, and admin tools
+- Secure password storage (hashing)
+- Session and CSRF cookies are secure (HTTPS-only in production)
+
+---
+
+## <span style="color:gold">Payment Integration</span>
+
+- Stripe for all payments:
+  - Monthly recurring subscriptions (property/pool packages)
+  - One-off jobs/quotes (customer receives payment link)
+- Stripe webhooks handle payment and subscription status updates in real time
+- No payment card details are stored on the site—handled entirely by Stripe
+- PCI-compliant, SCA-ready integration
+
+---
+
+## <span style="color:gold">SEO Features</span>
+
+- Meta tags for all major pages (title, description, OpenGraph)
+- Clean URLs, semantic markup
+- XML sitemap auto-generated and submitted to search engines
+- `robots.txt` restricts indexing of private/admin pages
+- Canonical tags to avoid duplicate content
+- Performance and accessibility tuned for SEO
+
+---
+
+## <span style="color:gold">Marketing Features</span>
+
+- Email newsletter signup for property owners (optional)
+- Promotional banners for new services or packages
+- Customer feedback/testimonials
+- Google Analytics and Facebook Pixel (easy to enable/disable)
+- Social share buttons on service pages
+
+---
+
+## <span style="color:gold">Testing</span>
+
+- **Manual testing:**  
+  - Registration, login, password reset
+  - Subscription sign-up and Stripe payment (using test cards)
+  - Quote request, admin review, and acceptance flow
+  - Staff portal job assignment, marking jobs as complete/missed
+  - Permissions: Ensured unauthorized users cannot access admin/staff pages
+  - PWA installability, push notification flows
+
+- **Automated testing:**  
+  - Django unit tests for models, views, and forms
+  - Pytest for backend logic and edge cases
+  - Stripe integration tested with Stripe CLI and test cards
+
+---
+
+# Manual Testing & User Feedback
+
+## Accessibility and Performance
+
+- **Lighthouse Audits:**  
+    | Category        | Score |
+    |-----------------|-------|
+    | Performance     | 99    |
+    | Accessibility   | 93    |
+    | Best Practices  | 78    |
+    | SEO             | 100   |
+
+- All user flows tested on **desktop** and **mobile** browsers.
+- **Customer feedback** collected after each job via dashboard modal.
+
+---
+
+## 1. General Navigation
+
+- Home page loads and displays correctly
+
+![Home](static/media/readme-media/dsp-landing.png)
+
+- [ ] Main navigation bar visible and sticky on all pages
+- [ ] Navigation links work (Home, Services, Products, About, Contact)
+- [ ] Footer links visible and working
+- [ ] Custom 404 page appears for invalid URLs
+
+---
+
+## 2. Authentication & Accounts
+
+- [ ] User can register a new account
+- [ ] User can log in with valid credentials
+- [ ] User can log out successfully
+- [ ] Password reset flow (forgotten password) functions correctly
+- [ ] Non-logged-in users are redirected when trying to access account features
+- [ ] Role-based access enforced: non-superusers/staff can't access admin pages
+
+---
+
+## 3. Profile & Property Management
+
+- [ ] User can view their profile details
+- [ ] User can edit their profile information (name, contact, etc.)
+- [ ] User can add a new property
+- [ ] User can edit existing property details
+- [ ] User can delete a property
+- [ ] "Add", "Edit", and "Delete" property buttons visible and functional
+- [ ] Properties display correct active/inactive service agreement status
+
+---
+
+## 4. Service Packages (Subscriptions)
+
+- [ ] User can view available service packages and their details
+- [ ] User can select a package and choose a property
+- [ ] Cannot select a property already subscribed (error shown)
+- [ ] Confirmation page displays correct package/property info
+- [ ] T&Cs checkbox required before proceeding to payment
+- [ ] Stripe payment form loads, accepts card, and processes payment
+- [ ] After payment, user receives subscription confirmation page
+- [ ] Confirmation email sent to user
+- [ ] New subscription appears on user dashboard
+- [ ] Superuser receives subscription notification email
+- [ ] User can cancel subscription (and receives confirmation)
+
+---
+
+## 5. One-Off Quotes
+
+- [ ] Quote request form is accessible for both guests and logged-in users
+- [ ] Form pre-fills for logged-in users (name/email/phone)
+- [ ] User can upload an image/file with quote request
+- [ ] After submitting, user sees a success message
+- [ ] Superuser receives notification for new quote request
+- [ ] Superuser can review, decline, or accept quote from admin dashboard
+- [ ] When accepted, user receives PDF quote and payment link by email
+- [ ] User can pay via Stripe and receives confirmation/thank you page
+- [ ] Paid jobs created and visible on dashboard
+
+---
+
+## 6. Staff Portal
+
+- [ ] Staff can log in and see only jobs assigned to them
+- [ ] Staff can update job status (complete/missed)
+- [ ] Staff must provide feedback for missed jobs (enforced)
+- [ ] Staff cannot access unassigned jobs or admin-only pages
+
+---
+
+## 7. Admin & Superuser Features
+
+- [ ] Superuser can view/manage all users, properties, jobs, quotes, agreements
+- [ ] Superuser can create, edit, and delete service packages
+- [ ] Superuser can assign jobs to staff/routes
+- [ ] Admin dashboards display correct data and allow filtering/sorting
+
+---
+
+## 8. User Experience, Security, SEO
+
+- [ ] All forms have field validation and show clear error messages
+- [ ] App is fully responsive (desktop/tablet/mobile)
+- [ ] No sensitive/debug info shown in browser or console
+- [ ] Meta tags present for all pages (checked in page source)
+- [ ] robots.txt and sitemap.xml accessible at root
+- [ ] Newsletter signup form submits correctly (if present)
+- [ ] No broken internal or external links
+- [ ] All static files load without errors (CSS, JS, images)
+
+---
+
+## 9. Payment Workflows (Stripe)
+
+- [ ] Stripe test cards accepted, invalid cards rejected
+- [ ] Payment errors (declined, expired, etc.) are handled with user feedback
+- [ ] Stripe receipts/emails received
+- [ ] Paid orders/subscriptions updated in the database
+- [ ] Payment success/failure pages show correct info
+
+---
+
+## 10. Accessibility (WCAG)
+
+- [ ] All images have alt text
+- [ ] Form fields have labels
+- [ ] Sufficient color contrast for text/buttons
+- [ ] Can be used with keyboard only (tab navigation)
+- [ ] Screen reader compatibility (basic checks)
+- [ ] Font sizes readable on all devices
+
+---
+
+## 11. Mobile Testing
+
+- [ ] All key pages/screens display correctly on iPhone and Android
+- [ ] Buttons, forms, and navigation are usable on small screens
+- [ ] Mobile menu works (open/close, all links)
+- [ ] Modals/popups are responsive
+
+---
+
+## 12. Screenshots
+
+Paste or link to screenshots as you test:
+
+- Home page (desktop & mobile): ![Home](screenshots/home_desktop.png)
+- Navigation menu open (mobile): ![Nav](screenshots/nav_mobile.png)
+- Registration/login form: ![Login](screenshots/login.png)
+- Profile page: ![Profile](screenshots/profile.png)
+- Property management (add/edit/delete): ![Property](screenshots/property_add.png)
+- Service package selection: ![Package](screenshots/package_select.png)
+- Subscription payment flow: ![Payment](screenshots/payment.png)
+- Subscription success: ![SubSuccess](screenshots/subscription_success.png)
+- User dashboard with active sub: ![Dashboard](screenshots/dashboard.png)
+- Quote request: ![Quote](screenshots/quote_request.png)
+- Quote email (inbox): ![QuoteEmail](screenshots/quote_email.png)
+- Admin dashboard: ![Admin](screenshots/admin_dashboard.png)
+- Staff portal: ![Staff](screenshots/staff_portal.png)
+- 404 page: ![404](screenshots/404.png)
+- Newsletter/signup: ![Newsletter](screenshots/newsletter.png)
+
+---
+
+## 13. User Feedback
+
+Summarize or paste customer/staff feedback (anonymized):
+
+> “Very easy to book a job, love the payment system!”  
+> “Staff portal is clear and helps track my jobs.”  
+> “Quote email was instant and clear.”
+
+---
+
+## 14. Known Issues / Bugs
+
+- (List any current issues for transparency)
+
+---
+
+## 15. Test Summary
+
+- **Passes:** XX/XX
+- **Fails:** XX/XX
+- **Pending/future improvements:** (list if needed)
+
+---
+
+**(Edit and check off each item as you go! Attach screenshots for evidence.)**
 
 
 
 ---
 
-##  <span style="color:gold">Data Model & Schema</span>
+## <span style="color:gold">Automated Testing</span>
 
-## Data Model & Schema
-
-The DS Property Maintenance Portal is built on a robust relational database schema using Django’s ORM, ensuring data integrity, consistency, and scalability.
-
-### Key Models & Relationships
-
-- **User (Django User)**
-  - Represents all users: property owners, staff, admins.
-  - Extended with a Profile model for additional user info (e.g., phone, address, role).
-
-- **Profile**
-  - Linked to User (OneToOne).
-  - Stores contact info and extra profile data for each user.
-
-- **Property**
-  - Linked to User (ForeignKey: owner/customer).
-  - Stores address, property type, and metadata.
-  - Related to ServiceAgreement, Job, and QuoteRequest.
-
-- **ServicePackage**
-  - Defines subscription-based maintenance packages (e.g., Silver, Gold).
-  - Linked to sub-company (Border 2 Border or Splash Zone Pools).
-
-- **ServiceAgreement**
-  - Represents a user’s active subscription/package for a property.
-  - Linked to User, Property, and ServicePackage.
-  - Stores status, start/end dates, Stripe subscription/payment info.
-
-- **Job**
-  - Represents a scheduled or completed task for a property.
-  - Linked to Property, assigned Staff (User), and optionally a QuoteRequest.
-  - Tracks job status, feedback, completion date, and related notes.
-
-- **JobFeedback**
-  - Linked to Job and Staff (User).
-  - Captures staff or customer feedback, with timestamps and status.
-
-- **QuoteRequest**
-  - Linked to User (customer) and Property.
-  - Stores request details, images, admin review status, and quote items.
-  - Can be converted into a Job upon acceptance and payment.
-
-- **QuoteItem**
-  - Linked to QuoteRequest.
-  - Each item represents a part/labor/service, quantity, and price, supporting dynamic quote building.
+- Unit tests for models (quotes, jobs, agreements)
+- Integration tests for property/package selection and payment flows
+- Permission tests for all sensitive views
+- Stripe integration tested with Stripe CLI/webhooks
 
 ---
 
-### Model Relationships Diagram
+## <span style="color:gold">Bug Fixes</span>
 
-![Entity Relationship Diagram](myapp_models.png)
+- **ServiceAgreement model:** Added missing fields, ran migrations
+- **Indentation errors:** Fixed Python syntax in various files
+- **Template errors:** Removed broken links, restored missing action buttons
+- **Property/package display:** Refactored with `prefetch_related` for accurate status
+- **CKEditor compatibility:** Documented upgrade plan and security limitations
+- **Stripe webhook/test errors:** Fixed env config and Stripe settings
+- **AWS S3 uploads:** Updated permissions, verified all environment variables
+- **Missed job feedback:** Combined feedback and missed job forms, enforced validation
+- **PWA install & push:** Debugged manifest, service worker, and VAPID keys
 
-
-
----
-
-##  <span style="color:gold">Technologies Used</span>
-
-
-The DS Property Maintenance Portal leverages modern, industry-standard technologies across the stack to deliver a robust, secure, and scalable e-commerce experience.
-
-### Core Technologies
-
-- **Python 3.12**  
-  Main backend programming language, powering the Django framework.
-
-- **Django**  
-  Full-stack web framework for rapid, secure, and scalable web development.
-
-- **Django Allauth**  
-  Handles user authentication, registration, and social account support.
-
-- **Stripe**  
-  Provides secure online payment processing for subscriptions and one-off jobs.
-
-- **Bootstrap 5**  
-  Modern, responsive frontend CSS framework for a clean, accessible user interface and grid-based layout.
-
-- **HTML5 & CSS3**  
-  Semantic markup and custom styles for structure, layout, and branding.
-
-- **JavaScript (Vanilla & jQuery)**  
-  For frontend interactivity, AJAX, dynamic form handling, and enhanced UX.
-
-- **Progressive Web App (PWA)**  
-  Staff portal is installable on mobile devices for real-time, offline-capable job management and push notifications.
-
-### Database & Storage
-
-- **PostgreSQL**  
-  Relational database for production (or SQLite for local development).
-
-- **AWS S3**  
-  Cloud file storage for user uploads (images, documents, quote attachments).
-
-### Deployment & Infrastructure
-
-- **Heroku / Render**  
-  Cloud hosting platforms for reliable deployment and automatic scaling.
-
-- **Gunicorn**  
-  WSGI HTTP server for serving Django in production.
-
-- **Whitenoise**  
-  For efficient static file serving in production.
-
-### Testing & DevOps
-
-- **Pytest / Django Test Framework**  
-  For automated testing of backend functionality.
-
-- **Git & GitHub**  
-  Version control and code collaboration.
-
-### Security & Optimization
-
-- **django-environ**  
-  Secure management of environment variables and secrets.
-
-- **django-csp (optional)**  
-  Content Security Policy for enhanced security.
-
-- **SEO Tools**  
-  Meta tags, sitemap.xml, robots.txt for improved search engine visibility.
-
-### Other Packages
-
-- **django-ckeditor**  
-  Rich text editor for admin content (see security notice).
-
-- **Pillow**  
-  Image handling for uploads and thumbnails.
-
-- **django-webpush**  
-  Web push notifications for staff and admin alerts.
-
-- **Boto3**  
-  AWS integration for media file storage.
+See also [Known Issues / Limitations](#known-issues--limitations).
 
 ---
 
-**All technologies were selected for their reliability, security, community support, and suitability for a commercial-grade Django e-commerce platform.**
+## <span style="color:gold">Known Issues / Limitations</span>
 
-
----
-
-##  <span style="color:gold">App Structure & File Layout</span>
-
-_Explain your folder structure and how the app is organized._
-
----
-
-##  <span style="color:gold">Authentication & Authorization</span>
-
-_Describe how users are authenticated and roles are handled._
+- CKEditor 4.22.1 is not secure—should not be used in production. Upgrade recommended.
+- Stripe requires live keys and webhooks for production payments.
+- Tested mainly in latest versions of Chrome, Firefox, Edge, Safari.
+- Not all admin actions have full audit logging.
+- PWA push notifications require HTTPS and user permission.
+- Production email sending requires SMTP configuration.
 
 ---
 
-##  <span style="color:gold">Payment Integration</span>
+## <span style="color:gold">Deployment Instructions</span>
 
-_Describe payment functionality and Stripe integration._
-
----
-
-##  <span style="color:gold">SEO Features</span>
-
-_Detail the SEO measures you have implemented (meta tags, sitemap, robots.txt, etc)._
-
----
-
-##  <span style="color:gold">Marketing Features</span>
-
-_Describe marketing features such as newsletters, social proof, or campaign tools._
+1. Clone the repository:  
+   `git clone https://github.com/yourusername/ds-property-maintenance.git`
+2. Create and activate a Python virtual environment
+3. Install requirements: `pip install -r requirements.txt`
+4. Set environment variables (see `.env.example`)
+5. Run migrations: `python manage.py migrate`
+6. Collect static files: `python manage.py collectstatic`
+7. Create superuser: `python manage.py createsuperuser`
+8. Start server: `python manage.py runserver`
+9. For production, deploy to Heroku/Render with static/media config, and all required environment variables.
 
 ---
 
-##  <span style="color:gold">Testing</span>
+## <span style="color:gold">Configuration & Environment Variables</span>
 
-_Overview of your testing approach for the application._
+- `DEBUG`
+- `SECRET_KEY`
+- `DATABASE_URL`
+- `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_STORAGE_BUCKET_NAME`
+- `EMAIL_HOST`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`
+- `CSP_REPORT_ONLY` (optional, for CSP test mode)
+
+All secrets loaded using `django-environ`.  
+See `.env.example` for the full list.
 
 ---
 
-##  <span style="color:gold">Manual Testing & User Feedback</span>
+## <span style="color:gold">How to Run Locally</span>
 
-lighthouse 
-
-## Lighthouse Best Practices, Stripe Integration, and Security Headers
-
-### Lighthouse Scores
-
-| Category        | Score |
-|-----------------|-------|
-| Performance     | 99    |
-| Accessibility   | 93    |
-| Best Practices  | 78    |
-| SEO             | 100   |
-
-#### Summary
-
-The DS Property Group production site has been optimized to achieve high Lighthouse scores in all major categories. The **Best Practices** score is slightly below 100 due to third-party cookies set by Stripe (used for secure payments). This is an expected and accepted outcome for real-world e-commerce sites.
+- Clone the repo and install requirements as above
+- Set `DEBUG=True` and use SQLite for quick setup
+- No need to configure Stripe or AWS for local dev unless testing those features
+- Run: `python manage.py runserver`
+- Admin at `/admin/`, staff portal at `/staff/`
 
 ---
 
 ## <span style="color:gold">GDPR Compliance & Staff Training</span>
 
-DS Property Maintenance is built with user privacy, transparency, and legal compliance at its core. The platform follows the General Data Protection Regulation (GDPR) and UK Data Protection Act principles.
+**DS Property Maintenance is fully GDPR compliant.**
+
+- All user data is collected and stored only for the operation of the platform and fulfillment of services.
+- Users can request access, rectification, or erasure of their data at any time via the contact page or by email.
+- Data is never sold or used for marketing without consent.
+- All staff (currently site owner) are trained in GDPR procedures using the [GDPR Requests Cheat Sheet](./GDPR-Requests-CheatSheet.md).
+- GDPR requests are:
+  1. Acknowledged promptly
+  2. Recorded (date, user, type)
+  3. Only handled after verifying user identity
+  4. Logged for audits
+  5. Responded to within 30 days
+
+- GDPR log: All requests and outcomes recorded in a private admin log.
+- See [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md) for full policy.
 
 ---
 
-### 1. What Data Is Collected and Why
+## <span style="color:gold">Future Improvements</span>
 
-- **User accounts:**  
-  Basic information for login and identification (email, name, password).
-
-- **Property & service details:**  
-  Address, service requests, quote details, and any files/images the user submits.
-
-- **Payments:**  
-  Payments are handled securely via Stripe. **No payment card details are stored on this site**.
-
-- **Feedback & communications:**  
-  User-submitted feedback, support queries, and related job information.
-
-> **Only data required to operate the site and provide services is collected. Data is never sold or used for advertising.**
+- Upgrade admin content editor to CKEditor 5 (or another secure WYSIWYG)
+- Expand automated test coverage for all apps and features
+- Add complete admin audit logs
+- Support user self-service data download/export
+- Integrate SMS and in-app customer notifications
+- In-app chat between staff and office/admin
+- Add support for new property service brands
 
 ---
 
-### 2. User Rights and Controls
+## <span style="color:gold">Credits & Attribution</span>
 
-- **Access:**  
-  Users may request a copy of all personal data held about them by contacting support.
-
-- **Rectification:**  
-  Users can edit their profile at any time and request corrections if any data is inaccurate.
-
-- **Erasure (“Right to be Forgotten”):**  
-  Users may request deletion of their account and personal data. Data needed for legal or business records (such as completed jobs or paid invoices) will be retained only as required by law.
-
-- **Transparency:**  
-  All uses of data are explained clearly in the site’s terms and during onboarding.
+- Logo, wireframes, and UI inspired by Bootstrap CSS and [Lottiefiles](https://lottiefiles.com/)
+- CKEditor via django-ckeditor
+- Stripe integration based on Stripe’s official Django docs
+- Thanks to Code Institute, Django docs, and open-source community
 
 ---
 
-### 3. Staff Training & Audit Trail
+## <span style="color:gold">Screenshots & Demo</span>
 
-- **GDPR Requests Cheat Sheet:**  
-  Anyone with access to user data (currently only the site owner) is required to read and follow the [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md), which is included in this repository and onboarding documentation.
+<div align="center">
 
-- **Training Process:**  
-  - Before being granted admin or support access, staff must review and confirm understanding of the GDPR cheat sheet and data handling procedures.
-  - All GDPR requests (access, correction, deletion) are handled according to this documented process.
+  <img src="static/media/readme-media/dsp-wf-landingpage.png" alt="Wireframe Landing Page" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/serviceplan-display.png" alt="Service Plan Display" width="47%" style="margin:0 10px;"/>
 
-- **Request Logging:**  
-  - All privacy-related requests and the actions taken are recorded in a secure log (private admin record or secure file).
-  - The log includes: date, user identity, request type, and outcome.
-  - This audit trail is available for compliance checks and demonstrates accountability.
+  <br><br>
 
-- **Onboarding & Refresher:**  
-  - All new staff will be trained in these procedures before being granted data access.
-  - If new staff are hired or procedures are updated, this section and the cheat sheet will be updated and reviewed.
+  <img src="static/media/readme-media/ds-responsive-screenshot.png" alt="Responsive Dashboard" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/all-subscriptions.png" alt="All Subscriptions List" width="47%" style="margin:0 10px;"/>
 
-> **Currently, only the site owner has access to user data and handles GDPR requests. The same process will be followed for any future staff or administrators.**
+  <br><br>
 
----
+  <img src="static/media/readme-media/all-subscriptions-confirm-cancel.png" alt="Subscription Cancel Confirmation" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/all-quotes-list.png" alt="All Quotes List" width="47%" style="margin:0 10px;"/>
 
-### 4. Data Security
+  <br><br>
 
-- **Strict Access Controls:**  
-  Only authenticated admin or staff with confirmed GDPR training can access user data.
+  <img src="static/media/readme-media/all-quotes-list-search.png" alt="All Quotes List with Search" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/quote-pending-view.png" alt="Pending Quote View" width="47%" style="margin:0 10px;"/>
 
-- **Data Minimisation:**  
-  Only essential data is collected and retained.
+  <br><br>
 
-- **Secure Storage:**  
-  Passwords are hashed; sensitive data is protected and never shared with third parties (except as required for payments via Stripe).
+  <img src="static/media/readme-media/payment-process.png" alt="Payment Process" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/payment-terms.png" alt="Payment Terms" width="47%" style="margin:0 10px;"/>
 
-- **No Data Selling:**  
-  User data is **never** sold, rented, or used for marketing outside of this service.
+  <br><br>
 
----
+  <img src="static/media/readme-media/quote-payment-view.png" alt="Quote Payment View" width="47%" style="margin:0 10px;"/>
+  <img src="static/media/readme-media/quote-payment-3d.png" alt="Quote Payment 3D Secure" width="47%" style="margin:0 10px;"/>
 
-### 5. How to Make a GDPR Request
+  <br><br>
 
-- Users can request access, correction, or deletion of their data at any time by contacting support via the website’s contact page or email.
-- The request will be acknowledged, identity verified, and a response provided within 30 days.
+  <img src="static/media/readme-media/quote-pay-view.png" alt="Quote Pay View" width="47%" style="margin:0 10px;"/>
+  
+</div>
 
----
+<br/>
 
-### 6. Reference: GDPR Requests Cheat Sheet
-
-See [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md) for the exact step-by-step procedure followed for every GDPR data request.
-
-#### Example Cheat Sheet Contents:
-
-```markdown
-# GDPR Requests Cheat Sheet
-
-Anyone handling user data (staff/admin) must follow these steps for any request to access, delete, or correct personal data:
-
-1. **Acknowledge the request** politely.
-2. **Record the request** (date, user, type of request).
-3. **Verify identity** before releasing/changing data.
-4. **Forward to the Data Protection Lead** (site owner) if unsure.
-5. **Respond within 30 days** as required by law.
-
-**NEVER**:
-- Share data unless you are sure of the user’s identity.
-- Ignore any privacy request.
-
-All staff must read and understand this document before handling user data.
-
-
-### Why Best Practices Is Not 100
-
-- **Stripe Integration:**  
-  Stripe (https://js.stripe.com) sets third-party cookies for fraud detection, PCI compliance, and secure payment processing.
-- **Lighthouse Limitation:**  
-  Lighthouse automatically penalizes any site that sets third-party cookies, regardless of necessity or industry best practice.
-- **No Code Fix Possible:**  
-  Disabling or blocking Stripe cookies would break payments and is **not recommended or permitted** by Stripe. This is standard for all modern e-commerce platforms using external payment providers.
+_Descriptions:  
+Wireframe and service plan (top row), dashboard and subscriptions, quotes list/search/pending, payment flows, and more. For full wireframes and mockups, see `/docs/wireframes/`._
 
 ---
 
-### Security Enhancements Implemented
+## <span style="color:gold">Social Media & Marketing</span>
 
-All best-practice security headers are enforced in production:
-
-- **Strict-Transport-Security (HSTS):**  
-  Forces HTTPS for all requests.
-- **Content Security Policy (CSP):**  
-  Restricts loading of scripts, styles, images, and fonts to trusted sources only (self, CDN, Google Fonts, Stripe).
-- **X-Content-Type-Options:**  
-  Prevents MIME-type sniffing.
-- **X-XSS-Protection:**  
-  Enables browser cross-site scripting filter.
-- **Secure Cookies:**  
-  Session and CSRF cookies are only sent over HTTPS.
-- **Referrer Policy:**  
-  Referrer data only sent to same-origin or HTTPS.
-- **CSP "Report Only" Mode:**  
-  Used during deployment to test policy before enforcement; switched to full enforcement after confirming no violations.
-
-**All security-related settings are configured via environment variables for 12-factor compatibility (Heroku), including easy CSP enforcement switching.**
+- Facebook page: (add link)
+- Twitter/X: (add link)
+- Customer testimonials and marketing banners shown on homepage and product pages
 
 ---
 
-### Example: Security Settings (settings.py)
+## <span style="color:gold">Credits</span>
 
-```python
-if not DEBUG:
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
-    # CSP for scripts, styles, Stripe, CDN, Google Fonts
-    CSP_DEFAULT_SRC = ("'self'",)
-    CSP_SCRIPT_SRC = ("'self'", "cdn.jsdelivr.net", "js.stripe.com",)
-    CSP_STYLE_SRC = ("'self'", "fonts.googleapis.com", "cdn.jsdelivr.net",)
-    CSP_FONT_SRC = ("'self'", "fonts.gstatic.com", "cdn.jsdelivr.net",)
-    CSP_IMG_SRC = ("'self'", "data:", "cdn.jsdelivr.net", "js.stripe.com",)
-    # Toggle CSP_REPORT_ONLY via environment variable in Heroku
-    CSP_REPORT_ONLY = os.environ.get("CSP_REPORT_ONLY", "False") == "True"
-
-
-
-_Describe manual test cases and user feedback collection._
-Scenario	Card Number	Description
-Insufficient funds	4000 0000 0000 9995	Always declined
-Expired card	4000 0000 0000 0069	Use past expiry date
-Incorrect CVC	4000 0000 0000 0127	Fails if CVC check required
-Processing error	4000 0000 0000 0119	Generic processing error
-Incorrect number	4242 4242 4242 4241	Fails Luhn check
-Authentication required	4000 0027 6000 3184	3D Secure (SCA) authentication required
----
-
-##  <span style="color:gold">Automated Testing</span>
-
-_List and describe automated tests (unit, integration, etc)._
+This project is original work by [Your Name].  
+All third-party resources credited above.  
+For queries, contact via the website.
 
 ---
-
-##  <span style="color:gold">Deployment Instructions</span>
-
-_Step-by-step guide to deploy the application._
-
----
-
-##  <span style="color:gold">Configuration & Environment Variables</span>
-
-_Describe the required environment variables and configuration settings._
-
----
-
-##  <span style="color:gold">How to Run Locally</span>
-
-_Instructions for running the project locally for development._
-
----
-
-##  <span style="color:gold">Known Issues / Limitations</span>
-
-## Security Notice: CKEditor Version
-
-**WARNING: Outdated CKEditor Version in Use**
-
-This project uses `django-ckeditor` with **CKEditor 4.22.1**, which is no longer supported and has known security issues (see [CKEditor 4.24.0-LTS Release Notes](https://ckeditor.com/cke4/release/CKEditor-4.24.0-LTS)).
-
-### Why the Upgrade Was Not Made
-
-At the time of development, an upgrade was not completed due to:
-
-- **Python 3.12 Compatibility:**  
-  The available upgrade paths (CKEditor 5 or `django-ckeditor-5`) are not fully compatible or stable with Python 3.12, the version required for this project. Attempting to upgrade resulted in errors or failed builds due to unresolved compatibility issues between the editor and the latest Python/Django stack.
-
-- **License Restrictions:**  
-  CKEditor 5 introduces new licensing terms, and CKEditor 4 LTS with security support is only available as a paid commercial product, which is not feasible for this academic/open-source submission.
-
-- **Scope and Stability:**  
-  The editor is used for internal admin content only. Upgrading would have required significant testing and refactoring under tight deadlines, potentially destabilizing the admin experience.
-
-### Recommendations for Production
-
-- **Do NOT use CKEditor 4.22.1 in a production environment.**
-- Monitor for Python 3.12-compatible releases of `django-ckeditor-5` or consider other supported editors.
-- If advanced WYSIWYG editing is required, evaluate available editors for Python 3.12 compatibility and license compliance before deployment.
-- For LTS support on CKEditor 4, consider a commercial license.
-
-
----
-
-##  <span style="color:gold">Bug Fixes</span>
-
-Below is a summary of the main errors and issues encountered during the development of DS Property Maintenance, along with the solutions and workarounds applied.
-
----
-
-### 1. Python/Django Compatibility Issues
-
-- **Error:**  
-  `TypeError: ServiceAgreement() got unexpected keyword arguments`
-- **Cause:**  
-  Fields like `start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, and `amount_paid` were missing from the `ServiceAgreement` model.
-- **Fix:**  
-  Updated the `ServiceAgreement` model to include all necessary fields, and ran Django migrations to update the database schema.
-
----
-
-### 2. SyntaxError Due to Indentation
-
-- **Error:**  
-  `SyntaxError: expected ':', got 'indent'`
-- **Cause:**  
-  Incorrect indentation in a Python file prevented the app from running.
-- **Fix:**  
-  Carefully corrected indentation errors in the affected Python files, adhering to Python’s strict indentation rules.
-
----
-
-### 3. NoReverseMatch for Non-Existent URL
-
-- **Error:**  
-  `NoReverseMatch: 'property_detail' not found`
-- **Cause:**  
-  The template referenced a URL named `property_detail` that did not exist in `urls.py`.
-- **Fix:**  
-  Removed the problematic link and unnecessary references from the template.
-
----
-
-### 4. Missing Property Action Buttons
-
-- **Error:**  
-  Add/Edit/Delete buttons for properties were not displaying after template updates.
-- **Cause:**  
-  The buttons were inadvertently removed while updating templates.
-- **Fix:**  
-  Re-added the "Add New Property," "Edit," and "Delete" buttons to `property_list.html`.
-
----
-
-### 5. Inactive Package Status on Properties List
-
-- **Error:**  
-  Properties always showed "Inactive" package status, even when active agreements existed.
-- **Cause:**  
-  The view used an outdated manual loop, and didn’t use `prefetch_related` for active agreements.
-- **Fix:**  
-  Refactored the view to use Django’s `prefetch_related` for active agreements, ensuring accurate template display.
-
----
-
-### 6. CKEditor Security & Compatibility Warning
-
-- **Error/Warning:**  
-  django-ckeditor bundles CKEditor 4.22.1, which is unsupported and insecure; upgrading to CKEditor 5 fails on Python 3.12.
-- **Cause:**  
-  CKEditor 5 or other alternatives are not fully compatible with Python 3.12 at this time.
-- **Fix:**  
-  Kept the older version for admin content only, documented the risk and upgrade recommendation in the README, and advised production users to use a secure, supported alternative.
-
----
-
-### 7. Stripe Payment Webhook/Test Errors
-
-- **Error:**  
-  Occasional errors with Stripe payment processing in test mode (webhooks not firing, test keys misconfigured).
-- **Cause:**  
-  Incorrect webhook secret, environment variable issues, or Stripe dashboard configuration.
-- **Fix:**  
-  Double-checked and updated environment variables, Stripe webhook settings, and ensured secrets were loaded correctly from the environment.
-
----
-
-### 8. AWS S3 Media Uploads
-
-- **Error:**  
-  Media/image uploads for quote requests and user profile pictures were not working after switching to AWS S3 storage.
-- **Cause:**  
-  Incorrect S3 bucket permissions or missing environment variables for AWS access.
-- **Fix:**  
-  Updated AWS S3 bucket policy, checked IAM user permissions, and ensured all AWS credentials were securely set in the environment.
-
----
-
-### 9. Feedback Not Saving for "Missed Job" Flow
-
-- **Error:**  
-  Feedback form did not save data or was not required when marking a job as missed.
-- **Cause:**  
-  The feedback validation logic was not enforced before submitting the “mark as missed” modal.
-- **Fix:**  
-  Combined feedback and missed job forms, enforced validation, and ensured notes were always captured before changing status.
-
----
-
-### 10. PWA Installation & Push Notifications
-
-- **Error:**  
-  PWA would not prompt for install or failed to cache assets on some devices; push notifications not appearing for all superusers.
-- **Cause:**  
-  Service worker registration or manifest.json issues, or browser restrictions on PWA features.
-- **Fix:**  
-  Debugged and fixed service worker and manifest, ensured HTTPS on deployed app, and double-checked VAPID keys and subscription settings for push notifications.
-
----
-
-### 11. Modal and AJAX Issues
-
-- **Error:**  
-  Delete or confirm actions would not update the page or would require a full reload.
-- **Cause:**  
-  Missing AJAX handlers or not returning proper JSON responses.
-- **Fix:**  
-  Improved JavaScript handling for modals and AJAX requests, ensured backend views return correct responses and status codes.
-
----
-
-### 12. Heroku/Render Deployment Issues
-
-- **Error:**  
-  Static/media files missing, 500 errors on deployment, or environment variables not found.
-- **Cause:**  
-  Missing/incorrect settings for `STATIC_ROOT`, `MEDIA_ROOT`, or missing `.env` values on the host.
-- **Fix:**  
-  Updated deployment settings, checked `collectstatic` logs, and securely set all environment variables for the production environment.
-
----
-
-This section demonstrates a commitment to debugging, iteration, and best practice.  
-For any remaining known issues or limitations, see the [Known Issues / Limitations](#known-issues--limitations) section.
-
-
-
----
-
-##  <span style="color:gold">Future Improvements</span>
-
-_Suggest features and enhancements planned for the future._
-
----
-
-##  <span style="color:gold">Credits & Attribution</span>
-
-_Credit any resources, libraries, tutorials, or collaborators._
-
----
-
-##  <span style="color:gold">Screenshots & Demo</span>
-
-_Include screenshots and/or a link to a live demo._
-
----
-
-##  <span style="color:gold">Social Media & Marketing</span>
-
-_Describe your social media efforts (include screenshots/links as required)._
-
----
-
-##  <span style="color:gold">Credits</span>
-
-_Declare that the project is your own work, with proper attribution as needed._
-
----
-
