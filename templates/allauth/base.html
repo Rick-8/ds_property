@@ -182,7 +182,7 @@
     <nav class="navbar navbar-expand-lg dark-opaque-nav fixed-top">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-                <img src="{% static 'media/dsproperty-logo.png' %}"
+                <img src="{% static 'media/dsproperty-logo-nav.png' %}"
                     alt="DS Property Maintenance Logo - Florida Home, Pool & Lawn Experts"
                     class="navbar-logo img-fluid rounded-circle me-2" width="120" height="120" />
             </a>
@@ -266,7 +266,7 @@
     {% if messages %}
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100; margin-top: 70px;">
         {% for message in messages %}
-        <div class="toast show shadow mb-2" style="background-color: rgba(0, 0, 0, 0.4); border: 2px solid gold;">
+        <div class="toast show shadow mb-2" style="background-color: rgba(0, 0, 0, 0.6); border: 2px solid gold;">
             <div class="d-flex">
                 <div class="toast-body">{{ message }}</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
