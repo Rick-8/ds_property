@@ -586,6 +586,28 @@ Customer feedback collected after each job via dashboard modal.
 Test 500 Page
 </a>
 
+## Serving `favicon.ico` in Django
+
+By default, browsers request `/favicon.ico` to display a site’s icon in browser tabs and bookmarks. Although the favicon can be referenced in HTML templates using the `<link rel="icon" ...>` tag, many browsers also try to fetch it directly from the root URL (`/favicon.ico`). If Django does not serve a file at this path, it will result in a 404 error in the logs.
+
+To ensure the favicon is always available at `/favicon.ico`, even when using Django's static files system, we added a dedicated URL pattern in `urls.py`:
+
+```python
+# --- Serve favicon.ico ---
+path(
+    'favicon.ico',
+    serve,
+    {
+        'path': 'media/favicon.ico',
+        'document_root': os.path.join(settings.BASE_DIR, 'static'),
+    }
+),
+This route ensures that requests to /favicon.ico are correctly served from the static/media/favicon.ico file.
+
+This helps prevent 404 errors for /favicon.ico and provides a consistent user experience across browsers.
+
+
+
 ## Subscription: Select, Buy, and Manage
 
 ---

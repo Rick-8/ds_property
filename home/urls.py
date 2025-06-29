@@ -1,4 +1,4 @@
-from home.views import trigger_404, trigger_500
+from home.views import trigger_500
 from django.urls import path, include
 from django.contrib import admin
 from . import views

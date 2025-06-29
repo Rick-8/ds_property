@@ -6,9 +6,10 @@ from django.conf.urls.static import static
 from django.views.static import serve
 from staff_pwa import views
 from staff_pwa.views import OfflinePageView
+import os
 
 urlpatterns = [
-    # PWA essential routes — must be high in list
+    # PWA essential routes
     path(
         'manifest.json',
         TemplateView.as_view(
@@ -27,6 +28,26 @@ urlpatterns = [
     path('offline/', OfflinePageView.as_view(), name='offline'),
     path('splash/', views.pwa_splash, name='pwa_splash'),
 
+    # --- Serve favicon.ico ---
+    path(
+        'favicon.ico',
+        serve,
+        {
+            'path': 'media/favicon.ico',
+            'document_root': os.path.join(settings.BASE_DIR, 'static'),
+        }
+    ),
+
+    # --- Serve sitemap.xml ---
+    path(
+        'sitemap.xml',
+        serve,
+        {
+            'path': 'sitemap.xml',
+            'document_root': r'C:\Users\rick_\Documents\vscode-projects\ds_property',
+        }
+    ),
+
     # Auth and apps
     path('account/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
@@ -43,5 +64,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
