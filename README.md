@@ -55,6 +55,8 @@ Welcome to the next generation of property management!
 **DS Property Maintenance Portal** is more than a website—it’s a dynamic digital hub designed to *empower* property owners, landlords, and managers throughout Florida.  
 Whether you manage a single-family home, multiple rentals, or HOA communities, this platform delivers a streamlined, secure, and intuitive experience for every kind of user.
 
+![DS property responsive page view](static/media/readme-media/ds-responsive-screenshot.png)
+
 ---
 
 ### Why Choose the DS Property Maintenance Portal?
@@ -110,40 +112,32 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
 ---
 ### <span style="color:gold">Social Media Post for Facebook (Mockup)</span>
 ---
-## Social Media Post for Facebook (Mockup)
+## Facebook Launch Announcement – Project Requirements & Explanation
 
-![DS Property Maintenance Logo](assets/ds-property-logo.png)  
-*DS Property Management Brand Logo*  
-*Posted: Wed Jun 18 2025*
+The **Facebook post image** serves as a public launch announcement for the new DS Property Group website, designed to reach potential and current customers on social media with a clear, engaging message. It highlights key new features—including easy online booking, instant quotes, a unified dashboard, real-time job tracking, secure payments, and a mobile-friendly design—making property management accessible and transparent. The post uses branded visuals, clear call-to-actions (“Like & Follow”), and concise language, aligning with modern digital marketing standards for e-commerce service launches.
 
----
+### Relevant Features Advertisd
 
-### 🌟 COMING SOON! 🌟  
-**Your Trusted Partner in Property Care**
+- **Demonstrate awareness of e-commerce fundamentals:**  
+  Promote the online booking, payments, and user dashboard features.
 
-We’re excited to announce our brand-new website is launching soon!
+- **Showcase marketing techniques:**  
+  Use visual branding, emoji, and call-to-action to encourage engagement.
 
-Built with you in mind, DS Property Maintenance makes looking after your property easier than ever.
+- **Highlight UX enhancements:**  
+  Mention real-time updates, mobile compatibility, and ease of use.
 
----
+- **Promote the secure payment system:**  
+  Reference the integration of Stripe for secure payments.
 
-#### 🏆 **What’s waiting for you:**
+- **Be suitable for professional platforms:**  
+  Ensure text is clear, free from typos, and formatted for social media.
 
-- ✅ **Easy online booking** — schedule services in just a few clicks 
-- ✅ **Instant, no-hassle quote requests**  
-- ✅ **One-stop dashboard** for all your properties and services  
-- ✅ **Real-time job tracking and updates**  
-- ✅ **Secure Stripe payments**  
-- ✅ **Fully mobile-friendly design**  
-- ✅ **Special deals and news for subscribers**
+- **Reflect company branding and professionalism:**  
+  Display the DS Property Group name, mission, and maintain visual consistency.
 
----
 
-**Stay tuned for our launch date and get ready for the best in property care!**
-
-👉 *Like & Follow our page for updates.*  
-**Your property, our passion.**
-
+![DS property Group logo](static/media/dsp-facebook-mockpost.png)
 ---
 
 
@@ -308,7 +302,7 @@ Each of these features has been meticulously crafted to deliver *maximum conveni
 
 ### Customers
 - Register/login and reset password (Django Allauth)
-- Browse services, add to basket, secure checkout
+- As a user, I want to be able to browse packages, so that I can easily find ones that fit my requirements.
 - Request/view custom quotes, leave feedback
 - Responsive design across all devices
 
@@ -321,6 +315,11 @@ Each of these features has been meticulously crafted to deliver *maximum conveni
 - Cloud deployment
 - Automated/manual testing
 - Error handling and robust security
+
+
+**To view the full list of current and completed user stories, please visit the live project board:**  
+[https://github.com/users/Rick-8/projects/14/views/1](https://github.com/users/Rick-8/projects/14/views/1)
+
 
 ---
 
@@ -344,7 +343,7 @@ Each of these features has been meticulously crafted to deliver *maximum conveni
 
 ### High Color Contrast and Readable Fonts (WCAG 2.1 AA)
 
-- Colors (gold, white, dark backgrounds) were selected and tested to provide high contrast, meeting or exceeding WCAG 2.1 AA requirements for contrast ratios.
+- Colors (gold, white, dark backgrounds) were selected and tested to provide high contrast.
 - **Font choices** (Exo, Playfair Display, Fjalla One) are web-safe, modern, and tested for clarity and readability.
 - Font sizes are responsive and large enough for comfortable reading on all devices.
 
@@ -385,11 +384,22 @@ All forms (login, signup, quote request, profile edit, etc.):
 
 ### Visual References
 
-**Landing Page Example**  
+## **Landing Page Example**  
+
+> **The landing page is designed with a vibrant, modern aesthetic featuring a dark glass theme that immediately sets the tone for the site. Clear branding and visually engaging elements establish trust and professionalism from the first impression. The site’s purpose is communicated up front: to provide streamlined property management and service solutions. Prominent calls to action, such as “Get Started,” “Browse Services,” and “Request a Quote,” guide users toward key actions, ensuring an intuitive and inviting experience for every visitor.**
+
 ![Landing Page](static/media/readme-media/dsp-wf-landingpage.png)
 
-**Service Plan Selection Example**  
+**Service Plan Selection Example**
+> **The service plan selection page presents available packages in an easy-to-navigate accordion layout. Each plan includes a concise description and relevant details, while action buttons within each section allow users to open the menu system and take the next step. This design ensures users can quickly compare options and make selections in a streamlined, user-friendly way.**
+
 ![Service Plan](static/media/readme-media/serviceplan-display.png)
+
+## **Property selcetion view turned Main Menu**  
+> **Originally, the idea to display property details was conceived as a one-off feature. However, during the Agile development process, this concept evolved into the overall theme for the entire site. By building the main menu and site structure around property management, we simplified navigation and created a more cohesive and user-friendly experience. This shift was made mid-project to ensure the design better served users and aligned with the project’s core goals.**
+
+![Menu Idea](static/media/readme-media/dsp-wf-property-turn-package.webp)
+
 
 ---
 
@@ -675,6 +685,10 @@ All secrets loaded using `django-environ`. See `.env.example` for full list.
 - CKEditor via django-ckeditor
 - Stripe integration based on Stripe’s official Django docs
 - Thanks to Code Institute, Django docs, and open-source community
+
+### Special Thanks
+A heartfelt thank you to my mentor, whose honest feedback, thoughtful advice, and unwavering support have fueled my passion for web development. 
+Their guidance has been instrumental throughout this project — making the challenges lighter and the learning far more meaningful.
 
 ---
 
