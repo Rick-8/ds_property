@@ -1,15 +1,57 @@
-# <span style="color:gold">DS Property Management</span>
+<h1>
+  <a href="https://ds-property-group-04ec2ca20d25.herokuapp.com/" style="color:gold; text-decoration: none;">
+    DS Property Management  (click to view)
+  </a>
+</h1>
+
 ![DS property Group logo](static/media/ds_property_static_shimmer_logo-pdf.jpg)
 
 ---
 
 ## Prerequisites & Viewing Notes
 
-- This README is designed for **dark mode** or **black backgrounds** for optimal readability, especially for gold and white text.
-- Gold-highlighted headings and certain images may appear less readable on a white or light background.
-- For best results, use a Markdown viewer, code editor, or GitHub dark theme.
-- Some screenshots, UI mockups, and wireframes are shown for a dark-themed interface.
-- If any color/contrast issues are seen, please try switching to dark mode or a compatible Markdown app.
+<ul>
+  <li>
+    This <strong>README</strong> is designed for
+    <span style="color:gold; font-weight:bold;">dark mode</span> or
+    <span style="color:#fff;">black backgrounds</span> for optimal readability,
+    especially for gold and white text.
+  </li>
+  <li>
+    <span style="color:gold; font-weight:bold;">Gold-highlighted headings</span>
+    and certain images may appear less readable on a white or light background.
+  </li>
+  <li>
+    For best results, use a Markdown viewer, code editor, or
+    <a href="https://github.com/" style="color:gold; text-decoration:underline;">
+      GitHub dark theme
+    </a>.
+  </li>
+  <li>
+    Some screenshots, UI mockups, and wireframes are shown for a
+    <span style="color:gold; font-weight:bold;">dark-themed interface</span>.
+  </li>
+  <li>
+    If any color/contrast issues are seen, please try switching to dark mode or a
+    compatible Markdown app, such as
+    <a href="https://code.visualstudio.com/" style="color:gold; text-decoration:underline;">
+      VS Code
+    </a> or
+    <a href="https://typora.io/" style="color:gold; text-decoration:underline;">
+      Typora
+    </a>.
+  </li>
+</ul>
+
+<p>
+  <em>
+    <strong>Note:</strong> HTML elements and custom styles are used in this README.
+    Please view it on a platform that supports inline HTML, such as
+    <a href="https://github.com/" style="color:gold; text-decoration:underline;">GitHub</a>,
+    GitLab, VS Code, or Typora. If viewing in a restrictive Markdown viewer,
+    some colors or styles may not render as intended.
+  </em>
+</p>
 
 ---
 
@@ -52,7 +94,7 @@
 **The Ultimate Full-Stack Django E-commerce Solution for Florida Property Owners & Managers**
 
 Welcome to the next generation of property management!  
-**DS Property Maintenance Portal** is more than a website—it’s a dynamic digital hub designed to *empower* property owners, landlords, and managers throughout Florida.  
+**DS Property Maintenance Portal** is more than a website—it’s a dynamic digital hub designed to _empower_ property owners, landlords, and managers throughout Florida.  
 Whether you manage a single-family home, multiple rentals, or HOA communities, this platform delivers a streamlined, secure, and intuitive experience for every kind of user.
 
 ![DS property responsive page view](static/media/readme-media/ds-responsive-screenshot.png)
@@ -62,7 +104,7 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
 ### Why Choose the DS Property Maintenance Portal?
 
 - **Modern, Mobile-First Experience**  
-  Designed from the ground up for mobile, tablet, and desktop, this portal ensures a *seamless*, beautiful user experience wherever you are—on site, at home, or on the go. Every feature and flow is engineered for speed, clarity, and delight, putting powerful tools right at your fingertips.
+  Designed from the ground up for mobile, tablet, and desktop, this portal ensures a _seamless_, beautiful user experience wherever you are—on site, at home, or on the go. Every feature and flow is engineered for speed, clarity, and delight, putting powerful tools right at your fingertips.
 
 - **Lightning-Fast Navigation & Real-Time Interactions**  
   Instant page loads, dynamic content updates, toast notifications, and smooth transitions mean you’re always in control—no waiting, no confusion, just effortless results.
@@ -72,7 +114,7 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
 ### Portal Features: Built for Real Needs
 
 - **Browse & Buy Recurring Services (Subscriptions)**  
-  Effortlessly explore a suite of property maintenance plans tailored for Florida’s unique environment. With a few taps, set up flexible, monthly service subscriptions (from pool cleaning to lawn care and beyond). **Never worry about missed maintenance again!** Stripe integration ensures *secure, hassle-free payments*, while automated scheduling keeps your property in top shape year-round.
+  Effortlessly explore a suite of property maintenance plans tailored for Florida’s unique environment. With a few taps, set up flexible, monthly service subscriptions (from pool cleaning to lawn care and beyond). **Never worry about missed maintenance again!** Stripe integration ensures _secure, hassle-free payments_, while automated scheduling keeps your property in top shape year-round.
 
 - **Request Custom Jobs & Instant Quotes—With Photos!**  
   Need something outside a standard plan? No problem! Submit one-off job requests or ask for custom quotes in seconds. Upload photos of your property or issue, describe the task, and get fast, professional feedback. Every request is tracked in your dashboard, ensuring nothing is lost or overlooked.
@@ -81,7 +123,7 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
   From day one, user privacy and security are built in. Manage your service contracts, payment details, and schedules all from one secure dashboard. Role-based access means owners, staff, and managers see only what they need—no clutter, no confusion.
 
 - **Powerful Service & Payment Scheduling**  
-  Visualize all your contracts and upcoming services in a *clean, calendar-driven interface*. Receive reminders, track past work, and reschedule as needed—all with a couple of clicks.
+  Visualize all your contracts and upcoming services in a _clean, calendar-driven interface_. Receive reminders, track past work, and reschedule as needed—all with a couple of clicks.
 
 - **Visual Communication: See and Be Seen**  
   Attach photos, notes, or files to your jobs, making communication between customer and service provider crystal clear. No more guesswork—just transparency and efficiency.
@@ -90,17 +132,17 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
   Have questions? Access expert advice and fast, personalized support, directly through the portal. Our team is just a click away, ready to help you solve problems, optimize service, or choose the perfect package.
 
 - **Accessibility for Everyone**  
-  No user left behind! From high-contrast themes to ARIA labels, keyboard navigation, and mobile-friendly controls, the portal is designed for *universal access*. Enjoy a site that’s as usable for seniors as it is for savvy property pros.
+  No user left behind! From high-contrast themes to ARIA labels, keyboard navigation, and mobile-friendly controls, the portal is designed for _universal access_. Enjoy a site that’s as usable for seniors as it is for savvy property pros.
 
 ---
 
-###  How DS Property Maintenance Portal Stands Out
+### How DS Property Maintenance Portal Stands Out
 
 - **Blazing fast, intuitive interface:** Modern web tech for a “just works” feel.
 - **Rock-solid security:** HTTPS everywhere, Stripe payments, and secure user roles.
 - **Seamless communication:** From booking to billing to completion—always in sync.
 - **Full visibility:** Every job, payment, and service is at your fingertips, anytime.
-- **Professional design:** Beautiful, branded layouts that *build trust* and wow your customers.
+- **Professional design:** Beautiful, branded layouts that _build trust_ and wow your customers.
 - **Accessible to all:** Meets and exceeds accessibility standards for a truly inclusive web.
 
 ---
@@ -110,8 +152,11 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
 > Welcome to the future of Florida property management!**
 
 ---
+
 ### <span style="color:gold">Social Media Post for Facebook (Mockup)</span>
+
 ---
+
 ## Facebook Launch Announcement – Project Requirements & Explanation
 
 The **Facebook post image** serves as a public launch announcement for the new DS Property Group website, designed to reach potential and current customers on social media with a clear, engaging message. It highlights key new features—including easy online booking, instant quotes, a unified dashboard, real-time job tracking, secure payments, and a mobile-friendly design—making property management accessible and transparent. The post uses branded visuals, clear call-to-actions (“Like & Follow”), and concise language, aligning with modern digital marketing standards for e-commerce service launches.
@@ -136,10 +181,7 @@ The **Facebook post image** serves as a public launch announcement for the new D
 - **Reflect company branding and professionalism:**  
   Display the DS Property Group name, mission, and maintain visual consistency.
 
-
-![DS property Group logo](static/media/dsp-facebook-mockpost.png)
----
-
+## ![DS property Group logo](static/media/readme-media/dsp-facebook-mockpost.png)
 
 ### <span style="color:gold">Business Model & Purpose</span>
 
@@ -187,8 +229,8 @@ DS Property Maintenance Portal blends the best of both worlds:
   Skilled staff perform work on-site across Florida, maintaining the highest professional standards.
 
 - **Staff-First Technology:**  
- DS Property Maintenance Portal goes beyond traditional business models by investing in **cutting-edge technology for service staff**.  
-Our custom Progressive Web App (PWA), optimized for phones and tablets, transforms how property services are delivered in the field.
+   DS Property Maintenance Portal goes beyond traditional business models by investing in **cutting-edge technology for service staff**.  
+  Our custom Progressive Web App (PWA), optimized for phones and tablets, transforms how property services are delivered in the field.
 
 **Key Features for Field Teams:**
 
@@ -196,42 +238,45 @@ Our custom Progressive Web App (PWA), optimized for phones and tablets, transfor
   Staff log in each day to instantly see their assigned jobs and optimized route, complete with maps, time slots, and all the critical details for the day ahead.
 
 - **Live Access to Property Notes:**  
-  No more outdated paperwork or missed messages!  
-  - *Just-in-time information*: When a staff member checks in to start a job, they can see the latest property notes—only for the current job.  
-  - Need to open a garage, access a garden, or enter a gated community?  
-    - **Customers simply update their property notes or access codes online, and staff see the update in real time, only when and where it’s needed.**  
+  No more outdated paperwork or missed messages!
+
+  - _Just-in-time information_: When a staff member checks in to start a job, they can see the latest property notes—only for the current job.
+  - Need to open a garage, access a garden, or enter a gated community?
+    - **Customers simply update their property notes or access codes online, and staff see the update in real time, only when and where it’s needed.**
   - All sensitive information is secured and visible only to staff actively working on that property, protecting both privacy and operational security.
 
-- **Instant Feedback & Status Updates:**  
-  - Staff can leave job feedback, record materials used, report issues, and upload before/after photos—*all from their mobile device, on site*.
+- **Instant Feedback & Status Updates:**
+
+  - Staff can leave job feedback, record materials used, report issues, and upload before/after photos—_all from their mobile device, on site_.
   - Managers see feedback instantly in their dashboard, enabling fast follow-up, high accountability, and top-notch service.
 
-- **Real-Time Communication:**  
+- **Real-Time Communication:**
+
   - Secure messaging tools allow staff and management to communicate quickly about specific jobs, scheduling changes, or customer needs—no phone tag or lost emails.
 
-- **Easy Job Completion:**  
+- **Easy Job Completion:**
+
   - Jobs are marked as complete via the app, automatically updating customer dashboards and triggering follow-up workflows (like satisfaction surveys or the next scheduled visit).
 
-- **Security & Efficiency:**  
-  - Staff PWA access is role-based and time-limited, ensuring sensitive information (like gate codes) is *never* left exposed.
+- **Security & Efficiency:**
+  - Staff PWA access is role-based and time-limited, ensuring sensitive information (like gate codes) is _never_ left exposed.
   - All actions are logged for accountability, and access is removed when the job is marked done or after shift ends.
 
 ---
 
-**This powerful, field-first technology ensures:**  
+**This powerful, field-first technology ensures:**
+
 - **Customers** can trust that the right information reaches the right staff at the right time—no confusion, no security risks, and no delay.
 - **Staff** enjoy a modern, efficient, stress-free work experience, letting them focus on service—not paperwork.
 - **Managers** gain live insight into team progress, instant feedback, and a complete digital record of every job.
 
 **It’s a smarter, safer, and more responsive way to deliver property maintenance in the real world.**
 
-
 This hybrid approach guarantees **maximum convenience and transparency for customers**, and **maximum efficiency and accountability for staff**.
 
 ---
 
 **The result: A truly modern property services business—where digital speed and transparency meet real-world expertise and care.**
-
 
 ---
 
@@ -245,25 +290,27 @@ The DS Property Maintenance Portal is packed with innovative, industry-leading f
   One powerful login, two trusted specialist brands: users can seamlessly manage all their outdoor, landscaping, and pool needs from a single dashboard. Switching between services is fast and intuitive—no extra accounts, no confusion.
 
 - **Recurring Service Package Subscriptions (Stripe-Powered)**  
-  Say goodbye to tedious paperwork! Customers can set up monthly or seasonal service plans for lawns, gardens, or pools in seconds. Stripe integration means *secure, automated billing*—no missed payments, no interruptions.
+  Say goodbye to tedious paperwork! Customers can set up monthly or seasonal service plans for lawns, gardens, or pools in seconds. Stripe integration means _secure, automated billing_—no missed payments, no interruptions.
 
 - **Dynamic, Itemized One-Off Quotes with Image Upload**  
   Customers can request custom, one-time jobs by snapping and uploading photos directly through the portal. Quotes are built dynamically with itemized pricing, transparent tax calculations, and instant status updates at every stage.
 
 - **Role-Based Dashboards (Customer, Staff, Admin)**  
-  Every user gets a personalized dashboard with the tools and information they need—nothing more, nothing less.  
-  - **Customers:** See upcoming jobs, track payments, and request support.  
-  - **Staff:** Access assigned routes, property notes, and submit job feedback.  
+  Every user gets a personalized dashboard with the tools and information they need—nothing more, nothing less.
+
+  - **Customers:** See upcoming jobs, track payments, and request support.
+  - **Staff:** Access assigned routes, property notes, and submit job feedback.
   - **Admins:** Oversee all jobs, monitor staff, manage users, and keep operations running smoothly.
 
 - **Admin Tools for Job Assignment, Scheduling, and Feedback**  
   Administrators can quickly assign jobs to staff, adjust schedules, monitor progress in real time, and review detailed feedback. The entire operation is visible, manageable, and trackable at every moment.
 
 - **PWA for Staff (Mobile Job Management, Push Notifications)**  
-  Staff enjoy a blazing-fast Progressive Web App on their smartphones and tablets:  
-  - View job lists and routes  
-  - Receive instant push notifications for new or changed jobs  
-  - Access up-to-date property notes (like gate codes or access instructions) only when needed  
+  Staff enjoy a blazing-fast Progressive Web App on their smartphones and tablets:
+
+  - View job lists and routes
+  - Receive instant push notifications for new or changed jobs
+  - Access up-to-date property notes (like gate codes or access instructions) only when needed
   - Complete jobs and upload photos right from the field
 
 - **Secure Authentication (Django Allauth)**  
@@ -273,53 +320,54 @@ The DS Property Maintenance Portal is packed with innovative, industry-leading f
   Every action is permission-checked: only authorized users can see, edit, or manage sensitive data. Role-based access keeps your information safe and private.
 
 - **SEO-Optimized Structure**  
-  The portal’s pages and content are crafted with SEO best practices, ensuring customers (and search engines) can easily find and understand your services.  
-  - Semantic HTML  
-  - Meta tags for social sharing  
+  The portal’s pages and content are crafted with SEO best practices, ensuring customers (and search engines) can easily find and understand your services.
+
+  - Semantic HTML
+  - Meta tags for social sharing
   - Fast, accessible, mobile-first design
 
 - **Secure, PCI-Compliant Stripe Payments**  
-  All transactions are processed using Stripe—an industry leader for payment security.  
-  - PCI DSS compliance  
-  - Encrypted payments  
+  All transactions are processed using Stripe—an industry leader for payment security.
+
+  - PCI DSS compliance
+  - Encrypted payments
   - No sensitive card data ever stored on your servers
 
 - **Real-Time Feedback and Updates for Customers**  
-  Customers are always in the loop:  
-  - Get instant notifications on job status, quotes, payments, and more  
-  - Toast messages and confirmations for every action  
+  Customers are always in the loop:
+  - Get instant notifications on job status, quotes, payments, and more
+  - Toast messages and confirmations for every action
   - Live support and feedback at every stage of the customer journey
 
 ---
 
-Each of these features has been meticulously crafted to deliver *maximum convenience, transparency, and peace of mind* for every user—making DS Property Maintenance Portal the gold standard for digital property management in Florida.
-
-
+Each of these features has been meticulously crafted to deliver _maximum convenience, transparency, and peace of mind_ for every user—making DS Property Maintenance Portal the gold standard for digital property management in Florida.
 
 ---
 
 ## <span style="color:gold">User Stories</span>
 
 ### Customers
+
 - Register/login and reset password (Django Allauth)
 - As a user, I want to be able to browse packages, so that I can easily find ones that fit my requirements.
 - Request/view custom quotes, leave feedback
 - Responsive design across all devices
 
 ### Staff/Admin
+
 - Dashboard for all jobs/requests/quotes
 - CRUD for services, packages, agreements
 - Assign jobs, view feedback, mark as complete/missed
 
 ### Developer
+
 - Cloud deployment
 - Automated/manual testing
 - Error handling and robust security
 
-
 **To view the full list of current and completed user stories, please visit the live project board:**  
 [https://github.com/users/Rick-8/projects/14/views/1](https://github.com/users/Rick-8/projects/14/views/1)
-
 
 ---
 
@@ -341,7 +389,7 @@ Each of these features has been meticulously crafted to deliver *maximum conveni
 - HTML5 semantic tags are used throughout: `<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`, `<form>`, and `<article>` where relevant.
 - Page headings use appropriate hierarchy (`<h1>` for page title, `<h2>` for sections, etc.), aiding assistive technologies in page structure recognition.
 
-### High Color Contrast and Readable Fonts (WCAG 2.1 AA)
+### High Color Contrast and Readable Fonts
 
 - Colors (gold, white, dark backgrounds) were selected and tested to provide high contrast.
 - **Font choices** (Exo, Playfair Display, Fjalla One) are web-safe, modern, and tested for clarity and readability.
@@ -384,22 +432,23 @@ All forms (login, signup, quote request, profile edit, etc.):
 
 ### Visual References
 
-## **Landing Page Example**  
+## **Landing Page Example**
 
 > **The landing page is designed with a vibrant, modern aesthetic featuring a dark glass theme that immediately sets the tone for the site. Clear branding and visually engaging elements establish trust and professionalism from the first impression. The site’s purpose is communicated up front: to provide streamlined property management and service solutions. Prominent calls to action, such as “Get Started,” “Browse Services,” and “Request a Quote,” guide users toward key actions, ensuring an intuitive and inviting experience for every visitor.**
 
 ![Landing Page](static/media/readme-media/dsp-wf-landingpage.png)
 
 **Service Plan Selection Example**
+
 > **The service plan selection page presents available packages in an easy-to-navigate accordion layout. Each plan includes a concise description and relevant details, while action buttons within each section allow users to open the menu system and take the next step. This design ensures users can quickly compare options and make selections in a streamlined, user-friendly way.**
 
 ![Service Plan](static/media/readme-media/serviceplan-display.png)
 
-## **Property selcetion view turned Main Menu**  
+## **Property selcetion view turned Main Menu**
+
 > **Originally, the idea to display property details was conceived as a one-off feature. However, during the Agile development process, this concept evolved into the overall theme for the entire site. By building the main menu and site structure around property management, we simplified navigation and created a more cohesive and user-friendly experience. This shift was made mid-project to ensure the design better served users and aligned with the project’s core goals.**
 
 ![Menu Idea](static/media/readme-media/dsp-wf-property-turn-package.webp)
-
 
 ---
 
@@ -409,7 +458,6 @@ All forms (login, signup, quote request, profile edit, etc.):
 - Used browser accessibility tools (Lighthouse, Axe, or Wave) to confirm color contrast, navigation order, and ARIA attribute coverage.
 - No critical accessibility errors or warnings present.
 - Accessibility audits were conducted with Chrome Lighthouse; all major issues were resolved and scores consistently exceeded 95–100%.
-
 
 ---
 
@@ -503,12 +551,12 @@ All forms (login, signup, quote request, profile edit, etc.):
 
 #### Accessibility & Performance
 
-| Category      | Score |
-|---------------|-------|
-| Performance   | 99    |
-| Accessibility | 93    |
-| Best Practices| 78    |
-| SEO           | 100   |
+| Category       | Score |
+| -------------- | ----- |
+| Performance    | 99    |
+| Accessibility  | 93    |
+| Best Practices | 78    |
+| SEO            | 100   |
 
 All user flows tested on **desktop** and **mobile** browsers.  
 Customer feedback collected after each job via dashboard modal.
@@ -517,51 +565,97 @@ Customer feedback collected after each job via dashboard modal.
 
 - Home page loads, navigation and footer visible everywhere  
   ![Home](static/media/readme-media/dsp-landing.png)
-- [ ] Main navigation bar visible and sticky on all pages
-- [ ] Navigation links work (Home, Services, Products, About, Contact)
-- [ ] Footer links visible and working
-- [ ] Custom 404 page appears for invalid URLs
+- Main navigation bar visible and sticky on all pages
+- Navigation links work (Home, Services, Products, About, Contact)
+- Footer links visible and working
+- Custom 404 page appears for invalid URLs
 
-...
 
-(continue all checklist items as above)
+  ![Home](static/media/readme-media/dsp-404-page.png)
 
-#### Screenshots
+- Custom 500 page appears for invalid URLs
 
-- Home page (desktop & mobile):  
-  ![Home](static/media/readme-media/home_desktop.png)
-- Navigation menu open (mobile):  
-  ![Nav](static/media/readme-media/nav_mobile.png)
-- Registration/login form:  
-  ![Login](static/media/readme-media/login.png)
-- Profile page:  
-  ![Profile](static/media/readme-media/profile.png)
-- Property management (add/edit/delete):  
-  ![Property](static/media/readme-media/property_add.png)
-- Service package selection:  
-  ![Package](static/media/readme-media/package_select.png)
-- Subscription payment flow:  
-  ![Payment](static/media/readme-media/payment.png)
-- Subscription success:  
-  ![SubSuccess](static/media/readme-media/subscription_success.png)
-- User dashboard with active sub:  
-  ![Dashboard](static/media/readme-media/dashboard.png)
-- Quote request:  
-  ![Quote](static/media/readme-media/quote_request.png)
-- Quote email (inbox):  
-  ![QuoteEmail](static/media/readme-media/quote_email.png)
-- Admin dashboard:  
-  ![Admin](static/media/readme-media/admin_dashboard.png)
-- Staff portal:  
-  ![Staff](static/media/readme-media/staff_portal.png)
-- 404 page:  
-  ![404](static/media/readme-media/404.png)
-- Newsletter/signup:  
-  ![Newsletter](static/media/readme-media/newsletter.png)
-- HTML validation badge:  
-  ![HTML Check](static/media/readme-media/html-check.webp)
-- W3C CSS validation badge:  
-  ![W3C CSS Check](static/media/readme-media/w3s-css-check.webp)
+  ![Home](static/media/readme-media/dsp-500-page.png)
+
+- Sign up page, with GDPR built in
+
+![Sign up page, with GDPR built in](static/media/readme-media/dsp-sign-up.png)
+
+<a href="https://ds-property-group-04ec2ca20d25.herokuapp.com/test-500/"
+   style="color:gold; font-weight:bold; text-decoration:underline;">
+Test 500 Page
+</a>
+
+## Subscription: Select, Buy, and Manage
+
+---
+
+### Service Plan Selection
+
+
+![Payment Process](static/media/readme-media/dsp-memberships-list.png)
+
+![Payment Process](static/media/readme-media/dsp-memberships-select.png)
+
+The subscription flow begins with the **Service Plan Selection** page.  
+Here, users are presented with a clear, accordion-style display of available service packages. Each plan features a concise description and relevant details, making it easy for users to compare options. Action buttons within each accordion allow users to select a plan and assign it to one of their properties.
+
+---
+
+### Selecting a Property and Confirming Details
+
+
+Once a user selects a service plan, they can choose the property they wish to subscribe for that service.  
+The property view clearly indicates which properties have active subscriptions and provides easy access to manage or change packages.
+
+---
+
+### Subscription Checkout and Payment
+
+![Payment Terms](static/media/readme-media/dsp-memberships-terms.png)
+
+![Payment Terms](static/media/readme-media/dsp-memberships-terms-pay.png)
+
+![Payment Terms](static/media/readme-media/payment-process.png)
+
+![Payment Terms](static/media/readme-media/dsp-memberships-terms-pay-success.png)
+
+
+After selecting a plan and property, users are guided through a secure checkout process powered by Stripe.  
+A summary of the selected service, pricing, and terms is displayed.  
+Users must review and accept the terms before proceeding. The payment process is intuitive, ensuring transparency and security throughout.
+
+---
+
+### Managing Active Subscriptions
+
+![All Properties with Active Subscription](static/media/readme-media/superuser-all-subscriptions.png)
+![Confirm Cancel Subscription](static/media/readme-media/all-subscriptions-confirm-cancel.png)
+
+Once subscribed, users can view all active subscriptions in one place.  
+The subscription management page lists each current service, associated property, and renewal date.  
+Users can easily review their plans, see the subscription status, and initiate cancellation or changes with a simple confirmation step.
+
+---
+
+This step-by-step flow demonstrates how users can easily select, purchase, and manage their service subscriptions, ensuring a streamlined and user-friendly experience from selection to ongoing management.
+
+
+
+## One off Quote Jobs
+
+The One off Quote Jobs feature allows users to request a custom service or job outside of their regular subscription. This process is designed to be simple and transparent, ensuring users receive an accurate estimate before any work begins.
+Users start by filling out a quote request form, where they can describe the job in detail and upload photos to help clarify their needs. Once submitted, the request is sent directly to the admin team for review.
+Administrators can then review all incoming quote requests, ask follow-up questions if needed, and respond with a detailed cost estimate. The user is notified when their quote is ready, and can view the breakdown of parts, labor, and any taxes or fees.
+If the user accepts the quote, they are guided through a secure payment process. Once payment is completed, the job is officially scheduled and tracked within the platform. Users can monitor the status of their one-off jobs and receive updates as work progresses.
+
+This system ensures clear communication, fair pricing, and a smooth process from initial request to completed service, providing flexibility for both standard and unique customer needs.
+
+![Confirm Cancel Subscription](static/media/readme-media/all-subscriptions-confirm-cancel.png)
+
+
+
+
 
 #### User Feedback
 
@@ -687,7 +781,8 @@ All secrets loaded using `django-environ`. See `.env.example` for full list.
 - Thanks to Code Institute, Django docs, and open-source community
 
 ### Special Thanks
-A heartfelt thank you to my mentor, whose honest feedback, thoughtful advice, and unwavering support have fueled my passion for web development. 
+
+A heartfelt thank you to my mentor, whose honest feedback, thoughtful advice, and unwavering support have fueled my passion for web development.
 Their guidance has been instrumental throughout this project — making the challenges lighter and the learning far more meaningful.
 
 ---

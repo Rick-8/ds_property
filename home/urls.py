@@ -9,7 +9,6 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('border-2-border/', views.border_2_border, name='border-2-border'),
     path('splashzone/', views.splashzone_pools, name='splashzone_pools'),
-    path("test-404/", trigger_404, name="test_404"),
     path("test-500/", trigger_500, name="test_500"),
     path('', views.ServicePackageListView.as_view(), name='servicepackage_list'),
     path('create/', views.ServicePackageCreateView.as_view(), name='servicepackage_create'),

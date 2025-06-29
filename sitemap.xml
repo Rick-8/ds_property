@@ -9,42 +9,52 @@
 
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/memberships/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/quotes/request/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/border-2-border/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/splashzone/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/account/login/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/account/signup/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/contact/</loc>
-  <lastmod>2025-06-26T11:45:34+00:00</lastmod>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/privacy-policy/</loc>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ds-property-group-04ec2ca20d25.herokuapp.com/cookie-policy/</loc>
+  <lastmod>2025-06-29T14:51:50+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 

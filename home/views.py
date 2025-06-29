@@ -44,11 +44,6 @@ def custom_500_view(request):
     return render(request, 'home/500.html', status=500)
 
 
-def trigger_404(request):
-    """Manually trigger a 404 page (for testing)."""
-    return HttpResponseNotFound(render(request, 'home/404.html', status=404))
-
-
 def trigger_500(request):
     """Manually trigger a 500 error (for testing)."""
     raise Exception("Simulated server error for testing 500 page")
