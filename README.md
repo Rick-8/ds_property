@@ -450,14 +450,25 @@ All forms (login, signup, quote request, profile edit, etc.):
 
 ![Menu Idea](static/media/readme-media/dsp-wf-property-turn-package.webp)
 
+## The menu system today.
+
+![Main Menu](static/media/readme-media/main-menu.png)
+![Package Menu](static/media/readme-media/package-menu.webp)
+![Quote Menu](static/media/readme-media/quote-menu.webp)
 ---
 
 ### Accessibility Testing & Compliance
 
-- Manual keyboard and screen reader testing performed for all core user flows.
-- Used browser accessibility tools (Lighthouse, Axe, or Wave) to confirm color contrast, navigation order, and ARIA attribute coverage.
+- Manual keyboard testing performed for all core user flows.
+- Used browser accessibility tools (Lighthouse, and Wave) to confirm color contrast, navigation order, and ARIA attribute coverage.
 - No critical accessibility errors or warnings present.
 - Accessibility audits were conducted with Chrome Lighthouse; all major issues were resolved and scores consistently exceeded 95–100%.
+
+![Wave Screen Test](static/media/readme-media/wave-test.webp)
+
+![Wave Screen Test](static/media/readme-media/html-check.webp)
+
+![Wave Screen Test](static/media/readme-media/w3s-css-check.webp)
 
 ---
 
@@ -498,7 +509,6 @@ All forms (login, signup, quote request, profile edit, etc.):
 - `staff_portal/` – PWA, job scheduling, feedback
 - `static/` – CSS, JS, images, README/demo media
 - `templates/` – Base layouts, modular includes
-- `docs/` – Wireframes, ERDs, policy docs
 
 ---
 
@@ -547,6 +557,17 @@ All forms (login, signup, quote request, profile edit, etc.):
 
 ## <span style="color:gold">Testing</span>
 
+
+  ## Testing & Quality Assurance
+
+  Throughout the development of DS Property Maintenance, rigorous testing was 
+  conducted at every stage of the project lifecycle—from initial design through 
+  to implementation and deployment. Regular flow checks were performed to ensure 
+  each new feature or modification worked seamlessly within the overall 
+  application. This iterative approach, combining manual and automated testing, 
+  allowed for early detection and prompt resolution of bugs, resulting in a 
+  robust, reliable, and user-friendly final product.
+
 ### Manual Testing & User Feedback
 
 #### Accessibility & Performance
@@ -567,8 +588,9 @@ Customer feedback collected after each job via dashboard modal.
   ![Home](static/media/readme-media/dsp-landing.png)
 - Main navigation bar visible and sticky on all pages
 - Navigation links work (Home, Services, Products, About, Contact)
-- Footer links visible and working
-- Custom 404 page appears for invalid URLs
+- Footer links visible and working.
+- Custom 404 page appears for invalid URLs.
+- Custom 500 page appears for server errors.
 
 
   ![Home](static/media/readme-media/dsp-404-page.png)
@@ -592,16 +614,16 @@ By default, browsers request `/favicon.ico` to display a site’s icon in browse
 
 To ensure the favicon is always available at `/favicon.ico`, even when using Django's static files system, we added a dedicated URL pattern in `urls.py`:
 
-```python
-# --- Serve favicon.ico ---
-path(
-    'favicon.ico',
-    serve,
-    {
-        'path': 'media/favicon.ico',
-        'document_root': os.path.join(settings.BASE_DIR, 'static'),
-    }
-),
+    ```python
+    # --- Serve favicon.ico ---
+    path(
+        'favicon.ico',
+        serve,
+        {
+            'path': 'media/favicon.ico',
+            'document_root': os.path.join(settings.BASE_DIR, 'static'),
+        }
+    ),
 This route ensures that requests to /favicon.ico are correctly served from the static/media/favicon.ico file.
 
 This helps prevent 404 errors for /favicon.ico and provides a consistent user experience across browsers.
@@ -637,8 +659,10 @@ The property view clearly indicates which properties have active subscriptions a
 ![Payment Terms](static/media/readme-media/dsp-memberships-terms.png)
 
 ![Payment Terms](static/media/readme-media/dsp-memberships-terms-pay.png)
+![Payment Terms](static/media/readme-media/payment-terms.png)
 
 ![Payment Terms](static/media/readme-media/payment-process.png)
+![Payment Terms](static/media/readme-media/quote-payment-3d.png)
 
 ![Payment Terms](static/media/readme-media/dsp-memberships-terms-pay-success.png)
 
@@ -663,12 +687,11 @@ Users can easily review their plans, see the subscription status, and initiate c
 This step-by-step flow demonstrates how users can easily select, purchase, and manage their service subscriptions, ensuring a streamlined and user-friendly experience from selection to ongoing management.
 
 
-
-## One off Quote Jobs
+## <span style="color:gold">One off Quote Jobs</span>
 
 The One off Quote Jobs feature allows users to request a custom service or job outside of their regular subscription. This process is designed to be simple and transparent, ensuring users receive an accurate estimate before any work begins.
 Users start by filling out a quote request form, where they can describe the job in detail and upload photos to help clarify their needs. Once submitted, the request is sent directly to the admin team for review.
-Administrators can then review all incoming quote requests, ask follow-up questions if needed, and respond with a detailed cost estimate. The user is notified when their quote is ready, and can view the breakdown of parts, labor, and any taxes or fees.
+Administrators can then review all incoming quote requests (Staff Portal -> Custom Jobs), ask follow-up questions if needed, and respond with a detailed cost estimate. The user is notified when their quote is ready, and can view the breakdown of parts, labor, and any taxes or fees.
 If the user accepts the quote, they are guided through a secure payment process. Once payment is completed, the job is officially scheduled and tracked within the platform. Users can monitor the status of their one-off jobs and receive updates as work progresses.
 
 This system ensures clear communication, fair pricing, and a smooth process from initial request to completed service, providing flexibility for both standard and unique customer needs.
@@ -676,8 +699,192 @@ This system ensures clear communication, fair pricing, and a smooth process from
 ![Confirm Cancel Subscription](static/media/readme-media/all-subscriptions-confirm-cancel.png)
 
 
+## How the Quote Jobs Workflow Works
+
+The "Quote Jobs" system lets customers request bespoke, one-off jobs and allows staff to handle quotes, customer responses, payments, and job scheduling seamlessly from start to finish. Below is an overview of the full process, along with illustrative screenshots.
+
+### 1. Customer Requests a Quote
+
+Customers submit a detailed quote request, optionally including images and descriptions of the work required.
+
+![Quote Request Form](static/media/readme-media/quote-start.webp)
+*Example: Customer submits a request via the online form.*
+
+---
+
+### 2. Admin Reviews and Builds Quote
+
+Superusers or admin staff review incoming quote requests, build a custom quote by adding parts, labor, and tax, then mark it as reviewed and send it to the customer for approval.
+
+![custom-job-list](static/media/readme-media/custom-job-list.webp)
+*Example: Admin assembles quote line items and sends to customer.*
+
+![custom-job-list](static/media/readme-media/quote-builder.webp)
+*Example: Admin Reveiws, builds and sends quote to customer.*
+
+---
+
+### 3. Customer Reviews and Accepts (or Declines) Quote
+
+Customers receive an email with a secure link or can access the quote from the My Quotes section on the Dashbaord to view the quote, review all details, and can accept or decline directly online.
+
+![Customer Quote Response](static/media/readme-media/quote-pay-view.png)
+*Example: Customer views and responds to the quote from their dashboard or email.*
+
+---
+
+### 4. Online Payment
+
+If the customer accepts, they are redirected to a secure Stripe payment form for fast, one-off payment.
+
+![Customer Quote Response](static/media/readme-media/quote-pay-view.png)
+*Example: Secure online payment for the approved quote. using the test card 4242 4242 4242 4242*
+
+![Customer Quote Response](static/media/readme-media/quote-payment-view.png)
+*Example: Secure online payment fail the used card.  4000 0027 6000 9005*
 
 
+![Customer Quote Response](static/media/readme-media/quote-email-payment-received.webp)
+*Example: Received email - payment received*
+
+---
+One off Quote Jobs
+## How Job Assignment, Routing, and Staff Scheduling Works
+
+The DS Property Maintenance platform uses a secure, organized workflow to ensure jobs are planned, assigned, and completed with full feedback.
+
+### 1. Assigning Jobs to Routes
+
+- Managers/superusers schedule jobs on specific dates and assign them to a geographic or logical route.
+- Each route represents a set of jobs to be completed in a certain area or by a specific crew on that day.
+- Jobs are grouped by date and route in the admin job planner for easy batch assignment.
+
+![quote-assign-unassign-job](static/media/readme-media/quote-assign-unassign-job.webp)
+*Example: Job appears in scheduling dashboard and customer confirmation screen.*
+
+### 2. Assigning Staff to Routes
+
+- After jobs are assigned to a route, staff members are scheduled to cover that route for a specific date.
+- The route planner ensures each staff member sees only their assigned route for each day.
+- Staff cannot view future or past jobs that are not assigned to them, maintaining security and focus.
+
+![staff-schedule-planner](static/media/readme-media/staff-schedule-planner.webp)
+*Example: Assigning Staff to Routes.*
+
+### 3. Staff Access and Work Flow
+
+- On the assigned workday, staff log into the Staff Portal or PWA.
+- They see a clear list of jobs assigned to their route for **that day only**.
+- Jobs cannot be accessed before their scheduled date, preventing early access or tampering.
+  - However there is a Future jobs section, that shows brief job details not listed on the day, (that they can not open to read) for clarity and improved workflow.
+- For each job, staff can:
+    - Mark the job as "Complete"
+    - Log feedback or issues (such as incomplete, delayed, or missed jobs)
+    - Provide reasons and comments for any job not completed
+- GDPR Request link is also provided on the page, should a staff member need to inform management 
+
+![Staff Schedule](static/media/readme-media/job-staff-view.png)
+*Example: Staff Access and Work Flow ability.*
+
+![staff-job-view](static/media/readme-media/job-staff-list.webp)
+*Example: Staff jobs list, each section wraps for small screen.*
+
+### 4. Logging and Feedback
+
+- All job actions and staff feedback are logged with timestamps.
+- Managers can review completed and missed jobs, including reasons and comments, in the admin dashboard.
+- This process ensures accountability, transparency, and provides a record of any issues for quality improvement.
+
+---
+
+**Summary:**  
+This workflow ensures jobs are securely scheduled, staff are only shown their work for the current day, and a full audit trail is maintained for each job—including completion status and feedback.
+
+---
+
+
+## Other Functions and pages
+
+## User Admin Panel
+
+The **User Admin Panel** is a secure interface designed for site superusers
+to efficiently manage all user accounts from a single page.
+It is only accessible to users with superuser privileges.
+
+### Access & Permissions
+
+- **Restricted Access:**  
+  Only logged-in superusers can access the user admin panel.
+  Attempts to access this view by non-superusers are denied.
+- **URL:**  
+  Typically found at `/admin/users/` or similar, depending on your URL
+  configuration.
+
+### Features
+
+The admin panel provides the following controls for each user account:
+
+- **View All Users:**  
+  Displays a table of all users, ordered by:
+  - Superuser status (superusers first)
+  - Staff status
+  - Email address (alphabetically)
+
+- **Toggle Active Status:**  
+  - Enables or disables a user's account.
+  - Deactivated users cannot log in.
+
+- **Toggle Superuser Status:**  
+  - Grants or removes superuser privileges.
+  - Superusers can access all admin tools and settings.
+
+- **Toggle Staff Status:**  
+  - Grants or removes staff privileges.
+  - Staff users may have limited admin access depending on your site
+    configuration.
+
+Each action displays a success message and immediately updates the user’s
+status.
+
+### Implementation Details
+
+- All panel actions (toggle active, superuser, or staff status) are handled
+  by **dedicated views**, protected by a `superuser_required` decorator.
+- The panel uses Django’s messaging framework to provide feedback on
+  actions.
+- If a user is already inactive or lacks required permissions, appropriate
+  messages are shown and the action is not performed.
+
+### Example Workflow
+
+1. **Access the Panel:**  
+   A superuser logs in and navigates to the user admin panel.
+2. **Review Users:**  
+   They see a list of all users, with buttons/links to toggle statuses.
+3. **Change a User’s Status:**  
+   Clicking a toggle button updates the relevant status (e.g., deactivate
+   a user).
+4. **Immediate Feedback:**  
+   A message confirms the change, and the user list refreshes.
+
+### Security
+
+- All views and actions are secured with authentication and permission
+  checks.
+- Non-superusers are denied access at both the view and action levels.
+
+---
+
+**In summary:**  
+The User Admin Panel gives superusers complete control over user activation,
+promotion, and administrative status in a clean, secure, and intuitive
+interface. All changes take effect immediately and are visible to other
+superusers.
+
+
+
+![user-admin-panel](static/media/readme-media/user-admin-panel.png)
+*Example: user admin panel.*
 
 #### User Feedback
 
@@ -703,21 +910,153 @@ This system ensures clear communication, fair pricing, and a smooth process from
 
 ## <span style="color:gold">Automated Testing</span>
 
-- Django unit tests: models, views, forms
-- Pytest for backend logic/edge cases
-- Stripe integration tested with Stripe CLI/webhooks
-- Permission tests for all sensitive views
+Rigorous automated testing was implemented to ensure stability, security, and confidence in the DS Property Maintenance platform. The following automated testing strategies and tools were used throughout development:
+
+---
+
+### Django Unit Tests
+
+- Core **models**, **views**, and **forms** are covered by Django’s built-in unit testing framework.
+- These tests confirm that business logic is enforced, data relationships are maintained, and user input is correctly validated across the platform’s primary features.
+- Example areas tested: property management, service package creation and updates, subscription workflows, quote requests, and admin actions.
+
+---
+
+### Pytest for Backend Logic and Edge Cases
+
+- **Pytest** is utilized for scenarios where more advanced logic or edge-case handling is required.
+- This includes complex workflow testing and ensuring the application responds robustly to invalid or unexpected input.
+- Pytest complements Django’s framework, providing more expressive assertions and fixtures where needed.
+
+---
+
+### Permission and Access Control Tests
+
+- All sensitive views (such as admin quote management, subscription administration, and job scheduling) are tested for proper access control.
+- Tests ensure only authorized users (e.g., superusers, staff, or owners) can view or perform restricted actions.
+- This protects user data and maintains site security.
+
+---
+
+**Screenshot:**  
+Automated test suite results  
+![Automated Testing Pass](static/media/readme-media/auto-testing-pass.png)
+
+---
+
+Automated tests are run regularly to catch regressions and validate new features before deployment. This comprehensive approach helps maintain high code quality and reliability as the platform grows.
+
 
 ---
 
 ## <span style="color:gold">Bug Fixes</span>
 
-- Fixed ServiceAgreement model fields and migrations
-- Fixed Python syntax and template errors
-- Refactored property/package display logic
-- Updated AWS S3 and env variable handling
-- Combined feedback/missed job forms (staff portal)
-- Debugged PWA install, push, and manifest setup
+# 🛠️ Bugs & Error Fix Log
+
+This section documents all significant bugs and issues encountered during the development and testing of DS Property Maintenance, along with their solutions.
+
+---
+
+## 1. `SyntaxError: expected ':' got 'indent'`
+- **Where/When:** Early project setup; Python code would not run.
+- **Cause:** Indentation error in a Python file (improper block formatting).
+- **Fix:** Corrected the indentation to conform with Python’s block structure.
+
+---
+
+## 2. `TypeError: ServiceAgreement() got unexpected keyword arguments`
+- **Where/When:** On creating ServiceAgreement objects.
+- **Cause:** Arguments like `start_date`, `status`, `stripe_customer_id`, `stripe_price_id`, and `amount_paid` were passed to `ServiceAgreement.objects.create()`, but these fields were missing from the model.
+- **Fix:** Added all missing fields to the `ServiceAgreement` model and ran `makemigrations` and `migrate` to update the database schema.
+
+---
+
+## 3. `NoReverseMatch` for 'property_detail' URL
+- **Where/When:** When loading the property list page.
+- **Cause:** Template referenced a URL pattern (`property_detail`) that didn't exist in `urls.py`.
+- **Fix:** Removed the invalid link from the template and, since a dedicated property detail page wasn’t needed, ensured all navigation worked without it.
+
+---
+
+## 4. Missing Property Action Buttons (Add, Edit, Delete)
+- **Where/When:** On the property list template after updates.
+- **Cause:** The "Add," "Edit," and "Delete" buttons were accidentally removed during template modifications.
+- **Fix:** Restored these buttons in the template with correct URLs and used secure POST requests for the delete action.
+
+---
+
+## 5. All Properties Showing "Inactive Package" Status
+- **Where/When:** On property list page.
+- **Cause:** The `list_properties` view was using a manual loop to find active agreements, but the template expected `property.active_agreements` to be available (prefetched).
+- **Fix:** Refactored the view to use Django’s `prefetch_related` for active agreements and removed the manual status loop.
+
+---
+
+## 6. Stripe Payments: Payment Not Reflected or Error
+- **Where/When:** During Stripe payment flows.
+- **Cause:** Either the Stripe secret/public keys were misconfigured or payment webhooks were not set up, so payments weren't reflected in the system.
+- **Fix:** 
+  - Double-checked environment variable setup for Stripe keys.
+  - Added proper webhook handling (`stripe_webhook` view) and tested webhook event simulation.
+  - Ensured relevant agreement/job creation in webhook handler.
+- **Extra:** Added error logging for Stripe API errors for easier debugging.
+
+---
+
+## 7. Service Agreement Cancel Fails Silently
+- **Where/When:** When canceling a service agreement.
+- **Cause:** Stripe subscription ID might have been missing, or subscription already canceled in Stripe, causing no action and confusing feedback.
+- **Fix:** 
+  - Added multiple checks in cancellation view: handles missing Stripe ID and subscriptions already canceled.
+  - Ensured user is always notified with a clear message.
+  - Updated property status locally in both cases.
+
+---
+
+## 8. PDF Invoice Not Attached to Email
+- **Where/When:** When sending quote acceptance or subscription confirmation emails.
+- **Cause:** File path incorrect, or PDF not generated before sending email.
+- **Fix:** 
+  - Corrected path to PDF template/static file.
+  - Improved error handling/logging if PDF is not found/generated.
+
+---
+
+## 9. Quote Accept Flow: Status Must Be 'REVIEWED' to Accept
+- **Where/When:** On admin quote acceptance.
+- **Cause:** Logic required quotes to be reviewed before accepting (business rule), but the admin UI was unclear and did not block or warn.
+- **Fix:** 
+  - Improved admin messages if status is not ‘REVIEWED’.
+  - Added guidance to use the ‘Mark as REVIEWED’ button before acceptance.
+
+---
+
+## 10. PaymentIntent Real Stripe Calls in Tests
+- **Where/When:** During automated tests for quote payment.
+- **Cause:** Tests would call real Stripe API, using up test resources or failing if offline.
+- **Fix:** Mocked Stripe API calls in test environment to simulate success/failure scenarios without real API calls.
+
+---
+
+## 11. Session Data Not Persisting (Package Selection)
+- **Where/When:** When users selected packages/properties but selection was lost after navigating away.
+- **Cause:** Session modification not explicitly marked after updating session dicts.
+- **Fix:** Set `request.session.modified = True` after changes to session data.
+
+---
+
+## 12. Error Feedback Not Shown to User
+- **Where/When:** Any user action that failed silently (e.g., form errors).
+- **Cause:** Error messages not included in template or returned via AJAX.
+- **Fix:** Added `messages.error()` for form validation failures and ensured AJAX error messages are surfaced to the user UI.
+
+---
+
+# Summary
+
+All major issues encountered were resolved with targeted code fixes, improved Django logic, robust error handling, and clear user/admin feedback. This helped ensure a stable, secure, and user-friendly experience throughout the DS Property Maintenance application.
+
+
 
 ---
 
@@ -781,17 +1120,48 @@ All secrets loaded using `django-environ`. See `.env.example` for full list.
 - All staff trained in GDPR using [GDPR-Requests-CheatSheet.md](./GDPR-Requests-CheatSheet.md).
 - GDPR requests are acknowledged, recorded, handled after identity verification, logged for audits, and responded to within 30 days.
 
+![staff-gdpr-information](static/media/readme-media/staff-gdpr.webp)
+*Example: GDPR Staff information screen - accessed from the staff jobs view.*
+
+![staff-gdpr-modal](static/media/readme-media/staff-gdpr-modal.webp)
+*Example: GDPR Request Modal.*
+
+![Staff GDPR information page](static/media/readme-media/gdpr-manager-email.png)
+*Example: All superuser receive this email, following a submit on the page above.*
+
 ---
 
-## <span style="color:gold">Future Improvements</span>
+## <span style="color:gold">Future Improvements and Upgrades</span>
 
-- Upgrade admin content editor to CKEditor 5
-- Expand automated test coverage for all features
-- Add complete admin audit logs
-- Support user self-service data download/export
-- Integrate SMS and in-app notifications
-- In-app chat between staff and office/admin
-- Add new property service brands
+To further enhance the DS Property Maintenance platform, the following improvements and features are planned for future development:
+
+- **Upgrade admin content editor to CKEditor 5:**  
+  Improve the user experience for administrators by enabling advanced rich-text editing and media embedding in all admin-managed content areas.
+
+- **Expand automated test coverage for all features:**  
+  Ensure long-term stability and reliability by extending automated testing to cover every workflow, including edge cases and new functionality.
+
+- **Add complete admin audit logs:**  
+  Implement detailed tracking of admin actions across the platform, improving transparency, accountability, and the ability to troubleshoot or review key changes.
+
+- **Support user self-service data download/export:**  
+  Allow users to easily download or export their account, property, and service data in common formats for greater transparency and data portability.
+
+- **Integrate SMS and in-app notifications:**  
+  Provide real-time updates to users and staff about important account events, job statuses, and system notifications via SMS and built-in app alerts.
+
+- **In-app chat between staff and office/admin:**  
+  Enable direct communication and collaboration by adding secure chat functionality for staff and administrative users within the platform.
+
+- **Add new property service brands:**  
+  Expand the business by incorporating additional sub-brands or service lines, allowing for greater specialization and market reach.
+
+- **Commercial property management:**  
+  Introduce support for managing commercial property portfolios, including features for larger buildings, tenant management, and advanced reporting.
+
+- **Accepting all jobs and subscriptions, and outsourcing jobs to nearby companies:**  
+  Build a system to handle every job request—whether in-house or outsourced to trusted partner companies—ensuring all customer needs are met efficiently and transparently.
+
 
 ---
 
@@ -801,6 +1171,7 @@ All secrets loaded using `django-environ`. See `.env.example` for full list.
 - CKEditor via django-ckeditor
 - Stripe integration based on Stripe’s official Django docs
 - Thanks to Code Institute, Django docs, and open-source community
+- Chat GPT - Image logo creation 
 
 ### Special Thanks
 
@@ -819,14 +1190,11 @@ For full wireframes and mockups, see `/docs/wireframes/`.
 
 ## <span style="color:gold">Social Media & Marketing</span>
 
-- Facebook page: (add link)
-- Twitter/X: (add link)
+- Facebook page - owned by itself.
+- WhatsApp - Owned by its self.
 - Customer testimonials and marketing banners shown on homepage and product pages
 
 ---
 
 ## <span style="color:gold">Credits</span>
-
-This project is original work by [Your Name].  
-All third-party resources credited above.  
-For queries, contact via the website.
+All third-party resources credited above.
