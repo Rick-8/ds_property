@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Profile, Property
+from .models import NewsletterSignup
 
 
 @admin.register(Profile)
@@ -18,3 +19,10 @@ class PropertyAdmin(admin.ModelAdmin):
     search_fields = ('label', 'address_line_1', 'city', 'postcode')
     readonly_fields = ('date_added',)
     ordering = ('-date_added',)
+
+
+@admin.register(NewsletterSignup)
+class NewsletterSignupAdmin(admin.ModelAdmin):
+    list_display = ('email', 'consent', 'date_joined')
+    search_fields = ('email',)
+    list_filter = ('consent', 'date_joined')

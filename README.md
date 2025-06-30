@@ -58,7 +58,7 @@
 ## Table of Contents
 
 - [Project Overview](#project-overview)
-- [Social Media Post for Facebook (Mockup)](#social-media-post-for-facebook-mockup)
+- [Social Media Post for Facebook (Mockup) and Newsletter Sign Up](#social-media-post-for-facebook-mockup-and-newsletter-sign-up)
 - [Business Model & Purpose](#business-model--purpose)
 - [Key Features](#key-features)
 - [User Stories](#user-stories)
@@ -153,7 +153,7 @@ Whether you manage a single-family home, multiple rentals, or HOA communities, t
 
 ---
 
-### <span style="color:gold">Social Media Post for Facebook (Mockup)</span>
+### <span style="color:gold">Social Media Post for Facebook (Mockup) and Newsletter Sign Up</span>
 
 ---
 
@@ -181,9 +181,87 @@ The **Facebook post image** serves as a public launch announcement for the new D
 - **Reflect company branding and professionalism:**  
   Display the DS Property Group name, mission, and maintain visual consistency.
 
+
 ## ![DS property Group logo](static/media/readme-media/dsp-facebook-mockpost.png)
 
-### <span style="color:gold">Business Model & Purpose</span>
+## Newsletter Signup, Digital Marketing & GDPR Management
+
+This project features a robust, fully GDPR-compliant newsletter signup and management module that goes above and beyond basic requirements. All features are tightly integrated, user-focused, and easy to manage for both customers and site administrators.
+
+---
+
+### Public Newsletter Signup
+
+- **Accessible to all visitors**: A clearly branded newsletter signup form is linked in the main navigation, sidebar, and site footer for maximum visibility.
+- **GDPR opt-in**: Users (guests or logged-in) must explicitly consent to receive marketing emails by ticking a checkbox.
+- **No account required**: Guests can sign up, or users can opt in during account registration or via their profile.
+- **Consent is always required and securely stored**.
+
+---
+
+### Dynamic Profile Integration
+
+- **Bidirectional sync** between user profiles and the newsletter signup system:
+    - If a user opts in or out of marketing emails from their profile page, their email is automatically added to or removed from the main newsletter signup list.
+    - If an admin updates or deletes a consented email from the newsletter dashboard, the user’s profile consent is immediately updated to match.
+- **One source of truth**: There’s never a mismatch between a user's `marketing_consent` profile field and their status in the newsletter database.
+- **Withdrawing consent is instant**—whether initiated by the user or by admin.
+
+---
+
+### Admin Dashboard (GDPR Management)
+
+- **Superuser-only dashboard** for full newsletter management.
+- **Fully responsive**: Gold/dark theme and mobile-friendly modal dialogs for all newsletter signup management actions (edit and delete). The admin dashboard is streamlined and easy to use on all devices, with modals providing in-place editing and deletion for seamless workflow.
+- **Email search bar**: Instantly filter signups by email address.
+- **Scrollable table**: Large lists are easy to navigate on any screen size, with sticky headers and a smooth UI.
+- **Edit consent**: Update an email or marketing consent in place. Changes are dynamically reflected in any linked user profile.
+- **Delete signup**: Instantly remove an email from the list and automatically revoke marketing consent in any linked user profile for total GDPR compliance.
+- **Reset search**: Easily clear filters and return to the full list.
+
+---
+
+### Two-Way Data Synchronization
+
+- **Automatic sync** between the user profile and newsletter consent database, regardless of where the change is made (admin or user).
+- **Admin CRUD actions** are always reflected in user-facing profile consent, and vice versa.
+- **Ensures full compliance** with privacy regulations and e-commerce best practice.
+
+---
+
+### Export & Integration
+
+- **Export-ready**: Newsletter signups can be viewed and exported via the dashboard or Django admin for use with email marketing platforms (MailChimp, Brevo, etc.).
+- **No built-in “send newsletter” function**—this system is designed for easy integration with industry-standard tools, as recommended for reliable deliverability and analytics.
+- **Designed for extensibility**: Future integration with APIs or bulk email tools is straightforward.
+
+---
+
+### Data Privacy & GDPR Compliance
+
+- **No marketing email is ever sent without explicit opt-in.**
+- **All consents are logged and easily revoked**—users can withdraw at any time, and admins can manage consent instantly.
+- **No accidental mailings**: Only actively consented emails remain in the list.
+
+---
+
+### Screenshot
+
+![Newsletter Signup Screenshot](static/media/readme-media/newsletter-signup.webp)
+
+![Newsletter Admin Dashboard Screenshot](static/media/readme-media/newsletter-dashboard.webp)
+
+---
+
+### 💡 Why This Matters
+
+> “A dynamically linked, GDPR-compliant newsletter signup and management system is essential for modern e-commerce, both for regulatory reasons and to build real trust with customers. This implementation ensures no accidental marketing, full user control, and a seamless, branded management experience for staff and admins.”
+
+---
+
+
+
+## <span style="color:gold">Business Model & Purpose</span>
 
 **DS Property Maintenance Portal** is built on a flexible, future-ready business model that bridges digital convenience with hands-on expertise.  
 The platform unites two specialist brands under one digital roof, giving Florida property owners a single, powerful portal for every outdoor and pool need.

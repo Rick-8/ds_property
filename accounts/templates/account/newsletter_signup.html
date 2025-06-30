@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 420px;">
+  <div class="dark-opaque rounded-4 shadow">
+    <h2 class="large-gold-text mb-3" style="font-size:2rem;">
+      Join Our Newsletter
+    </h2>
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+      <div class="mb-3 text-start">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {% if form.email.errors %}
+          <div class="text-danger small">{{ form.email.errors }}</div>
+        {% endif %}
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-check-label">
+          {{ form.consent }} {{ form.consent.label }}
+        </label>
+        {% if form.consent.errors %}
+          <div class="text-danger small">{{ form.consent.errors }}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-outline-gold w-100">
+        <i class="fa fa-paper-plane me-1"></i> Sign Up
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

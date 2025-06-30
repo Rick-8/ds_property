@@ -79,3 +79,11 @@ class Property(models.Model):
 
     class Meta:
         verbose_name_plural = "Properties"
+
+
+class NewsletterSignup(models.Model):
+    email = models.EmailField(unique=True)
+    consent = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.email

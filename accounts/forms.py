@@ -1,12 +1,11 @@
 from django import forms
-from .models import Profile, Property
+from .models import Profile, Property, NewsletterSignup
 from allauth.account.forms import SignupForm
 
 
 class ProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True, label='Email')
 
-    # Checkbox to optionally add the default address as a saved property
     add_as_property = forms.BooleanField(
         required=False,
         label="Add this address to my property list",
@@ -32,7 +31,6 @@ class ProfileForm(forms.ModelForm):
     def save(self, commit=True):
         profile = super().save(commit=False)
 
-        # Sync email with User model
         if self.user:
             self.user.email = self.cleaned_data['email']
             self.user.save()
@@ -41,7 +39,6 @@ class ProfileForm(forms.ModelForm):
         if commit:
             profile.save()
 
-            # Handle the "add as property" checkbox
             if self.cleaned_data.get('add_as_property'):
                 address_exists = Property.objects.filter(
                     profile=profile,
@@ -68,7 +65,10 @@ class ProfileForm(forms.ModelForm):
 class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
-        exclude = ['profile', 'date_added', 'route_number', 'has_active_service', 'stripe_subscription_id']
+        exclude = [
+            'profile', 'date_added', 'route_number',
+            'has_active_service', 'stripe_subscription_id'
+        ]
 
 
 class CustomSignupForm(SignupForm):
@@ -79,9 +79,22 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         user = super().save(request)
-        # Save marketing consent to the user's profile
         profile = getattr(user, 'profile', None)
         if profile:
             profile.marketing_consent = self.cleaned_data.get('marketing_consent', False)
             profile.save()
         return user
+
+
+class NewsletterQuickSignupForm(forms.Form):
+    email = forms.EmailField(label="Email address", required=True)
+    consent = forms.BooleanField(
+        label="I agree to receive marketing emails.",
+        required=True
+    )
+
+
+class NewsletterSignupAdminForm(forms.ModelForm):
+    class Meta:
+        model = NewsletterSignup
+        fields = ['email', 'consent']

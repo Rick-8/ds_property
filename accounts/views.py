@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db.models import Prefetch
-
 from memberships.models import ServiceAgreement
-from .models import Profile, Property
+from .models import Profile, Property, NewsletterSignup
 from .forms import ProfileForm, PropertyForm
+from .forms import NewsletterQuickSignupForm
+from .forms import NewsletterSignupAdminForm
 
 
 @login_required
@@ -38,6 +39,18 @@ def view_profile(request):
 
             profile.save()
 
+            # --- SYNC NewsletterSignup with Profile Consent ---
+            # If the user consents, ensure they're on the newsletter list
+            if profile.marketing_consent:
+                NewsletterSignup.objects.update_or_create(
+                    email=profile.email,
+                    defaults={'consent': True}
+                )
+            else:
+                # If they remove consent, remove from newsletter list
+                NewsletterSignup.objects.filter(email=profile.email).delete()
+            # --------------------------------------------------
+
             if form.cleaned_data.get('add_as_property'):
                 exists = Property.objects.filter(
                     profile=profile,
@@ -65,6 +78,7 @@ def view_profile(request):
         messages.info(request, "Please complete your profile to get the best experience.")
 
     return render(request, 'account/profile.html', {'form': form})
+
 
 
 @login_required
@@ -251,4 +265,89 @@ def admin_property_list(request):
 
     return render(request, 'admin/property_list.html', {
         'properties': properties,
+    })
+
+
+def newsletter_signup(request):
+    if request.method == "POST":
+        form = NewsletterQuickSignupForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            consent = form.cleaned_data['consent']
+            signup, created = NewsletterSignup.objects.get_or_create(
+                email=email,
+                defaults={'consent': consent}
+            )
+            if not created and signup.consent != consent:
+                signup.consent = consent
+                signup.save()
+            try:
+                profile = Profile.objects.get(email=email)
+                profile.marketing_consent = consent
+                profile.save()
+            except Profile.DoesNotExist:
+                pass
+
+            messages.success(request, "Thank you for signing up for our newsletter!")
+            return redirect('newsletter_signup')
+    else:
+        form = NewsletterQuickSignupForm()
+    return render(request, "account/newsletter_signup.html", {"form": form})
+
+
+@staff_member_required
+def newsletter_crud_list(request):
+    signups = NewsletterSignup.objects.all().order_by('-date_joined')
+    return render(request, 'account/newsletter_crud_list.html', {'signups': signups})
+
+
+@staff_member_required
+def newsletter_crud_edit(request, pk):
+    signup = get_object_or_404(NewsletterSignup, pk=pk)
+    if request.method == "POST":
+        form = NewsletterSignupAdminForm(request.POST, instance=signup)
+        if form.is_valid():
+            form.save()
+
+            try:
+                profile = Profile.objects.get(email=signup.email)
+                profile.marketing_consent = signup.consent
+                profile.save()
+            except Profile.DoesNotExist:
+                pass
+
+            messages.success(request, "Signup updated.")
+            return redirect('newsletter_crud_dashboard')
+    else:
+        form = NewsletterSignupAdminForm(instance=signup)
+    return render(request, 'account/newsletter_crud_edit.html', {'form': form, 'signup': signup})
+
+
+@staff_member_required
+def newsletter_crud_delete(request, pk):
+    signup = get_object_or_404(NewsletterSignup, pk=pk)
+    if request.method == "POST":
+
+        try:
+            profile = Profile.objects.get(email=signup.email)
+            profile.marketing_consent = False
+            profile.save()
+        except Profile.DoesNotExist:
+            pass
+
+        signup.delete()
+        messages.success(request, "Signup deleted and user consent revoked (if user exists).")
+        return redirect('newsletter_crud_dashboard')
+    return render(request, 'account/newsletter_crud_confirm_delete.html', {'signup': signup})
+
+
+@staff_member_required
+def newsletter_crud_dashboard(request):
+    search_query = request.GET.get('q', '').strip()
+    signups = NewsletterSignup.objects.all().order_by('-date_joined')
+    if search_query:
+        signups = signups.filter(email__icontains=search_query)
+    return render(request, 'account/newsletter_crud_dashboard.html', {
+        'signups': signups,
+        'search_query': search_query
     })

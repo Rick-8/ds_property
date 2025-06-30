@@ -7,39 +7,45 @@
     <ul class="list-group list-group-flush d-flex flex-column align-items-center gap-3">
 
       {% if user.is_authenticated %}
-        {% if user.is_staff or user.is_superuser %}
-        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-          <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-            View All Subscriptions
-          </a>
-        </li>
+      {% if user.is_staff or user.is_superuser %}
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+        <a href="{% url 'all_subscriptions' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+          View All Subscriptions
+        </a>
+      </li>
 
-        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-          <a href="{% url 'list_all_properties' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-            All Properties
-          </a>
-        </li>
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+        <a href="{% url 'list_all_properties' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+          All Properties
+        </a>
+      </li>
 
-        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-          {% if user.is_superuser %}
-            <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-              Staff Portal
-            </a>
-          {% else %}
-            <a href="{% url 'staff_job_list' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-              Staff Portal
-            </a>
-          {% endif %}
-        </li>
-
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
         {% if user.is_superuser %}
-        <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-          <a href="{% url 'user_admin_panel' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
-            User Admin Panel
-          </a>
-        </li>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+          Staff Portal
+        </a>
+        {% else %}
+        <a href="{% url 'staff_job_list' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+          Staff Portal
+        </a>
         {% endif %}
-        {% endif %}
+      </li>
+
+      {% if user.is_superuser %}
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+        <a href="{% url 'user_admin_panel' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+          User Admin Panel
+        </a>
+      </li>
+      <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
+        <a href="{% url 'newsletter_crud_dashboard' %}" class="btn btn-outline-gold text-center"
+          style="min-width: 280px;">
+          Manage Newsletter Signups
+        </a>
+      </li>
+      {% endif %}
+      {% endif %}
       {% endif %}
       {% if user.is_authenticated %}
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
@@ -49,7 +55,8 @@
       </li>
 
       <li class="list-group-item d-flex justify-content-center align-items-center bg-transparent border-0 p-0 w-100">
-        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center" style="min-width: 280px;">
+        <a href="{% url 'account_change_password' %}" class="btn btn-outline-gold text-center"
+          style="min-width: 280px;">
           Change Password
         </a>
       </li>
