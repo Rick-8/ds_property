@@ -54,7 +54,15 @@
             </option>
             {% endfor %}
         </select>
-        <button class="btn btn-success" id="offcanvas-confirm-btn">{% trans "Confirm" %}</button>
+        <div class="d-flex gap-2">
+        <button class="btn btn-success flex-fill" id="offcanvas-confirm-btn">
+            {% trans "Confirm" %}
+        </button>
+        <a href="{% url 'add_property' %}" 
+           class="btn btn-outline-gold flex-fill">
+           {% trans "Add Address" %}
+        </a>
+    </div>
     </div>
 </div>
 
